@@ -20,7 +20,7 @@ class NewUserForm(forms.Form):
 
 
 class UrlForm(forms.Form):
-    urlProject = forms.CharField(max_length=80)
+    urlProject = forms.CharField(max_length=500)
 
 
 class UpdateForm(forms.Form):

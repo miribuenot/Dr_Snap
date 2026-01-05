@@ -156,29 +156,41 @@ def show_dashboard(request, skill_points=None):
         print("Skill rubric")
         print(skill_rubric)
         d = d[0]
-        if d['multiproject']:
+        
+        # 1. Comprobación segura de multiproyecto
+        if d.get('multiproject'):
             context = {
-                'ETA': calc_eta(d['num_projects'])
+                'ETA': calc_eta(d.get('num_projects', 0))
             }
             return render(request, user + '/dashboard-bulk-landing.html', context)
-        else: 
-            if d['Error'] == 'analyzing':
+        
+        # 2. Comprobación de errores (usando .get para seguridad)
+        error_type = d.get('Error')
+        
+        if error_type:
+            if error_type == 'analyzing':
                 return render(request, 'error/analyzing.html')
-            elif d['Error'] == 'MultiValueDict':
+            elif error_type == 'MultiValueDict':
+                # Este es el error que probablemente estás teniendo
+                print("DEBUG: Falta algún parámetro en el POST. Recibido:", request.POST) 
                 return render(request, user + '/main.html', {'error': True})
-            elif d['Error'] == 'id_error':
+            elif error_type == 'id_error':
                 return render(request, user + '/main.html', {'id_error': True})
-            elif d['Error'] == 'no_exists':
+            elif error_type == 'no_exists':
                 return render(request, user + '/main.html', {'no_exists': True})
-            else:
-                if d["dashboard_mode"] == 'Default':
-                    return render(request, user + '/dashboard-default.html', d)
-                elif d["dashboard_mode"] == 'Personalized':
-                    return render(request, user + '/dashboard-personal.html', d)               
-                elif d["dashboard_mode"] == 'Recommender':
-                    return render(request, user + '/dashboard-recommender.html', d)
-    else:
-        return HttpResponseRedirect('/')    
+
+        # 3. Si no hay errores, mostramos el dashboard según el modo
+        mode = d.get("dashboard_mode")
+
+        if mode == 'Default':
+            return render(request, user + '/dashboard-default.html', d)
+        elif mode == 'Personalized':
+            return render(request, user + '/dashboard-personal.html', d)               
+        elif mode == 'Recommender':
+            return render(request, user + '/dashboard-recommender.html', d)
+        
+        # Fallback: Si no coincide ningún modo, mostramos por defecto para no mostrar página en blanco
+        return render(request, user + '/dashboard-default.html', d)
 
 @csrf_exempt
 def get_recommender(request, skill_points=None):
