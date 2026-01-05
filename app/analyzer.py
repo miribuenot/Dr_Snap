@@ -1,22 +1,22 @@
-from datetime import datetime
 import json
 import os
 import shutil
 import traceback
+import uuid
+import logging
+import requests
+from datetime import datetime
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
-import uuid
-from venv import logger
+from urllib.parse import quote, urlparse, parse_qs
 from zipfile import BadZipfile, ZipFile
-from django.utils.datastructures import MultiValueDictKeyError
-from django.http import HttpResponseRedirect, HttpResponse
+
+from django.http import HttpResponseRedirect
 from app.exception import DrScratchException
-from app.forms import UrlForm
+# Imports de análisis (Hairball)
 from app.hairball3.backdropNaming import BackdropNaming
 from app.hairball3.deadCode import DeadCode
-from app.hairball3.duplicateScripts import DuplicateScripts
 from app.hairball3.mastery import Mastery
-from app.hairball3.refactor import RefactorDuplicate
 from app.hairball3.spriteNaming import SpriteNaming
 from app.hairball3.scratchGolfing import ScratchGolfing
 from app.hairball3.block_sprite_usage import Block_Sprite_Usage
@@ -25,10 +25,8 @@ from app.scratchclient import ScratchSession
 from app.recomender import RecomenderSystem
 import app.consts_drscratch as consts
 from lxml import etree
-import xml.etree.ElementTree as ET
 
-
-
+logger = logging.getLogger(__name__)
 
 def save_analysis_in_file_db(request, zip_filename):
     now = datetime.now()
@@ -39,32 +37,17 @@ def save_analysis_in_file_db(request, zip_filename):
     else:
         username = None
 
-    if Organization.objects.filter(username=username):
-        filename_obj = File(filename=zip_filename,
-                        organization=username,
-                        method=method, time=now,
-                        score=0, abstraction=0, parallelization=0,
-                        logic=0, synchronization=0, flowControl=0,
-                        userInteractivity=0, dataRepresentation=0,
-                        spriteNaming=0, initialization=0,
-                        deadCode=0, duplicateScript=0)
-    elif Coder.objects.filter(username=username):
-        filename_obj = File(filename=zip_filename,
-                        coder=username,
-                        method=method, time=now,
-                        score=0, abstraction=0, parallelization=0,
-                        logic=0, synchronization=0, flowControl=0,
-                        userInteractivity=0, dataRepresentation=0,
-                        spriteNaming=0, initialization=0,
-                        deadCode=0, duplicateScript=0)
+    if Organization.objects.filter(username=username).exists():
+        filename_obj = File(filename=zip_filename, organization=username, method=method, time=now)
+    elif Coder.objects.filter(username=username).exists():
+        filename_obj = File(filename=zip_filename, coder=username, method=method, time=now)
     else:
-        filename_obj = File(filename=zip_filename,
-                        method=method, time=now,
-                        score=0, abstraction=0, parallelization=0,
-                        logic=0, synchronization=0, flowControl=0,
-                        userInteractivity=0, dataRepresentation=0,
-                        spriteNaming=0, initialization=0,
-                        deadCode=0, duplicateScript=0)
+        filename_obj = File(filename=zip_filename, method=method, time=now)
+
+    for attr in ['score', 'abstraction', 'parallelization', 'logic', 'synchronization', 
+                 'flowControl', 'userInteractivity', 'dataRepresentation', 'spriteNaming', 
+                 'initialization', 'deadCode', 'duplicateScript']:
+        setattr(filename_obj, attr, 0)
 
     filename_obj.save()
     return filename_obj
@@ -76,368 +59,96 @@ def _make_compare(request, skill_points: dict):
     counter = 0
     d = {}
     path = {}
-    json = {}
-    if request.method == "POST":
-        if "_urls" in request.POST:
-            for url in request.POST.getlist('urlProject'):
-                print("Url:", url)
-                project = check_project(counter)
-                d[project] = analysis_by_url(request, url, skill_points)
-                path[project] = request.session.get('current_project_path')
-                counter += 1
-        elif "_uploads" in request.POST:
-            for upload in request.FILES.getlist('zipFile'):
-                project = check_project(counter)
-                print("Upload:", upload)
-                d[project] = analysis_by_upload(request, skill_points, upload)
-                path[project] = request.session.get('current_project_path')
-                counter += 1
-        elif "_mix" in request.POST:
-            print("-----------------****************")
-            project = check_project(counter)
-            base_type = request.POST.get('baseProjectType')
-            if base_type == "urlProject":
-                url = request.POST.getlist('urlProject')[0]
-                d[project] = analysis_by_url(request, url, skill_points)
-                path[project] = request.session.get('current_project_path')
-                counter += 1
-                upload = request.FILES.get('zipFile')
-                project = check_project(counter)
-                d[project] = analysis_by_upload(request, skill_points, upload)
-                path[project] = request.session.get('current_project_path')
-            else:
-                upload = request.FILES.get('zipFile')
-                d[project] = analysis_by_upload(request, skill_points, upload)
-                path[project] = request.session.get('current_project_path')
-                counter += 1
-                project = check_project(counter)
-                url = request.POST.getlist('urlProject')[1]
-                d[project] = analysis_by_url(request, url, skill_points)
-                path[project] = request.session.get('current_project_path')
-
-        print(path.items())
-        for key,value in path.items():
-            print("-----------------****************")
-            print(key, value)
-            json[key] = load_json_project(value)    
-        dict_scratch_golfing = ScratchGolfing(json.get('Original'), json.get('New')).finalize()
-        dict_scratch_golfing = dict_scratch_golfing['result']['scratch_golfing']
-        
-        d['Compare'] = dict_scratch_golfing
-        check_same_functionality(request, d)
-
-        return d
-    else:
+    json_projects = {}
+    
+    if request.method != "POST":
         return HttpResponseRedirect('/')
+
+    if "_urls" in request.POST:
+        for url in request.POST.getlist('urlProject'):
+            project = check_project(counter)
+            d[project] = analysis_by_url(request, url, skill_points)
+            path[project] = request.session.get('current_project_path')
+            counter += 1
+    elif "_uploads" in request.POST:
+        for upload in request.FILES.getlist('zipFile'):
+            project = check_project(counter)
+            d[project] = analysis_by_upload(request, skill_points, upload)
+            path[project] = request.session.get('current_project_path')
+            counter += 1
+    elif "_mix" in request.POST:
+        project = check_project(counter)
+        base_type = request.POST.get('baseProjectType')
+        if base_type == "urlProject":
+            url = request.POST.getlist('urlProject')[0]
+            d[project] = analysis_by_url(request, url, skill_points)
+            path[project] = request.session.get('current_project_path')
+            counter += 1
+            upload = request.FILES.get('zipFile')
+            project = check_project(counter)
+            d[project] = analysis_by_upload(request, skill_points, upload)
+            path[project] = request.session.get('current_project_path')
+        else:
+            upload = request.FILES.get('zipFile')
+            d[project] = analysis_by_upload(request, skill_points, upload)
+            path[project] = request.session.get('current_project_path')
+            counter += 1
+            project = check_project(counter)
+            url = request.POST.getlist('urlProject')[1]
+            d[project] = analysis_by_url(request, url, skill_points)
+            path[project] = request.session.get('current_project_path')
+
+    for key, value in path.items():
+        json_projects[key] = load_json_project(value)    
+    
+    dict_scratch_golfing = ScratchGolfing(json_projects.get('Original'), json_projects.get('New')).finalize()
+    d['Compare'] = dict_scratch_golfing['result']['scratch_golfing']
+    check_same_functionality(request, d)
+
+    return d
     
 def check_project(counter):
-    if counter == 0:
-        project = "Original"
-    else:
-        project = "New"
-    return project
+    return "Original" if counter == 0 else "New"
 
 def check_same_functionality(request, d):
-    """
-    Check if the projects have the same functionality
-    """
     same_functionality = request.POST.get('same_functionality') == "True"
-    print("Same functionality:", same_functionality)
-    if same_functionality:
-            d['Compare'].update({
-                'same_functionality': True
-            })
-    else: 
-        d['Compare'].update({
-            'same_functionality': False
-        })
+    d['Compare'].update({'same_functionality': same_functionality})
 
 def return_scratch_project_identifier(url) -> dict:
     """
-    Process String from URL Form
-    
-    id_project = ''
-    aux_string = url.split("/")[-1]
-    if aux_string == '':
-        possible_id = url.split("/")[-2]
-        if possible_id == "editor":
-            id_project = url.split("/")[-3]
-        else:
-            id_project = possible_id
-    else:
-        if aux_string == "editor":
-            id_project = url.split("/")[-2]
-        else:
-            id_project = aux_string
-
-    try:
-        check_int = int(id_project)
-    except ValueError:
-        logger.error('Project id is not an integer')
-        id_project = "error"
-
-    return id_project
+    Extract username and projectname from Snap! URL
     """
-    from urllib.parse import urlparse, parse_qs
-    
-    print("scartch")
     parsed_url = urlparse(url)
     query_params = parse_qs(parsed_url.query)
     
     username = query_params.get('username', [None])[0]
     projectname = query_params.get('projectname', [None])[0]
 
-    print(parsed_url)
-    
     if username and projectname:
         return {'platform': 'Snap', 'username': username, 'projectname': projectname}
     else:
         return {'platform': 'error', 'message': 'Missing username or projectname in URL'}
 
-
-
 def write_activity_in_logfile(file_name):
-
     log_filename = '{}/log/{}'.format(os.path.dirname(os.path.dirname(__file__)), 'logFile.txt')
-
     try:
-        log_file = open(log_filename, "a+")
-        log_file.write("FileName: " + str(file_name.filename) + "\t\t\t" + "ID: " + str(file_name.id) + "\t\t\t" +
-                       "Method: " + str(file_name.method) + "\t\t\t" + "Time: " + str(file_name.time) + "\n")
-    except OSError:
-        logger.error('FileNotFoundError')
-    except Exception:
-        traceback.print_exc()
-    finally:
-        log_file.close()
-
+        with open(log_filename, "a+") as log_file:
+            log_file.write(f"FileName: {file_name.filename}\t\t\tID: {file_name.id}\t\t\tMethod: {file_name.method}\t\t\tTime: {file_name.time}\n")
+    except Exception as e:
+        logger.error(f"Error writing log file: {e}")
 
 def generate_uniqueid_for_saving(id_project):
     date_now = datetime.now()
     date_now_string = date_now.strftime("%Y_%m_%d_%H_%M_%S_%f")
     return id_project + "_" + date_now_string
 
-
-def save_projectsb3(path_file_temporary, id_project):
-
-    dir_zips = os.path.dirname(os.path.dirname(__file__)) + "/uploads/"
-
-    unique_id = generate_uniqueid_for_saving(id_project)
-    unique_file_name_for_saving = dir_zips + unique_id + ".sb2"
-
-    dir_utemp = path_file_temporary.split(id_project)[0].encode('utf-8')
-    path_project = os.path.dirname(os.path.dirname(__file__))
-
-    if '_new_project.json' in path_file_temporary:
-        ext_project = '_new_project.json'
-    else:
-        ext_project = '_old_project.json'
-
-    temporary_file_name = id_project + ext_project
-
-    os.chdir(dir_utemp)
-
-    with ZipFile(unique_file_name_for_saving, 'w') as myzip:
-        os.rename(temporary_file_name, 'project.json')
-        myzip.write('project.json')
-
-    try:
-        os.remove('project.json')
-        os.chdir(path_project)
-    except OSError:
-        logger.error('Error removing temporary project.json')
-
-    return unique_file_name_for_saving, ext_project
-
-
-def download_scratch_project_from_servers(path_project, info_project):
-    scratch_project_inf = ScratchSession().get_project(info_project)
-    url_json_scratch = "{}/{}?token={}".format(consts.URL_SCRATCH_SERVER, id_project, scratch_project_inf.project_token)
-    print("URLLLLL -------------------")
-    print(url_json_scratch)
-    path_utemp = '{}/utemp/{}'.format(path_project, info_project)
-    path_json_file = path_utemp + '_new_project.json'
-
-    try:
-        logger.info(url_json_scratch)
-        response_from_scratch = urlopen(url_json_scratch)
-    except HTTPError:
-        # Two ways, id does not exist in servers or id is in other server
-        logger.error('HTTPError')
-        url_json_scratch = "{}/{}".format(consts.URL_GETSB3, info_project)
-        response_from_scratch = urlopen(url_json_scratch)
-        path_json_file = path_utemp + '_old_project.json'
-    except URLError:
-        logger.error('URLError')
-        traceback.print_exc()
-    except:
-        traceback.print_exc()
-
-    try:
-        json_string_format = response_from_scratch.read()
-        json_data = json.loads(json_string_format)
-        print("PATH JSON TEMPORARY FILE in dspfs---------------------------------------------------------")
-        print(json_data)
-        resulting_file = open(path_json_file, 'wb')
-        resulting_file.write(json_string_format)
-        resulting_file.close()
-    except ValueError as e:
-        logger.error('ValueError: %s', e.message)
-        raise DrScratchException
-    except IOError as e:
-        logger.error('IOError %s' % e.message)
-        raise IOError
-
-    return path_json_file
-
-def send_request_getsb3(id_project, username, method):
-    """
-    Send request to getsb3 app
-    """
-    file_url = '{}{}'.format(id_project, '.sb3')
- 
-    now = datetime.now()
-
-    if Organization.objects.filter(username=username):
-        file_obj = File(filename=file_url,
-                        organization=username,
-                        method=method, time=now,
-                        score=0, abstraction=0, parallelization=0,
-                        logic=0, synchronization=0, flowControl=0,
-                        userInteractivity=0, dataRepresentation=0,
-                        spriteNaming=0, initialization=0,
-                        deadCode=0, duplicateScript=0)
-    elif Coder.objects.filter(username=username):
-        file_obj = File(filename=file_url,
-                        coder=username,
-                        method=method, time=now,
-                        score=0, abstraction=0, parallelization=0,
-                        logic=0, synchronization=0, flowControl=0,
-                        userInteractivity=0, dataRepresentation=0,
-                        spriteNaming=0, initialization=0,
-                        deadCode=0, duplicateScript=0)
-    else:
-        file_obj = File(filename=file_url,
-                        method=method, time=now,
-                        score=0, abstraction=0, parallelization=0,
-                        logic=0, synchronization=0, flowControl=0,
-                        userInteractivity=0, dataRepresentation=0,
-                        spriteNaming=0, initialization=0,
-                        deadCode=0, duplicateScript=0)
-    
-    file_obj.save()
-
-    write_activity_in_logfile(file_obj)
-    #path_scratch_project_sb3, ext_type_project = save_projectsb3(path_json_file_temporary, id_project)
-
-    return file_obj
-
-
-
-def generator_dic(request, info_project, skill_points: dict) -> dict:
-    """
-    Return a dictionary with static analysis and errors
-    """
-
-    try:
-        username = None
-        file_obj = send_request_getsb3(info_project, username, method="url")
-        #try:
-            #request.session['current_project_path'] = path_project
-        #except AttributeError:
-            #pass
-    except DrScratchException:
-        logger.error('DrScratchException')
-        d = {'Error': 'no_exists'}
-        return d
-    except FileNotFoundError:
-        logger.error('File not found into Scratch server')
-        traceback.print_exc()
-        d = {'Error': 'no_exists'}
-        return d
-
-    try:
-        print("MAS TRAZASS------------------------------------------------")
-        #print(path_project)
-        #print(file_obj)
-        #print(ext_type_project)
-        #Dividir xml
-        print(request)
-        print(info_project)
-        print(skill_points)
-        print(file_obj)
-        filename_obj = ""
-        d = analyze_project(request, info_project, skill_points,  filename_obj,file_obj)
-    except Exception:
-        logger.error('Impossible analyze project')
-        #traceback.print_exc()
-        #file_obj.method = 'url/error'
-        #file_obj.save()
-        #old_path_project = path_project
-        #new_path_project = path_project.split("/uploads/")[0] + "/error_analyzing/" + path_project.split("/uploads/")[1]
-        #shutil.copy(old_path_project, new_path_project)
-        return {'Error': 'analyzing'}
-
-    # Redirect to dashboard for unregistered user
-    d['Error'] = 'None'
-
-    return d
-
-
-def check_version(filename):
-    """
-    Check the version of the project and return it
-    """
-
-    extension = filename.split('.')[-1]
-    if extension == 'sb2':
-        version = '2.0'
-    elif extension == 'sb3':
-        version = '3.0'
-    else:
-        version = '1.4'
-
-    return version
-
-
 def load_json_project(path_projectsb3):
     try:
-       with open(path_projectsb3, "r", encoding = "utf-8") as archivo_xml:
-        json_project = archivo_xml.read()
-        return json_project
-    except BadZipfile:
-        print('Bad xml')
- 
-def proc_refactored_code(refactor):
-    dict_refactor = {}
-    dict_refactor["refactor"] = dict_refactor
-    dict_refactor["refactor"]["refactor_list"] = refactor
-
-    return dict_refactor
-
-def proc_block_sprite_usage(result_block_sprite_usage, filename):
-    dict_block_sprite_usage = {}
-    dict_block_sprite_usage["block_sprite_usage"] = dict_block_sprite_usage
-    dict_block_sprite_usage["block_sprite_usage"]= result_block_sprite_usage
-
-    return dict_block_sprite_usage
-
-def proc_dead_code(dict_dead_code, filename):
-
-    dict_dc = {}
-    dict_dc["deadCode"] = dict_dc
-    dict_dc["deadCode"]["number"] = dict_dead_code['result']['total_dead_code_scripts']
-
-    for dict_sprite_dead_code_blocks in dict_dead_code['result']['list_dead_code_scripts']:
-        for sprite_name, list_blocks in dict_sprite_dead_code_blocks.items():
-            dict_dc["deadCode"][sprite_name] = list_blocks
-
-    filename.deadCode = dict_dead_code['result']['total_dead_code_scripts']
-    filename.save()
-
-    return dict_dc
-
-
+       with open(path_projectsb3, "r", encoding="utf-8") as archivo_xml:
+        return archivo_xml.read()
+    except Exception as e:
+        logger.error(f"Error loading JSON project: {e}")
+        return ""
 
 def proc_recomender(dict_recom):
     recomender = {
@@ -445,32 +156,19 @@ def proc_recomender(dict_recom):
             'message': "Congrat's you don't have any bad smell at the moment.",
         }
     }
-    #if (dict_recom["duplicatedScripts"] != None):
-    #    recomender = {
-    #        'recomenderSystem': dict_recom["duplicatedScripts"],
-     #   }
-    #    RecomenderSystem.curr_type = dict_recom["duplicatedScripts"]['type']
-    #    return recomender
-    if (dict_recom["deadCode"] != None):
-        recomender = {
-            'recomenderSystem': dict_recom["deadCode"],
-        }
+    if dict_recom.get("deadCode"):
+        recomender = {'recomenderSystem': dict_recom["deadCode"]}
         RecomenderSystem.curr_type = dict_recom["deadCode"]['type']
         return recomender
-    if (dict_recom["spriteNaming"] != None):
-        recomender = {
-            'recomenderSystem': dict_recom["spriteNaming"],
-        }
+    if dict_recom.get("spriteNaming"):
+        recomender = {'recomenderSystem': dict_recom["spriteNaming"]}
         RecomenderSystem.curr_type = dict_recom["spriteNaming"]['type']
         return recomender
-    if (dict_recom["backdropNaming"] != None):
-        recomender = {
-            'recomenderSystem': dict_recom["backdropNaming"],
-        }
+    if dict_recom.get("backdropNaming"):
+        recomender = {'recomenderSystem': dict_recom["backdropNaming"]}
         RecomenderSystem.curr_type = dict_recom["backdropNaming"]['type']
         return recomender
     return recomender
-
 
 def proc_urls(request, dict_mastery, file_obj):
     dict_urls = {}
@@ -484,21 +182,18 @@ def proc_urls(request, dict_mastery, file_obj):
         dict_urls["url_vanilla"] = get_urls(dict_vanilla)
     elif mode == 'Personalized':
         dict_personal = dict_mastery['personalized'].copy()
-        print(dict_personal)
         dict_urls["url_personal"] = get_urls(dict_personal)
     return dict_urls
 
 def get_urls(dict_mastery):
-    list_urls = []
-    for key in dict_mastery.keys():
-        if key != 'total_points' and key!= 'competence' and key!= 'max_points' and key!= 'average_points':
-            list_urls.append(key)
-    return list_urls
+    return [key for key in dict_mastery.keys() 
+            if key not in ['total_points', 'competence', 'max_points', 'average_points']]
 
 def proc_mastery(request, dict_mastery, file_obj):
     dic = {}
     mode = request.POST.get('dashboard_mode', 'Default')
     non_personalized = ['Default', 'Comparison', 'Recommender']
+    
     if mode in non_personalized:
         dict_extended = dict_mastery['extended'].copy()
         dict_vanilla = dict_mastery['vanilla'].copy()
@@ -518,418 +213,301 @@ def proc_mastery(request, dict_mastery, file_obj):
         dic = {"mastery": d_personal_translated}
         dic["mastery"]["competence"] = dict_personal["competence"]
         dic["mastery"]["points"] = dict_personal["total_points"]
-        print("Lista_Mastery:", dict_personal.keys())
     
     return dic
 
-def set_file_obj(request, file_obj, dict, mode=None):
-
-    file_obj.score = dict["total_points"][0]
-    file_obj.competence = dict["competence"]
-    file_obj.abstraction = dict["Abstraction"][0]
-    file_obj.parallelization = dict["Parallelization"][0]
-    file_obj.logic = dict["Logic"][0]
-    file_obj.synchronization = dict["Synchronization"][0]
-    file_obj.flow_control = dict["FlowControl"][0]
-    file_obj.userInteractivity = dict["UserInteractivity"][0]
-    file_obj.dataRepresentation = dict["DataRepresentation"][0]
+def set_file_obj(request, file_obj, dict_data, mode=None):
+    file_obj.score = dict_data["total_points"][0]
+    file_obj.competence = dict_data["competence"]
+    file_obj.abstraction = dict_data["Abstraction"][0]
+    file_obj.parallelization = dict_data["Parallelization"][0]
+    file_obj.logic = dict_data["Logic"][0]
+    file_obj.synchronization = dict_data["Synchronization"][0]
+    file_obj.flow_control = dict_data["FlowControl"][0]
+    file_obj.userInteractivity = dict_data["UserInteractivity"][0]
+    file_obj.dataRepresentation = dict_data["DataRepresentation"][0]
     if mode != 'Vanilla':
-        file_obj.mathOperators = dict["MathOperators"][0]
-        file_obj.mathOperators = dict["MotionOperators"][0]
+        file_obj.mathOperators = dict_data["MathOperators"][0]
+        file_obj.mathOperators = dict_data["MotionOperators"][0] 
     file_obj.save()
-
 
 def proc_duplicate_script(dict_result, file_obj) -> dict:
-
     dict_ds = {}
-    dict_ds["duplicateScript"] = dict_ds
-    dict_ds["duplicateScript"]["number"] = dict_result['result']['total_duplicate_scripts']
-    dict_ds["duplicateScript"]["scripts"] = dict_result['result']['list_duplicate_scripts']
-    dict_ds["duplicateScript"]["csv_format"] = dict_result['result']['list_csv']
-
+    dict_ds["duplicateScript"] = {
+        "number": dict_result['result']['total_duplicate_scripts'],
+        "scripts": dict_result['result']['list_duplicate_scripts'],
+        "csv_format": dict_result['result']['list_csv']
+    }
     file_obj.duplicateScript = dict_result['result']['total_duplicate_scripts']
     file_obj.save()
-
     return dict_ds
 
+def proc_dead_code(dict_dead_code, filename):
+    dict_dc = {"deadCode": {"number": dict_dead_code['result']['total_dead_code_scripts']}}
+
+    for dict_sprite_dead_code_blocks in dict_dead_code['result']['list_dead_code_scripts']:
+        for sprite_name, list_blocks in dict_sprite_dead_code_blocks.items():
+            dict_dc["deadCode"][sprite_name] = list_blocks
+
+    filename.deadCode = dict_dead_code['result']['total_dead_code_scripts']
+    filename.save()
+    return dict_dc
 
 def proc_sprite_naming(lines, file_obj):
-
     dic = {}
     lLines = lines.split('\n')
     number = lLines[0].split(' ')[0]
     lObjects = lLines[1:]
     lfinal = lObjects[:-1]
 
-    dic['spriteNaming'] = dic
-    dic['spriteNaming']['number'] = int(number)
-    dic['spriteNaming']['sprite'] = lfinal
-
+    dic['spriteNaming'] = {'number': int(number), 'sprite': lfinal}
     file_obj.spriteNaming = number
     file_obj.save()
-
     return dic
 
-
 def proc_backdrop_naming(lines, file_obj):
-
     dic = {}
     lLines = lines.split('\n')
     number = lLines[0].split(' ')[0]
     lObjects = lLines[1:]
     lfinal = lObjects[:-1]
-    dic['backdropNaming'] = dic
-    dic['backdropNaming']['number'] = int(number)
-    dic['backdropNaming']['backdrop'] = lfinal
-
+    
+    dic['backdropNaming'] = {'number': int(number), 'backdrop': lfinal}
     file_obj.backdropNaming = number
     file_obj.save()
-
     return dic
 
+def proc_block_sprite_usage(result_block_sprite_usage, filename):
+    return {"block_sprite_usage": result_block_sprite_usage}
 
 def translate(request, d, filename, vanilla=False):
     """
-    Translate the output of Hairball
+    Translate the output of Hairball based on LANGUAGE_CODE
     """
+    lang = request.LANGUAGE_CODE
+    translations = {
+        "es": {'Abstraction': 'Abstracción', 'Parallelization': 'Paralelismo', 'Logic': 'Pensamiento lógico', 'Synchronization': 'Sincronización', 'FlowControl': 'Control de flujo', 'UserInteractivity': 'Interactividad con el usuario', 'DataRepresentation': 'Representación de la información', 'MathOperators': 'Operadores matemáticos', 'MotionOperators': 'Operadores de movimiento'},
+        "en": {'Abstraction': 'Abstraction', 'Parallelization': 'Parallelism', 'Logic': 'Logic', 'Synchronization': 'Synchronization', 'FlowControl': 'Flow control', 'UserInteractivity': 'User interactivity', 'DataRepresentation': 'Data representation', 'MathOperators': 'Math operators', 'MotionOperators': 'Motion operators'},
+        "gl": {'Abstraction': 'Abstracción', 'Parallelization': 'Paralelismo', 'Logic': 'Pensamento lóxico', 'Synchronization': 'Sincronización', 'FlowControl': 'Control de fluxo', 'UserInteractivity': 'Interactividade co usuario', 'DataRepresentation': 'Representación da información', 'MathOperators': 'Operadores matemáticos', 'MotionOperators': 'Operadores de movemento'},
+        "ca": {'Abstraction': 'Abstracció', 'Parallelization': 'Paral·lelisme', 'Logic': 'Pensament lògic', 'Synchronization': 'Sincronització', 'FlowControl': 'Control de flux', 'UserInteractivity': "Interactivitat amb l'usuari", 'DataRepresentation': "Representació de la informació", 'MathOperators': 'Operadors matemàtics', 'MotionOperators': 'Operadors de moviment'},
+        "eu": {'Abstraction': 'Abstrakzioa', 'Parallelization': 'Paralelismoa', 'Logic': 'Pentsamendu logikoa', 'Synchronization': 'Sinkronizazioa', 'FlowControl': 'Fluxu kontrola', 'UserInteractivity': 'Erabiltzailearen interaktibitatea', 'DataRepresentation': 'Informazioaren errepresentazioa', 'MathOperators': 'Operadore matematikoak', 'MotionOperators': 'Mugimendu operadoreak'},
+    }
 
-    if request.LANGUAGE_CODE == "es":
-        d_translate_es = {'Abstracción': [d['Abstraction'], 'Abstraction'], 'Paralelismo': [d['Parallelization'], 'Parallelization'],
-                          'Pensamiento lógico': [d['Logic'], 'Logic'], 'Sincronización': [d['Synchronization'], 'Synchronization'],
-                          'Control de flujo': [d['FlowControl'], 'FlowControl'], 'Interactividad con el usuario': [d['UserInteractivity'], 'UserInteractivity'],
-                          'Representación de la información': [d['DataRepresentation'], 'DataRepresentation']}
-        if not vanilla: # Check that not is Vanilla Mode
-            d_translate_es.update({'Operadores matemáticos': [d['MathOperators'], 'MathOperators'], 'Operadores de movimiento': [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "es"
-        filename.save()
-        return d_translate_es
-    elif request.LANGUAGE_CODE == "en":
-        d_translate_en = {'Abstraction': [d['Abstraction'], 'Abstraction'], 'Parallelism': [d['Parallelization'], 'Parallelization'], 'Logic': [d['Logic'], 'Logic'],
-                          'Synchronization': [d['Synchronization'], 'Synchronization'], 'Flow control': [d['FlowControl'], 'FlowControl'],
-                          'User interactivity': [d['UserInteractivity'], 'UserInteractivity'], 'Data representation': [d['DataRepresentation'], 'DataRepresentation']}
-        if not vanilla: 
-            d_translate_en.update({'Math operators': [d['MathOperators'], 'MathOperators'], 'Motion operators': [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "en"
-        filename.save()
-        return d_translate_en
-    elif request.LANGUAGE_CODE == "ca":
-        d_translate_ca = {'Abstracció': [d['Abstraction'], 'Abstraction'], 'Paral·lelisme': [d['Parallelization'], 'Parallelization'], 'Lògica': [d['Logic'], 'Logic'],
-                          'Sincronització': [d['Synchronization'], 'Synchronization'], 'Controls de flux': [d['FlowControl'], 'FlowControl'],
-                          "Interactivitat de l'usuari": [d['UserInteractivity'], 'UserInteractivity'],
-                          'Representació de dades': [d['DataRepresentation'], 'DataRepresentation']}
-        if not vanilla: 
-            d_translate_ca.update({'Operadors matemàtics': [d['MathOperators'], 'MathOperators'], 'Operadors de moviment':  [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "ca"
-        filename.save()
-        return d_translate_ca
-    elif request.LANGUAGE_CODE == "gl":
-        d_translate_gl = {'Abstracción': [d['Abstraction'], 'Abstraction'], 'Paralelismo': [d['Parallelization'], 'Parallelization'], 'Lóxica': [d['Logic'], 'Logic'],
-                          'Sincronización': [d['Synchronization'], 'Synchronization'], 'Control de fluxo': [d['FlowControl'], 'FlowControl'],
-                          "Interactividade do susario": [d['UserInteractivity'], 'UserInteractivity'],
-                          'Representación dos datos': [d['DataRepresentation'], 'DataRepresentation']}
-        if not vanilla: 
-            d_translate_gl.update({'Operadores matemáticos': [d['MathOperators'], 'MathOperators'], 'Operadores de movemento': [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "gl"
-        filename.save()
-        return d_translate_gl
-
-    elif request.LANGUAGE_CODE == "pt":
-        d_translate_pt = {'Abstração': [d['Abstraction'], 'Abstraction'], 'Paralelismo': [d['Parallelization'], 'Parallelization'], 'Lógica': [d['Logic'], 'Logic'],
-                          'Sincronização': [d['Synchronization'], 'Synchronization'], 'Controle de fluxo': [d['FlowControl'], 'FlowControl'],
-                          "Interatividade com o usuário": [d['UserInteractivity'], 'UserInteractivity'],
-                          'Representação de dados': [d['DataRepresentation'], 'DataRepresentation']}
-        if not vanilla: 
-            d_translate_pt.update({'Operadores matemáticos': [d['MathOperators'], 'MathOperators'], 'Operadores de movimento': [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "pt"
-        filename.save()
-        return d_translate_pt
+    # Fallback to English if language not found, simplified logic
+    t_map = translations.get(lang, translations['en'])
     
-    elif request.LANGUAGE_CODE == "el":
-        d_translate_el = {'Αφαίρεση': [d['Abstraction'], 'Abstraction'], 'Παραλληλισμός': [d['Parallelization'], 'Parallelization'], 'Λογική': [d['Logic'], 'Logic'],
-                          'Συγχρονισμός': [d['Synchronization'], 'Synchronization'], 'Έλεγχος ροής': [d['FlowControl'], 'FlowControl'],
-                          'Αλληλεπίδραση χρήστη': [d['UserInteractivity'], 'UserInteractivity'],
-                          'Αναπαράσταση δεδομένων': [d['DataRepresentation'], 'DataRepresentation']}
-        if not vanilla: 
-            d_translate_el.update({'Μαθηματικοί χειριστές': [d['MathOperators'], 'MathOperators'], 'Χειριστές κίνησης': [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "el"
-        filename.save()
-        return d_translate_el
+    result = {}
+    keys = ['Abstraction', 'Parallelization', 'Logic', 'Synchronization', 'FlowControl', 'UserInteractivity', 'DataRepresentation']
+    if not vanilla:
+        keys.extend(['MathOperators', 'MotionOperators'])
 
-    elif request.LANGUAGE_CODE == "eu":           
-        d_translate_eu = {'Abstrakzioa': [d['Abstraction'], 'Abstraction'], 'Paralelismoa': [d['Parallelization'], 'Parallelization'], 'Logika': [d['Logic'], 'Logic'],
-                          'Sinkronizatzea': [d['Synchronization'], 'Synchronization'], 'Kontrol fluxua': [d['FlowControl'], 'FlowControl'],
-                          'Erabiltzailearen elkarreragiletasuna': [d['UserInteractivity'], 'UserInteractivity'],
-                          'Datu adierazlea': [d['DataRepresentation'], 'DataRepresentation']}
-        if not vanilla: 
-            d_translate_eu.update({'Eragile matematikoak': [d['MathOperators'], 'MathOperators'], 'Mugimendu-eragileak': [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "eu"
-        filename.save()
-        return d_translate_eu
+    for key in keys:
+        # Map Hairball key to Translated Name + Score
+        result[t_map.get(key, key)] = [d[key], key]
 
-    elif request.LANGUAGE_CODE == "it":           
-        d_translate_it = {'Astrazione': [d['Abstraction'], 'Abstraction'], 'Parallelismo': [d['Parallelization'], 'Parallelization'], 'Logica': [d['Logic'], 'Logic'],
-                          'Sincronizzazione': [d['Synchronization'], 'Synchronization'], 'Controllo di flusso': [d['FlowControl'], 'FlowControl'],
-                          'Interattività utente': [d['UserInteractivity'], 'UserInteractivity'],
-                          'Rappresentazione dei dati': [d['DataRepresentation'], 'DataRepresentation']}
-        if not vanilla: 
-            d_translate_it.update({'Operatori matematici':  [d['MathOperators'], 'MathOperators'], 'Operatori del movimento': [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "it"
-        filename.save()
-        return d_translate_it
+    filename.language = lang if lang in translations else "any"
+    filename.save()
+    return result
 
-    elif request.LANGUAGE_CODE == "ru":
-        d_translate_ru = {'Абстракция': [d['Abstraction'], 'Abstraction'], 'Параллельность действий': [d['Parallelization'], 'Parallelization'],
-                          'Логика': [d['Logic'], 'Logic'], 'cинхронизация': [d['Synchronization'], 'Synchronization'],
-                          'Управление потоком': [d['FlowControl'], 'FlowControl'], 'Интерактивность': [d['UserInteractivity'], 'UserInteractivity'],
-                          'Представление данных': [d['DataRepresentation'], 'DataRepresentation']}
-        if not vanilla: 
-            d_translate_ru.update({'Математические операторы': [d['MathOperators'], 'MathOperators'], 'Операторы движения': [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "ru"
-        filename.save()
-        return d_translate_ru
-
-    elif request.LANGUAGE_CODE == "tr":
-        d_translate_tr = {
-            'Soyutlama': [d['Abstraction'], 'Abstraction'], 'Paralellik': [d['Parallelization'], 'Parallelization'],
-            'Mantık': [d['Logic'], 'Logic'], 'Senkranizasyon': [d['Synchronization'], 'Synchronization'],
-            'Akış kontrolü': [d['FlowControl'], 'FlowControl'], 'Kullanıcı etkileşimi': [d['UserInteractivity'], 'UserInteractivity'],
-            'Veri temsili': [d['DataRepresentation'], 'DataRepresentation']
-        }
-        if not vanilla: 
-            d_translate_tr.update({'Matematiksel operatörler': [d['MathOperators'], 'MathOperators'], 'Hareket operatörleri': [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "tr"
-        filename.save()
-        return d_translate_tr
-
-    else:
-        d_translate_en = {'Abstraction': [d['Abstraction'], 'Abstraction'], 'Parallelism': [d['Parallelization'], 'Parallelization'], 'Logic': [d['Logic'], 'Logic'],
-                          'Synchronization': [d['Synchronization'], 'Synchronization'], 'Flow control': [d['FlowControl'], 'FlowControl'],
-                          'User interactivity': [d['UserInteractivity'], 'UserInteractivity'], 'Data representation': [d['DataRepresentation'], 'DataRepresentation']}
-        if not vanilla: 
-            d_translate_en.update({'Math Operators': [d['MathOperators'], 'MathOperators'], 'Motion Operators': [d['MotionOperators'], 'MotionOperators']})
-        filename.language = "any"
-        filename.save()
-        return d_translate_en
-"""
-def get_blocks(block, scene_name, dict_datos, id):
-    block_name = block.get('s')
-    block_data = {'block': block_name}
-    block_data['id'] = id # Crear un diccionario para el bloque actual
-    print("analizo", block_data)
-    # Si el bloque tiene hijos, los vamos procesando recursivamente
-    child_blocks = block.findall('block[@s]')
-    
-
-    script_blocks = block.findall('script')
-    for script in script_blocks:
-         # Encontrar bloques dentro de los scripts anidados
-        child_blocks.extend(script.findall('./block[@s]'))
-    #print(child_blocks)
-
-    for child in child_blocks:
-        # Convertir cada elemento a cadena XML y luego imprimir
-        child_xml = etree.tostring(child, pretty_print=True, encoding='unicode')
-        #print("hijo",child_xml)
-
-    #print("nuevo")
-    if child_blocks:
-        block_data['next'] = [] # Si tiene hijos, inicializamos el campo 'next'
-        for child_block in child_blocks:
-            #print("hijo")
-            # Procesamos los bloques hijos y los añadimos a 'next'
-            child_data = get_blocks(child_block, scene_name, dict_datos, id)
-            block_data['next'].append(child_data[scene_name]['blocks'][-1]['block']) # Añadimos el último bloque hijo al campo 'next'
-
-    # Añadir el bloque actual al diccionario de datos de la escena
-    dict_datos[scene_name]['blocks'].append(block_data)
-    return dict_datos
-"""
 def get_blocks(block, scene_name, dict_datos, parent_id):
-    
-    #print("analizo  ", etree.tostring(block, pretty_print=True, encoding='unicode'))
-    block_name = block.get('s')  # Nombre del bloque actual
-    block_id = parent_id  # Identificador base (del padre)
-    #print("hola")
+    block_name = block.get('s')  
+    block_id = parent_id 
+
     trigo_blocks = block.find(".//option")
     if trigo_blocks is not None: 
-        #print("analizo trigo ", etree.tostring(trigo_blocks, pretty_print=True, encoding='unicode'))
         trigo_value = trigo_blocks.text
-        print(trigo_value)
-        
         block_data = {'block': block_name, 'id': block_id,  'option': trigo_value} 
     else:
         block_data = {'block': block_name, 'id': block_id} 
     
-    # Crear un diccionario para el bloque actual
-    print("analizo", block_data)
-    
-    # Encontrar bloques hijos directos y scripts anidados
     child_blocks = block.findall('block[@s]')
     script_blocks = block.findall('script')
     for script in script_blocks:
         child_blocks.extend(script.findall('./block[@s]'))
     
-    # Procesar los bloques hijos recursivamente
     if child_blocks:
-        block_data['next'] = []  # Inicializar el campo 'next' para los hijos
+        block_data['next'] = []
         for index, child_block in enumerate(child_blocks, start=1):
-            # Crear un identificador único para cada hijo (e.g., "9.1", "9.2")
             child_id = f"{block_id}.{index}"
-            
-            # Procesar el bloque hijo
             child_data, _ = get_blocks(child_block, scene_name, dict_datos, child_id)
-            
-            # Agregar el identificador del último bloque hijo procesado
             block_data['next'].append(child_id)
     
-    # Añadir el bloque actual al diccionario de datos de la escena
     dict_datos[scene_name]['blocks'].append(block_data)
-    
     return dict_datos, block_id
     
 def split_xml(request, scratch_project_inf):
     dict_datos = {}
-    #print(scratch_project_inf)
-    root = etree.fromstring(scratch_project_inf)
-    project = root.find('project')
-    #self.id = root.xpath('//snapdata/@remixID')[0]
-    #print(etree.tostring(project, encoding='unicode', method='xml'))
-  
-    id = 0
-    print("porject ", project)
-    if project is not None:
-        for scenes in project.findall('scenes'):
-            for scene in scenes.findall('scene'):
-                scene_name = scene.get('name') 
-                if  scene_name is not None:
-                    dict_datos[scene_name] = {}
-                for blocks in scene.findall('blocks'):
-                    dict_datos[scene_name]['blocks'] = []
-                    for block_def in blocks.findall('block-definition'):
-                        for script in block_def.findall('script'):
-                            for block in script.findall('./block'):
-                                dict_datos,id = get_blocks(block, scene_name, dict_datos, id) 
-                                id  += 1       
+    try:
+        if not scratch_project_inf:
+            raise ValueError("Empty project content")
+            
+        root = etree.fromstring(scratch_project_inf)
+        project = root.find('project')
+        id_counter = 0
 
-    if project is not None:
-        for scenes in project.findall('scenes'):
-            for scene in scenes.findall('scene'):
-                for stage in scene.findall('stage'):
-                    stage_name = stage.get('name') 
-                    if stage_name is not None:
-                        dict_datos[stage_name] = {}
-                        dict_datos[stage_name]['blocks'] = []
-                        for scripts in stage.findall('scripts'):
-                            for script in scripts.findall('script'):
+        if project is not None:
+            # Parse Scenes
+            for scenes in project.findall('scenes'):
+                for scene in scenes.findall('scene'):
+                    scene_name = scene.get('name') 
+                    if scene_name:
+                        dict_datos[scene_name] = {'blocks': []}
+                    for blocks in scene.findall('blocks'):
+                        for block_def in blocks.findall('block-definition'):
+                            for script in block_def.findall('script'):
                                 for block in script.findall('./block'):
-                                    dict_datos,id = get_blocks(block, stage_name, dict_datos, id)          
-                                    id  += 1 
-    if project is not None:
-        for scenes in project.findall('scenes'):
-            for scene in scenes.findall('scene'):
-                for stage in scene.findall('stage'):
-                    for sprites in stage.findall('sprites'):
-                        for sprite in sprites.findall('sprite'):
-                            sprite_name = sprite.get('name') 
-                            dict_datos[sprite_name] = {}
-                            dict_datos[sprite_name]['blocks'] = []
-                            dict_datos[sprite_name]['costumes'] = []
-                            for costumes in sprite.findall('costumes'):
-                                for lis in costumes.findall('list'):
-                                    for item in lis.findall('item'):
-                                        #print("analizo  ", etree.tostring(item, pretty_print=True, encoding='unicode'))
-                                        costume = item.find('ref')  # Buscamos un solo 'costume' dentro del 'item'
-                                        #print(costume)
-                                        if costume is not None:  # Verificar si el 'costume' existe
-                                            costume_name = costume.get('mediaID')  # Obtener el nombre del disfraz
-                                            if costume_name:  # Si el nombre del disfraz no es None
-                                                #print("Nombre del disfraz:", costume_name)
-                                                dict_datos[sprite_name]['costumes'].append(costume_name)  # Agregarlo a la lista
+                                    dict_datos, id_counter = get_blocks(block, scene_name, dict_datos, id_counter) 
+                                    id_counter += 1       
 
-                            for scripts in sprite.findall('scripts'):
+            # Parse Stages
+            for scenes in project.findall('scenes'):
+                for scene in scenes.findall('scene'):
+                    for stage in scene.findall('stage'):
+                        stage_name = stage.get('name') 
+                        if stage_name:
+                            dict_datos[stage_name] = {'blocks': []}
+                            for scripts in stage.findall('scripts'):
                                 for script in scripts.findall('script'):
                                     for block in script.findall('./block'):
-                                        dict_datos,id = get_blocks(block, sprite_name, dict_datos, id)          
-                                        id  += 1 
+                                        dict_datos, id_counter = get_blocks(block, stage_name, dict_datos, id_counter)          
+                                        id_counter += 1 
+            
+            # Parse Sprites and Costumes
+            for scenes in project.findall('scenes'):
+                for scene in scenes.findall('scene'):
+                    for stage in scene.findall('stage'):
+                        for sprites in stage.findall('sprites'):
+                            for sprite in sprites.findall('sprite'):
+                                sprite_name = sprite.get('name') 
+                                dict_datos[sprite_name] = {'blocks': [], 'costumes': []}
+                                
+                                # Costumes
+                                for costumes in sprite.findall('costumes'):
+                                    for lis in costumes.findall('list'):
+                                        for item in lis.findall('item'):
+                                            costume = item.find('ref')
+                                            if costume is not None:
+                                                costume_name = costume.get('mediaID')
+                                                if costume_name:
+                                                    dict_datos[sprite_name]['costumes'].append(costume_name)
 
-
-
-    print("final", dict_datos)      
+                                # Blocks
+                                for scripts in sprite.findall('scripts'):
+                                    for script in scripts.findall('script'):
+                                        for block in script.findall('./block'):
+                                            dict_datos, id_counter = get_blocks(block, sprite_name, dict_datos, id_counter)          
+                                            id_counter += 1 
+    except Exception as e:
+        logger.error(f"Error splitting XML: {e}")
+        
     return dict_datos
 
-def analyze_project(request, info_project, skill_points: dict, filename_obj,file_obj):
-    
-    dict_analysis = {}
-    
 
+def get_snap_project_xml(username, projectname):
+
+    safe_user = quote(username)
+    safe_proj = quote(projectname)
+    url = f"https://snap.berkeley.edu/api/v1/projects/{safe_user}/{safe_proj}"
+
+    try:
+        logger.info(f"Downloading project from: {url}")
+        headers = {
+            'User-Agent': 'DrSnap-Analyzer/1.0',
+            'Accept': 'application/json'
+        }
+
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+
+        try:
+            data = response.json()
+            # Prioritize fields based on API structure
+            if 'xml' in data: return data['xml']
+            if 'code' in data: return data['code']
+            if 'SourceCode' in data: return data['SourceCode']
+            
+            logger.warning("JSON received but no xml/code field found. Returning raw text.")
+            return response.text
+        except json.JSONDecodeError:
+            # Fallback for non-JSON responses
+            return response.text
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error connecting to Snap API v1: {e}")
+        raise DrScratchException(f"Could not download project. Verify '{projectname}' is PUBLIC. Error: {e}")
+
+
+def send_request_getsb3(id_project, username, method):
+    file_url = f'{id_project}.sb3'
+    now = datetime.now()
+
+    # Determine ownership
+    if Organization.objects.filter(username=username).exists():
+        file_obj = File(filename=file_url, organization=username, method=method, time=now)
+    elif Coder.objects.filter(username=username).exists():
+        file_obj = File(filename=file_url, coder=username, method=method, time=now)
+    else:
+        file_obj = File(filename=file_url, method=method, time=now)
+
+    # Initialize stats to 0
+    for attr in ['score', 'abstraction', 'parallelization', 'logic', 'synchronization', 
+                 'flowControl', 'userInteractivity', 'dataRepresentation', 'spriteNaming', 
+                 'initialization', 'deadCode', 'duplicateScript']:
+        setattr(file_obj, attr, 0)
+    
+    file_obj.save()
+    write_activity_in_logfile(file_obj)
+    return file_obj
+
+
+def analyze_project(request, info_project, skill_points: dict, filename_obj, file_obj):
+    dict_analysis = {}
     dashboard = request.POST.get('dashboard_mode', 'Default')
     curr_type = request.POST.get('curr_type', '')
-    print("ONJ", file_obj)
-    print("ONJ", filename_obj)
 
-    #en vez de abri .sb3, tenemos que dividir el xml
-    if(info_project.get("projectname") != ""):
-        print("solicitud\n")
-        scratch_project_inf = ScratchSession().get_project(info_project)
-        #print(scratch_project_inf)
+    # --- Loading Project Content ---
+    if info_project.get("projectname"):
+        # Download from Snap API
+        try:
+            scratch_project_inf = get_snap_project_xml(
+                info_project['username'], 
+                info_project['projectname']
+            )
+        except Exception as e:
+             logger.error(f"Fatal error downloading: {e}")
+             return {'Error': 'no_exists'}
     else:
-        print("cargo\n")
-        scratch_project_inf = _project = load_json_project(filename_obj)
-        #print(scratch_project_inf)
-    json_snap_project = split_xml(request,scratch_project_inf)
-    print("hooa",json_snap_project)
-    path_projectsb3 = info_project["projectname"]
+        # Load local file
+        scratch_project_inf = load_json_project(filename_obj)
 
+    # --- XML Parsing ---
+    json_snap_project = split_xml(request, scratch_project_inf)
+    path_projectsb3 = info_project["projectname"] if info_project.get("projectname") else "upload"
+
+    # --- Hairball Analysis ---
     dict_mastery = Mastery(path_projectsb3, json_snap_project, skill_points, dashboard).finalize()
-    #dict_duplicate_script = DuplicateScripts(path_projectsb3, json_snap_project).finalize()
-    dict_dead_code = DeadCode(path_projectsb3, json_snap_project,).finalize()
+    dict_dead_code = DeadCode(path_projectsb3, json_snap_project).finalize()
     result_sprite_naming = SpriteNaming(path_projectsb3, json_snap_project).finalize()
     result_backdrop_naming = BackdropNaming(path_projectsb3, json_snap_project).finalize()
     result_block_sprite_usage = Block_Sprite_Usage(path_projectsb3, json_snap_project).finalize()
-    #refactored_code = RefactorDuplicate(json_snap_project, dict_duplicate_script).refactor_duplicates()
-
-    print("--------------------- DUPLICATED CODE DICT ---------------------------")
-    #print(refactored_code)
-    print("--------------------- DEAD CODE DICT ---------------------------")
-    print(dict_dead_code)
-    print("--------------------- SPRITE NAMING DICT -----------------------")
-    print(result_sprite_naming)
-    print("--------------------- BACKDROP NAMING DICT ----------------------")
-    print(result_backdrop_naming)
-    print("------------------------------------------------------------------")
     
-    # RECOMENDER SECTION
-    if (dashboard == 'Recommender'):
+    # --- Recommender System ---
+    if dashboard == 'Recommender':
         dict_recom = {}
         recomender = RecomenderSystem(curr_type)
-        print("fffffffffffffffffffffffffffffffff") 
         dict_recom["deadCode"] = recomender.recomender_deadcode(dict_dead_code)
         dict_recom["spriteNaming"] = recomender.recomender_sprite(result_sprite_naming)
         dict_recom["backdropNaming"] = recomender.recomender_backdrop(result_backdrop_naming)
-        #dict_recom["duplicatedScripts"] = recomender.recomender_duplicatedScripts(dict_duplicate_script, refactored_code)
-        print("fffffffffffffffffffffffffffffffff")
-        print(dict_recom)
+        
         dict_analysis.update(proc_recomender(dict_recom))
-        print("fffffffffffffffffffffffffffffffff")
    
-     
+    # --- Aggregating Results ---
     dict_analysis.update(proc_mastery(request, dict_mastery, file_obj))
-    #dict_analysis.update(proc_duplicate_script(dict_duplicate_script, file_obj))
     dict_analysis.update(proc_dead_code(dict_dead_code, file_obj))
-   
-
     dict_analysis.update(proc_sprite_naming(result_sprite_naming, file_obj))
-    print("fffffffffffffffffffffffffffffffff")
-
     dict_analysis.update(proc_backdrop_naming(result_backdrop_naming, file_obj))
-    #dict_analysis.update(proc_refactored_code(refactored_code))
-    print("fffffffffffffffffffffffffffffffff")
     dict_analysis.update(proc_block_sprite_usage(result_block_sprite_usage, file_obj))
     
-    # dict_analysis.update(proc_urls(request, dict_mastery, file_obj))
-    # dictionary.update(proc_initialization(resultInitialization, filename))
-    
-    print("dicxt", dict_analysis)
     return dict_analysis
 
     
@@ -938,61 +516,51 @@ def analysis_by_upload(request, skill_points: dict, upload):
     Upload file from form POST for unregistered users
     """
     zip_filename = upload.name.encode('utf-8')
-    print(zip_filename)
     filename_obj = save_analysis_in_file_db(request, zip_filename)
-    dir_zips = os.path.dirname(os.path.dirname(__file__)) + "/uploads/"
+    
+    dir_zips = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads/")
+    if not os.path.exists(dir_zips):
+        os.makedirs(dir_zips)
+
     project_name = str(uuid.uuid4()) 
     unique_id = '{}_{}{}'.format(project_name, datetime.now().strftime("%Y_%m_%d_%H_%M_%S_"), datetime.now().microsecond)
-    zip_filename = zip_filename.decode('utf-8')
-    print(zip_filename)
-    version = check_version(zip_filename)
-    version = '2.0'
-    file_saved = dir_zips + unique_id + ".sb2"
-    print("--------------------- FILE SAVED ---------------------------")
-    print(file_saved)
-    """
-    if version == "1.4":
-        file_saved = dir_zips + unique_id + ".sb"
-    elif version == "2.0":
-        file_saved = dir_zips + unique_id + ".sb2"
-    else:
-        file_saved = dir_zips + unique_id + ".sb3"
-    """
-    info_project=  {'platform': 'Snap', 'username': "", 'projectname': ''}
-    # Create log
-    path_log = os.path.dirname(os.path.dirname(__file__)) + "/log/"
-    log_file = open(path_log + "logFile.txt", "a")
-    log_file.write("FileName: " + str(zip_filename) + "\t\t\t" + "ID: " + str(filename_obj.id) + "\t\t\t" + \
-                "Method: " + str(filename_obj.method) + "\t\t\tTime: " + str(filename_obj.time) + "\n")
-    # Save file in server
-    file_name = os.path.join("uploads", file_saved) #guardas la ruta
-    request.session['current_project_path'] = file_name
-    with open(file_name, 'wb+') as destination:
+    zip_filename_str = zip_filename.decode('utf-8')
+    
+    # Check version (Simplified default to 2.0/Snap)
+    version = check_version(zip_filename_str)
+    file_saved = os.path.join(dir_zips, unique_id + ".sb2")
+    
+    info_project = {'platform': 'Snap', 'username': "", 'projectname': ''}
+    
+    # Log Upload
+    write_activity_in_logfile(filename_obj)
+
+    # Save file to server
+    request.session['current_project_path'] = file_saved
+    with open(file_saved, 'wb+') as destination:
         for chunk in upload.chunks():
             destination.write(chunk)
+            
     try:
-        ext_type_project=None
-        print(request)
-        print(file_name)
-        print(filename_obj)
-        print(ext_type_project)
-        print(skill_points)
-        dict_drscratch_analysis = analyze_project(request, info_project, skill_points, file_name, filename_obj)
-        print(dict_drscratch_analysis)
+        dict_drscratch_analysis = analyze_project(request, info_project, skill_points, file_saved, filename_obj)
     except Exception:
         traceback.print_exc()
         filename_obj.method = 'project/error'
         filename_obj.save()
-        old_path_project = file_saved
-        new_path_project = file_saved.split("/uploads/")[0] + "/error_analyzing/" + file_saved.split("/uploads/")[1]
-        shutil.copy(old_path_project, new_path_project)
-        dict_drscratch_analysis = {
+        
+        # Move to error folder
+        error_dir = file_saved.split("/uploads/")[0] + "/error_analyzing/"
+        if not os.path.exists(error_dir):
+            os.makedirs(error_dir)
+        new_path_project = error_dir + file_saved.split("/uploads/")[1]
+        shutil.copy(file_saved, new_path_project)
+        
+        return {
             'filename': upload.name,
             'Error': 'analyzing',
             'dashboard_mode': request.POST.get('dashboard_mode')
-            }
-        return dict_drscratch_analysis
-    # Redirect to dashboard for unregistered user
+        }
+
     dict_drscratch_analysis['Error'] = 'None'
     dict_drscratch_analysis.update({
         'url': None,
@@ -1007,9 +575,8 @@ def analysis_by_url(request, url, skill_points: dict):
     """
     Make the automatic analysis by URL
     """
-
     info_project = return_scratch_project_identifier(url)
-    print("Info project " ,info_project)
+    
     if info_project['platform'] == "error":
         return {'Error': 'id_error'}
     else:
@@ -1021,4 +588,37 @@ def analysis_by_url(request, url, skill_points: dict):
             'multiproject': False
         })
         return dic
-    
+
+def generator_dic(request, info_project, skill_points: dict) -> dict:
+    """
+    Return a dictionary with static analysis and errors
+    """
+    try:
+        username = None
+        # Create DB entry for the URL analysis
+        file_obj = send_request_getsb3(info_project['projectname'], username, method="url")
+    except DrScratchException:
+        logger.error('DrScratchException creating file obj')
+        return {'Error': 'no_exists'}
+    except Exception as e:
+        logger.error(f'Error initializing analysis: {e}')
+        return {'Error': 'no_exists'}
+
+    try:
+        filename_obj = ""
+        d = analyze_project(request, info_project, skill_points, filename_obj, file_obj)
+    except Exception as e:
+        logger.error(f'Impossible analyze project: {e}')
+        return {'Error': 'analyzing'}
+
+    d['Error'] = 'None'
+    return d
+
+def check_version(filename):
+    extension = filename.split('.')[-1]
+    if extension == 'sb2':
+        return '2.0'
+    elif extension == 'sb3':
+        return '3.0'
+    else:
+        return '1.4'
