@@ -284,7 +284,10 @@ def translate(request, d, filename, vanilla=False):
     """
     Translate the output of Hairball based on LANGUAGE_CODE
     """
-    lang = request.LANGUAGE_CODE
+    # 1. Obtenemos el código y lo limpiamos (es-es -> es)
+    raw_lang = request.LANGUAGE_CODE
+    lang = raw_lang.split('-')[0] if '-' in raw_lang else raw_lang
+
     translations = {
         "es": {'Abstraction': 'Abstracción', 'Parallelization': 'Paralelismo', 'Logic': 'Pensamiento lógico', 'Synchronization': 'Sincronización', 'FlowControl': 'Control de flujo', 'UserInteractivity': 'Interactividad con el usuario', 'DataRepresentation': 'Representación de la información', 'MathOperators': 'Operadores matemáticos', 'MotionOperators': 'Operadores de movimiento'},
         "en": {'Abstraction': 'Abstraction', 'Parallelization': 'Parallelism', 'Logic': 'Logic', 'Synchronization': 'Synchronization', 'FlowControl': 'Flow control', 'UserInteractivity': 'User interactivity', 'DataRepresentation': 'Data representation', 'MathOperators': 'Math operators', 'MotionOperators': 'Motion operators'},
@@ -293,7 +296,7 @@ def translate(request, d, filename, vanilla=False):
         "eu": {'Abstraction': 'Abstrakzioa', 'Parallelization': 'Paralelismoa', 'Logic': 'Pentsamendu logikoa', 'Synchronization': 'Sinkronizazioa', 'FlowControl': 'Fluxu kontrola', 'UserInteractivity': 'Erabiltzailearen interaktibitatea', 'DataRepresentation': 'Informazioaren errepresentazioa', 'MathOperators': 'Operadore matematikoak', 'MotionOperators': 'Mugimendu operadoreak'},
     }
 
-    # Fallback to English if language not found, simplified logic
+    # 2. Usamos 'get' para evitar errores si el idioma no existe (fallback a inglés)
     t_map = translations.get(lang, translations['en'])
     
     result = {}
@@ -302,10 +305,10 @@ def translate(request, d, filename, vanilla=False):
         keys.extend(['MathOperators', 'MotionOperators'])
 
     for key in keys:
-        # Map Hairball key to Translated Name + Score
+        # Si la clave no está en el mapa, usa la original en inglés
         result[t_map.get(key, key)] = [d[key], key]
 
-    filename.language = lang if lang in translations else "any"
+    filename.language = lang
     filename.save()
     return result
 

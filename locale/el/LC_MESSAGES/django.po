@@ -367,10 +367,10 @@ msgstr ""
 #: app/templates/upload/dashboard-unregistered-basic.html:255
 #: app/templates/upload/dashboard-unregistered-developing.html:292
 #: app/templates/upload/dashboard-unregistered-master.html:353
-#, fuzzy
-#| msgid "©2014 Dr. Scratch is powered by "
-msgid "©2019 Dr. Scratch"
-msgstr "©2014 Το Dr. Scratch λειτουργεί από"
+
+#| msgid "©2014 Dr. Snap is powered by "
+msgid "©2019 Dr. Snap"
+msgstr "©2014 Το Dr. Snap λειτουργεί από"
 
 #: app/templates/coder/base.html:425
 #: app/templates/main/main_organization.html:273
@@ -396,8 +396,8 @@ msgstr "Τι είναι το url;"
 #: app/templates/main/main.html:690 app/templates/main/main_new.html:711
 #: app/templates/organization/base.html:457
 #: app/templates/upload/dashboard-organization.html:241
-msgid "How I can know my Scratch project's url?"
-msgstr "Πώς μπορώ να βρώ το url του έργου μου στο Scratch;"
+msgid "How I can know my Snap project's url?"
+msgstr "Πώς μπορώ να βρώ το url του έργου μου στο Snap;"
 
 #: app/templates/coder/base.html:454 app/templates/organization/base.html:461
 msgid "<img class='framed' src='../static/app/images/url-en.png' />"
@@ -408,15 +408,15 @@ msgstr "<img class='framed' src='../static/app/images/url-en.png' />"
 #: app/templates/main/main_new.html:734
 #: app/templates/organization/base.html:480
 #: app/templates/upload/dashboard-organization.html:264
-msgid "I want to download my project from Scratch!"
-msgstr "Θέλω να κατεβάσω το έργο μου από τον ιστότοπο του Scratch!"
+msgid "I want to download my project from Snap!"
+msgstr "Θέλω να κατεβάσω το έργο μου από τον ιστότοπο του Snap!"
 
 #: app/templates/coder/base.html:475 app/templates/login/login.html:590
 #: app/templates/main/main.html:715 app/templates/main/main.html:739
 #: app/templates/main/main_new.html:736
 #: app/templates/organization/base.html:482
 #: app/templates/upload/dashboard-organization.html:266
-msgid "How I can download my Scratch project to my computer?"
+msgid "How I can download my Snap project to my computer?"
 msgstr "Πώς μπορώ να κατεβάσω το έργο στον υπολογιστή μου;"
 
 #: app/templates/coder/base.html:479 app/templates/organization/base.html:486
@@ -479,7 +479,7 @@ msgstr "Η ενότητα αυτή εμφανίζει το συνολικό σκ
 #: app/templates/organization/dashboard-developing.html:69
 #: app/templates/organization/dashboard-master.html:75
 msgid "Certificate"
-msgstr ""
+msgstr "Πιστοποιητικό"
 
 #: app/templates/coder/dashboard-basic.html:71
 #: app/templates/coder/dashboard-developing.html:75
@@ -492,7 +492,7 @@ msgstr ""
 #: app/templates/organization/dashboard-developing.html:70
 #: app/templates/organization/dashboard-master.html:76
 msgid "Download your certificate!"
-msgstr ""
+msgstr "Κατεβάστε το πιστοποιητικό σας!"
 
 #: app/templates/coder/dashboard-basic.html:75
 #: app/templates/coder/dashboard-developing.html:79
@@ -523,7 +523,8 @@ msgstr "Το σκορ αναλυτικά"
 msgid ""
 "Here we show the score in each programming skill as well as links to sites "
 "that can help you to level up."
-msgstr ""
+msgstr "Εδώ εμφανίζουμε τη βαθμολογία σε κάθε προγραμματιστική δεξιότητα, καθώς και "
+"συνδέσμους που μπορούν να σας βοηθήσουν να βελτιωθείτε."
 
 #: app/templates/coder/dashboard-basic.html:144
 #: app/templates/coder/dashboard-developing.html:215
@@ -549,8 +550,8 @@ msgstr ""
 #: app/templates/upload/dashboard-unregistered-basic.html:99
 #: app/templates/upload/dashboard-unregistered-developing.html:110
 #: app/templates/upload/dashboard-unregistered-master.html:148
-msgid "Dr. Scratch(Beta Version)"
-msgstr "Dr. Scratch(Beta Version)"
+msgid "Dr. Snap(Beta Version)"
+msgstr "Dr. Snap(Beta Version)"
 
 #: app/templates/coder/dashboard-basic.html:162
 #: app/templates/coder/dashboard-default-basic.html:355
@@ -595,12 +596,12 @@ msgstr "Σκορ:"
 #: app/templates/upload/dashboard-unregistered-basic.html:117
 #: app/templates/upload/dashboard-unregistered-developing.html:126
 #: app/templates/upload/dashboard-unregistered-master.html:165
-#, python-format
+#
 msgid ""
-" I have just obtained %(points)s points analyzing my project in Dr. Scratch! "
+" I have just obtained %(points)s points analyzing my project in Dr. Snap! "
 "Beat it! @DrScratchTool "
 msgstr ""
-"Μόλις πήρα %(points)s αναλύοντας το έργο μου με το  Dr. Scratch! Μπορείτε να "
+"Μόλις πήρα %(points)s αναλύοντας το έργο μου με το  Dr. Snap! Μπορείτε να "
 "πάτε καλύτερα; @DrScratchTool "
 
 #: app/templates/coder/dashboard-basic.html:167
@@ -645,7 +646,7 @@ msgstr "Είστε στην αρχή μιας <br>μεγάλης περιπέτ�
 #: app/templates/upload/dashboard-unregistered-basic.html:135
 #: app/templates/upload/dashboard-unregistered-developing.html:143
 #: app/templates/upload/dashboard-unregistered-master.html:186
-msgid "Come back to your Scratch project."
+msgid "Come back to your Snap project."
 msgstr "Ελάτε να δούμε το έργο σας."
 
 #: app/templates/coder/dashboard-basic.html:182
@@ -713,7 +714,7 @@ msgstr ""
 #: app/templates/organization/dashboard-basic.html:196
 #: app/templates/organization/dashboard-developing.html:284
 #: app/templates/organization/dashboard-master.html:296
-#, python-format
+#
 msgid ""
 "\n"
 "                                        <a href=\"/learn/%(key)s/\">%(key)s</"
@@ -778,7 +779,7 @@ msgstr ""
 #: app/templates/main/dashboard-default-old.html:304
 #: app/templates/main/dashboard-default.html:11
 msgid "Vanilla Mode"
-msgstr ""
+msgstr "Τυπική Λειτουργία"
 
 #: app/templates/coder/dashboard-default-basic.html:300
 #: app/templates/coder/dashboard-default-developing.html:288
@@ -786,7 +787,7 @@ msgstr ""
 #: app/templates/main/dashboard-default-old.html:305
 #: app/templates/main/dashboard-default.html:12
 msgid "Extended Mode"
-msgstr ""
+msgstr "Επιστροφή στο έργο Snap."
 
 #: app/templates/coder/dashboard-default-basic.html:309
 #: app/templates/coder/dashboard-default-developing.html:297
@@ -805,7 +806,7 @@ msgstr ""
 #: app/templates/main/dashboard-default-old.html:322
 #: app/templates/main/dashboard-default.html:492
 #: app/templates/main/dashboard-default.html:1297
-#, fuzzy
+
 #| msgid "Sprite naming"
 msgid "Sprite Naming"
 msgstr "Ονόματα αντικειμένων"
@@ -818,7 +819,7 @@ msgstr "Ονόματα αντικειμένων"
 #: app/templates/main/dashboard-default-old.html:329
 #: app/templates/main/dashboard-default.html:499
 #: app/templates/main/dashboard-default.html:1346
-#, fuzzy
+
 #| msgid "Backdrop naming"
 msgid "Backdrop Naming"
 msgstr "Ονόματα φόντο"
@@ -833,7 +834,7 @@ msgstr "Ονόματα φόντο"
 #: app/templates/main/dashboard-default.html:506
 #: app/templates/main/dashboard-default.html:1395
 #: app/templates/upload/dashboard-unregistered.html:209
-#, fuzzy
+
 #| msgid "Dead code"
 msgid "Dead Code"
 msgstr "Κώδικας που δεν εκτελείται"
@@ -843,13 +844,7 @@ msgstr "Κώδικας που δεν εκτελείται"
 #: app/templates/coder/dashboard-default-master.html:488
 #: app/templates/main/dashboard-default-old.html:553
 #: app/templates/main/dashboard-default-old.html:795
-#: app/templates/main/dashboard-personal-old.html:482
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                                        <a href=\"/learn/%(key)s/"
-#| "\">%(key)s</a>\n"
-#| "                                        "
+#: app/templates/main/dashboard-personal-old.html:482                                       "
 msgid ""
 "\n"
 "                                                        <a href=\"/learn/"
@@ -897,7 +892,7 @@ msgstr "Το έργο σας δεν έχει προεπιλεγμένα ονόμ
 #: app/templates/main/dashboard-default.html:1330
 #: app/templates/main/dashboard-default.html:1379
 msgid "Try to name them more according to the Function they make"
-msgstr ""
+msgstr "Προσπαθήστε να τα ονομάσετε ανάλογα με τη λειτουργία που επιτελούν"
 
 #: app/templates/coder/dashboard-default-basic.html:532
 #: app/templates/coder/dashboard-default-developing.html:404
@@ -955,16 +950,16 @@ msgstr "Το έργο σας δεν έχει κώδικα που δεν εκτε
 #: app/templates/main/dashboard-default-old.html:1052
 #: app/templates/main/dashboard-default.html:1438
 msgid "Erase them in order to have a cleaner Code"
-msgstr ""
+msgstr "Διαγράψτε τα για να έχετε πιο καθαρό Κώδικα"
 
 #: app/templates/coder/dashboard-default-basic.html:637
 #: app/templates/coder/dashboard-default-developing.html:749
 #: app/templates/coder/dashboard-default-master.html:750
 #: app/templates/coder/dashboard-master.html:540
-#, fuzzy
-#| msgid "©2014 Dr. Scratch is powered by "
-msgid "© 2019 Dr. Scratch."
-msgstr "©2014 Το Dr. Scratch λειτουργεί από"
+
+#| msgid "©2014 Dr. Snap is powered by "
+msgid "© 2019 Dr. Snap."
+msgstr "©2014 Το Dr. Snap λειτουργεί από"
 
 #: app/templates/coder/dashboard-default-developing.html:324
 #: app/templates/coder/dashboard-default-master.html:324
@@ -978,7 +973,7 @@ msgid "Duplicated Scripts"
 msgstr "Διπλασιασμένα Προγράμματα"
 
 #: app/templates/coder/dashboard-default-developing.html:346
-#, fuzzy
+
 #| msgid ""
 #| "<h3 class='text-left dark-text'>The level of your project is... "
 #| "<strong>DEVELOPING! </strong></h3>"
@@ -1007,7 +1002,7 @@ msgstr ""
 #: app/templates/main/dashboard-personal.html:47
 #: app/templates/main/dashboard-personal.html:51
 #: app/templates/main/dashboard-personal.html:53
-#, fuzzy
+
 #| msgid "You're doing a great job. Keep it up!!!"
 msgid "You're doing a great job. Keep it up!!! "
 msgstr "Κάνετε καλή δουλειά. Συνεχίστε έτσι!!!!"
@@ -1258,7 +1253,7 @@ msgid "Downloads"
 msgstr "Κατεβάστε το αρχείο .csv"
 
 #: app/templates/coder/email-sign-up.html:5
-msgid "New coder in Dr. Scratch!"
+msgid "New coder in Dr. Snap!"
 msgstr ""
 
 #: app/templates/coder/email-sign-up.html:7
@@ -1280,8 +1275,8 @@ msgstr "Ευχαριστούμε που χρησιμοποιείτε τον ισ
 #: app/templates/password/email.html:14
 #: app/templates/sign-password/email-reset-pwd.html:14
 #: app/templates/sign/email.html:12
-msgid "The Dr. Scratch team"
-msgstr "Η ομάδα του Dr. Scratch"
+msgid "The Dr. Snap team"
+msgstr "Η ομάδα του Dr. Snap"
 
 #: app/templates/coder/main.html:12 app/templates/main/rubric-uploader.html:123
 #: app/templates/organization/main.html:12
@@ -1292,23 +1287,9 @@ msgstr ""
 #: app/templates/main/main_new.html:246
 #: app/templates/main/rubric-uploader.html:125
 #: app/templates/organization/main.html:14
-msgid "There are two options to analyze your Scratch project now!"
+msgid "There are two options to analyze your Snap project now!"
 msgstr ""
-"Υπάρχουν δύο επιλογές για να αναλύσετε ένα έργο με το Dr. Scratch τώρα!"
-
-#: app/templates/coder/main.html:18
-#: app/templates/main/compare-uploader.html:194
-#: app/templates/main/main.html:353 app/templates/main/main_new.html:251
-#: app/templates/main/rubric-uploader.html:130
-#: app/templates/organization/main.html:19
-msgid ""
-"1. Introduce the <span class='colored-text'><a data-toggle='modal' "
-"href='#modalUrl'>url</a></span> of your Scratch project, you don't have to "
-"download it:"
-msgstr ""
-"1. Εισάγετε το <span class='colored-text'><a data-toggle='modal' "
-"href='#modalUrl'>url</a></span> του έργου σας, δεν χρειάζεται να το "
-"κατεβάσετε:"
+"Υπάρχουν δύο επιλογές για να αναλύσετε ένα έργο με το Dr. Snap τώρα!"
 
 #: app/templates/coder/main.html:19
 #: app/templates/main/compare-uploader.html:202
@@ -1328,15 +1309,19 @@ msgstr ""
 "placeholder\" placeholder=\"http:/scratch.mit.edu/projects/your_number\" "
 "type=\"text\">"
 
-#: app/templates/coder/main.html:20
-#: app/templates/main/dashboard-compare-2.html:647
-#: app/templates/main/dashboard-default.html:727
-#: app/templates/main/dashboard-default.html:1120
-#: app/templates/main/main.html:355 app/templates/main/main_new.html:253
-#: app/templates/main/rubric-uploader.html:132
-#: app/templates/organization/main.html:21
-msgid "Analyze by url"
-msgstr "Αναλύστε με βάση το url"
+##: app/templates/coder/main.html:18
+#: app/templates/main/compare-uploader.html:194
+#: app/templates/main/main.html:353 app/templates/main/main_new.html:251
+#: app/templates/main/rubric-uploader.html:130
+#: app/templates/organization/main.html:19
+msgid ""
+"1. Introduce the <span class='colored-text'><a data-toggle='modal' "
+"href='#modalUrl'>url</a></span> of your Snap project, you don't have to "
+"download it:"
+msgstr ""
+"1. Εισάγετε το <span class='colored-text'><a data-toggle='modal' "
+"href='#modalUrl'>url</a></span> του έργου Snap, δεν χρειάζεται να το "
+"κατεβάσετε:"
 
 #: app/templates/coder/main.html:25
 #: app/templates/main/compare-uploader.html:207
@@ -1349,26 +1334,22 @@ msgid ""
 "analyze it here:"
 msgstr ""
 "2. Εάν έχετε <span class='colored-text'><a data-toggle='modal' "
-"href='#modalProject'>το έργο σας </a></span> στον υπολογιστή σας αναλύστε το "
-"εδώ:"
+"href='#modalProject'>το έργο σας</a></span> κατεβασμένο στον υπολογιστή σας, μπορείτε να το "
+"αναλύσετε εδώ:"
 
 #: app/templates/coder/main.html:26 app/templates/main/main.html:360
 #: app/templates/main/main_new.html:259
 #: app/templates/main/rubric-uploader.html:137
 #: app/templates/organization/main.html:27
-msgid ""
-"<input  name='zipFile' type='file' class='filestyle' data-buttonText='Choose "
-"Project'>"
-msgstr ""
-"<input  name='zipFile' type='file' class='filestyle' data-"
-"buttonText='Επιλέξτε έργο'>"
+msgid "<input name=\"zipFile\" id=\"cf-upload\" type=\"file\" class=\"filestyle\" data-buttonText=\"Choose Project\">"
+msgstr "<input name=\"zipFile\" id=\"cf-upload\" type=\"file\" class=\"filestyle\" data-buttonText=\"Επιλογή Έργου\">"
 
 #: app/templates/coder/main.html:27 app/templates/main/main.html:361
 #: app/templates/main/main_new.html:260
 #: app/templates/main/rubric-uploader.html:138
 #: app/templates/organization/main.html:28
 msgid "Analyze my project"
-msgstr "Ανάλυσε το έργο μου"
+msgstr "Ανάλυση του έργου μου"
 
 #: app/templates/coder/main.html:34 app/templates/coder/main.html:37
 #: app/templates/main/contact-form.html:142
@@ -1402,8 +1383,8 @@ msgstr "Σφάλμα! Το id του έργου σας είναι λανθασμ
 #: app/templates/main/rubric-uploader.html:161
 #: app/templates/organization/main.html:46
 #: app/templates/organization/main.html:78
-msgid "Error! Your project doesn't exist in Scratch's servers"
-msgstr "Σφάλμα! Το έργο σας δεν υπάρχει στον ιστότοπο του Scratch"
+msgid "Error! Your project doesn't exist in Snap's servers"
+msgstr "Σφάλμα! Το έργο σας δεν υπάρχει στον ιστότοπο του Snap"
 
 #: app/templates/coder/settings.html:8
 #: app/templates/organization/organization.html:222
@@ -1447,7 +1428,7 @@ msgid "Statistics"
 msgstr "Στατιστικά"
 
 #: app/templates/discuss.html:78
-msgid "What do you think about Dr. Scratch?"
+msgid "What do you think about Dr. Snap?"
 msgstr ""
 
 #: app/templates/discuss.html:86
@@ -1460,7 +1441,7 @@ msgstr ""
 
 #: app/templates/discuss.html:100
 msgid ""
-"Tell us what do you think about Dr. Scratch, your thoughts, suggestions,"
+"Tell us what do you think about Dr. Snap, your thoughts, suggestions,"
 "etc..."
 msgstr ""
 
@@ -1523,10 +1504,10 @@ msgstr "Ξεκίνα"
 #: app/templates/main/dashboard_template.html:303
 #: app/templates/main/main.html:651 app/templates/main/rubric-creator.html:610
 #: app/templates/main/rubric-uploader.html:173
-#, fuzzy
-#| msgid "©2014 Dr. Scratch is powered by "
+
+#| msgid "©2014 Dr. Snap is powered by "
 msgid "©2024 Dr.Scratch Made with "
-msgstr "©2014 Το Dr. Scratch λειτουργεί από"
+msgstr "©2014 Το Dr. Snap λειτουργεί από"
 
 #: app/templates/error/404.html:77 app/templates/error/500.html:78
 #: app/templates/error/analyzing.html:78 app/templates/error/base.html:106
@@ -1555,10 +1536,10 @@ msgstr ""
 #: app/templates/main/dashboard_template.html:303
 #: app/templates/main/main.html:651 app/templates/main/rubric-creator.html:610
 #: app/templates/main/rubric-uploader.html:173
-#, fuzzy
-#| msgid "The Dr. Scratch team"
+
+#| msgid "The Dr. Snap team"
 msgid "Dr.Scratch Team."
-msgstr "Η ομάδα του Dr. Scratch"
+msgstr "Η ομάδα του Dr. Snap"
 
 #: app/templates/error/500.html:38
 msgid "500 - Internal Server Error"
@@ -1637,13 +1618,13 @@ msgstr "Αν πήρατε 0 βαθμούς"
 
 #: app/templates/learn/Abstraction.html:15
 msgid ""
-"When you start programming with Scratch, sometimes it may seem that the "
+"When you start programming with Snap, sometimes it may seem that the "
 "simplest solution is to program all the behavior of a character in a single "
 "program. However, <b>ideally is that character behavior is controlled by "
 "different programs and each of these programs deal with a particular issue</"
 "b>. Here's an example:"
 msgstr ""
-"Όταν ξεκινάτε τον προγραμματισμό με το Scratch, μερικές φορές μπορεί να "
+"Όταν ξεκινάτε τον προγραμματισμό με το Snap, μερικές φορές μπορεί να "
 "φαίνεται ότι η απλούστερη λύση είναι να προγραμματίσετε όλη τη συμπεριφορά "
 "ενός χαρακτήρα σε ένα μόνο πρόγραμμα. Όμως, <b>ιδανικά η συμπεριφορά ενός "
 "χαρακτήρα ελέγχεται από διαφορετικά προγράμματα και κάθε ένα από αυτά τα "
@@ -1774,7 +1755,7 @@ msgid ""
 "instructions. These abstractions allow you to create simple programs to "
 "read, program and maintain. Here's an example:"
 msgstr ""
-"Το Scratch σας επιτρέπει να δημιουργήσετε τις δικές σας εντολές που "
+"Το Snap σας επιτρέπει να δημιουργήσετε τις δικές σας εντολές που "
 "αποτελούνται από μια σειρά από οδηγίες. Τέτοιες αφαιρέσεις σας επιτρέπουν να "
 "δημιουργείτε προγράμματα που είναι απλά στον προγραμματισμό και την "
 "διατήρηση. Να ένα παράδειγμα:"
@@ -1791,7 +1772,7 @@ msgstr "πήγαινε σε θέση x: (-200) y: (0)"
 
 #: app/templates/learn/Abstraction.html:76
 msgid ""
-"This Scratch project draws two orange lines of different length  on the "
+"This Snap project draws two orange lines of different length  on the "
 "screen. Rather than repeat the code 2 times, as shown in the example, you "
 "can define a <i>'DrawOrange'</i> block consisting of blocks that paint an "
 "orange line on the screen and that you can tell what is the length of the "
@@ -1853,14 +1834,14 @@ msgstr "Αν πήρατε δύο βαθμούς..."
 
 #: app/templates/learn/Abstraction.html:111
 msgid ""
-"In some Scratch projects we have many identical characters that exactly "
+"In some Snap projects we have many identical characters that exactly "
 "perform the same actions. The first idea that comes to mind to do this is to "
 "create a character, schedule all his behavior and once you're ready, make as "
 "many copies as you need. Therefore, if we want 20 Martians, create 20 "
 "identical objects. However, what if I want to change the program? Would have "
 "to go object by object performing this modification."
 msgstr ""
-"Σε μερικά έργα Scratch έχουμε αρκετούς ίδιους χαρακτήρες που κάνουν ακριβώς "
+"Σε μερικά έργα Snap έχουμε αρκετούς ίδιους χαρακτήρες που κάνουν ακριβώς "
 "τις ίδιες ενέργειες. Η πρώτη σκέψη που έρχεται στο μυαλό είναι να "
 "δημιουργήσουμε έναν χαρακτήρα, να τον προγραμματίσουμε και όταν είμαστε "
 "έτοιμοι, να κάνουμε όσα αντίγραφα μπορούμε. Επομένως αν χρειαζόμαστε 20 "
@@ -1936,7 +1917,7 @@ msgstr ""
 
 #: app/templates/learn/BatchMode.html:25
 msgid ""
-"You only have to upload a .txt file with the urls of the Scratch's Projects."
+"You only have to upload a .txt file with the urls of the Snap's Projects."
 msgstr ""
 
 #: app/templates/learn/BatchMode.html:34
@@ -1982,14 +1963,14 @@ msgstr "Αναπαράσταση δεδομένων"
 
 #: app/templates/learn/DataRepresentation.html:9
 msgid ""
-"Every Scratch project needs a set of information about the characters in "
+"Every Snap project needs a set of information about the characters in "
 "order to run properly. For example, <b>we need to know the position of each "
 "character, the direction it is pointing, size, etc.</b> In addition, "
 "programmers can create new information repositories to store other data such "
 "as the level at which we find ourselves, elapsed time, the rating, the "
 "lives, the rewards collected ..."
 msgstr ""
-"Κάθε έργο Scratch χρειάζεται ένα σύνολο πληροφοριών σχετικά με τους "
+"Κάθε έργο Snap χρειάζεται ένα σύνολο πληροφοριών σχετικά με τους "
 "χαρακτήρες για να τρέχει σωστά. Για παράδειγμα, <b>θα πρέπει να ξέρουμε τη "
 "θέση κάθε χαρακτήρα, την κατεύθυνσή του, το μέγεθός του κ.α.</b> Επιπλέον, "
 "οι προγραμματιστές δημιουργούν νέες σύνολα πληροφοριών για να αποθηκεύσουν "
@@ -1998,14 +1979,14 @@ msgstr ""
 
 #: app/templates/learn/DataRepresentation.html:16
 msgid ""
-"Each character of a Scratch project has a number of features, or attributes, "
+"Each character of a Snap project has a number of features, or attributes, "
 "that every moment of the project have value, and can be modified by "
 "programs. For example, a character has a certain size that can be modified "
 "by block 'resize for 10', making the character appear slightly larger. "
 "Following is the list of attributes that each character and blocks that can "
 "be used to modify:"
 msgstr ""
-"Κάθε χαρακτήρας ενός έργου Scratch έχει έναν αριθμό από χαρακτηριστικά, που "
+"Κάθε χαρακτήρας ενός έργου Snap έχει έναν αριθμό από χαρακτηριστικά, που "
 "σε κάθε χρονική στιγμή έχουν μια τιμή που μπορεί να τροποποιηθεί από "
 "προγράμματα. Για παράδειγμα, ένας χαρακτήρας έχει συγκεκριμένο μέγεθος που "
 "μπορεί να τροποποιηθεί με την εντολή 'άλλαξε το μέγεθος του αντικειμένου "
@@ -2126,14 +2107,14 @@ msgstr "εξαφανίσου"
 #: app/templates/learn/DataRepresentation.html:79
 msgid ""
 "In addition to modifying the attributes of the characters, programmers can "
-"use other mechanisms to store information on a Scratch project. <b>One of "
+"use other mechanisms to store information on a Snap project. <b>One of "
 "these mechanisms are variables that can store a value to store different "
 "types of data that may need: at what level we are</b>, how many lives you "
 "have left, how many points we, how is called the user ..."
 msgstr ""
 "Εκτός από το να τροποποιούν τα χαρακτηριστικά των αντικειμένων, οι "
 "προγραμματιστές μπορούν να χρησιμοποιούν και άλλους μηχανισμούς για να "
-"αποθηκεύουν πληροφορίες σε ένα έργο Scratch. <b>Ένας από τους μηχανισμούς "
+"αποθηκεύουν πληροφορίες σε ένα έργο Snap. <b>Ένας από τους μηχανισμούς "
 "είναι οι μεταβλητές οι οποίες μπορούν να αποθηκεύουν μια τιμή, ώστε να "
 "αποθηκεύουν διαφορετικούς τύπους δεδομένων που μπορεί να χρειάζονται: σε "
 "ποιο επίπεδο βρισκόμαστε</b>, πόσες ζωές έχουν απομείνει, πόσους βαθμούς "
@@ -2186,12 +2167,12 @@ msgstr ""
 
 #: app/templates/learn/DataRepresentation.html:99
 msgid ""
-"In addition to the variables, Scratch lets you use another data type to "
+"In addition to the variables, Snap lets you use another data type to "
 "store project information: <b>The lists. The lists can store more than one "
 "value at the same time, so they are ideal for storing rewards have been "
 "recovered by a character or set of names, raise a couple of examples.</b>"
 msgstr ""
-"Εκτός από τις μεταβλητές, το Scratch επιτρέπει να χρησιμοποιούμε και άλλους "
+"Εκτός από τις μεταβλητές, το Snap επιτρέπει να χρησιμοποιούμε και άλλους "
 "τύπους δεδομένων για να αποθηκεύσουμε πληροφορία σε ένα έργο: <b>Τις λίστες. "
 "Οι λίστες μπορούν να αποθηκεύσουν παραπάνω από μία τιμές και είναι ιδανικές "
 "για να αποθηκεύουμε ας πούμε τα δώρα που μάζεψε ένας χαρακτήρας, ένα σύνολο "
@@ -2299,30 +2280,30 @@ msgstr ""
 
 #: app/templates/learn/DefaultMode.html:24 app/templates/login/login.html:276
 #: app/templates/main/main_new.html:420
-msgid "There are two options to analyze a Scratch project with Dr. Scratch"
-msgstr "Υπάρχουν δύο επιλογές για να αναλύσετε ένα έργο με το Dr. Scratch"
+msgid "There are two options to analyze a Snap project with Dr. Snap"
+msgstr "Υπάρχουν δύο επιλογές για να αναλύσετε ένα έργο με το Dr. Snap"
 
 #: app/templates/learn/DefaultMode.html:28
-#, fuzzy
+
 #| msgid ""
 #| "You can upload an sb2 file or just provide the project url, avoiding the "
 #| "need to previously download the project to your computer. By analyzing "
-#| "your projects with Dr. Scratch, you can easily check your Computational "
+#| "your projects with Dr. Snap, you can easily check your Computational "
 #| "Thinking Score."
 msgid ""
 "You can upload an sb3 file or just provide the project url, avoiding the "
 "need to previously download the project to your computer. By analyzing your "
-"projects with Dr. Scratch, you can easily check your Computational Thinking "
+"projects with Dr. Snap, you can easily check your Computational Thinking "
 "Score."
 msgstr ""
 "Μπορείτε να ανεβάσετε ένα sb2 αρχείο ή απλώς να δώσετε το url του έργου στην "
-"κοινότητα του Scratch, χωρίς προηγουμένως να κατεβάσετε το έργο στον "
-"υπολογιστή σας. Αναλύοντας τα έργα σας με το Dr. Scratch, μπορείτε νε δείτε "
+"κοινότητα του Snap, χωρίς προηγουμένως να κατεβάσετε το έργο στον "
+"υπολογιστή σας. Αναλύοντας τα έργα σας με το Dr. Snap, μπορείτε νε δείτε "
 "το Σκορ σας στην Υπολογιστική Σκέψη."
 
 #: app/templates/learn/FlowControl.html:5
 #: app/templates/statistics/statistics.html:260
-#, fuzzy
+
 #| msgid "Flow control"
 msgid "Flow Control"
 msgstr "Έλεγχος ροής"
@@ -2560,13 +2541,13 @@ msgid ""
 "To make decisions on some projects sometimes is necessary to evaluate more "
 "than one condition at the same time to know what to execute. In these "
 "situations it is very helpful to use <b>logical operations</b> that combine "
-"the conditions. Logical operations are available in Scratch <i>AND, OR and "
+"the conditions. Logical operations are available in Snap <i>AND, OR and "
 "No</i>."
 msgstr ""
 "Για να αποφασιστεί η πορεία εκτέλεσης ενός έργου μερικές φορές είναι "
 "απαραίτητο να υπολογιστούν παραπάνω από μία συνθήκες ταυτόχρονα. Σε αυτές "
 "τις περιπτώσεις βοηθούν πολύ οι <b>λογικοί τελεστές</b> που συνδυάζουν "
-"συνθήκες. Τρεις είναι οι λογικοί τελεστές στη Scratch <i>1. και 2.ή 3. δεν "
+"συνθήκες. Τρεις είναι οι λογικοί τελεστές στη Snap <i>1. και 2.ή 3. δεν "
 "ισχύει ότι</i>"
 
 #: app/templates/learn/Logic.html:55
@@ -2614,12 +2595,12 @@ msgstr ""
 
 #: app/templates/learn/Parallelization.html:9
 msgid ""
-"In most Scratch creations a certain level of parallelism is required. But "
+"In most Snap creations a certain level of parallelism is required. But "
 "what means parallelism? <b>Parallelism is the possibility that several "
 "things occur simultaneously.</b> For example, two characters perform an "
 "action while a character or do several things at once."
 msgstr ""
-"Στις περισσότερες δημιουργίες με το Scratch, ένα επίπεδο παραλληλισμού είναι "
+"Στις περισσότερες δημιουργίες με το Snap, ένα επίπεδο παραλληλισμού είναι "
 "απαραίτητο. Αλλά τι σημαίνει παραλληλισμός; <b>Παραλληλισμός είναι η "
 "δυνατότητα πολλών πραγμάτων να συμβαίνουν στον ίδιο χρόνο.</b> Για "
 "παράδειγμα, δύο χαρακτήρες εκτελούν κάποια λειτουργία ταυτόχρονα, ή ένας "
@@ -2953,14 +2934,14 @@ msgstr ""
 "το υπόβαθρο αλλάξει σε Άνοιξη', δηλαδή να πει 'Ήρθε η άνοιξη!'΄."
 
 #: app/templates/learn/UserInteractivity.html:6
-#, fuzzy
+
 #| msgid "User interactivity"
 msgid "User Interactivity"
 msgstr "Αλληλεπίδραση χρήστη"
 
 #: app/templates/learn/UserInteractivity.html:9
 msgid ""
-"The instructions related to user interactivity can <b>help your Scratch "
+"The instructions related to user interactivity can <b>help your Snap "
 "projects be more interactive</b>, ie the person who is running it can "
 "perform actions that provoke new situations in the project. For example, I "
 "can use the keyboard or mouse to move a character, you can answer questions "
@@ -2984,7 +2965,7 @@ msgstr ""
 
 #: app/templates/learn/UserInteractivity.html:23
 msgid ""
-"How this block works? When the user who wants to run your project Scratch "
+"How this block works? When the user who wants to run your project Snap "
 "clicks on the green flag, all blocks were placed under the block <i>'when "
 "green flag clicked'</i> begin to run. You can have as many programs as you "
 "need to start with this block."
@@ -2996,7 +2977,7 @@ msgstr ""
 
 #: app/templates/learn/UserInteractivity.html:33
 msgid ""
-"Now that you have begun to interact with the user running your Scratch "
+"Now that you have begun to interact with the user running your Snap "
 "project, perhaps you can try some of the following blocks:"
 msgstr ""
 "Τώρα που έχετε αρχίσει να αλληλεπιδράτε με τον χρήστη που τρέχει το έργο "
@@ -3049,14 +3030,14 @@ msgstr ""
 
 #: app/templates/learn/UserInteractivity.html:63
 msgid ""
-"One of the funniest Scratch possibilities in terms of user interactivity is "
+"One of the funniest Snap possibilities in terms of user interactivity is "
 "the possibility that <b>the user can use your webcam or microphone to "
-"interact with characters from Scratch or sound to trigger certain actions.</"
+"interact with characters from Snap or sound to trigger certain actions.</"
 "b>"
 msgstr ""
 "Μία από τις πιο ενδιαφέρουσες δυνατότητες που παρέχονται όσον αφορά την "
 "αλληλεπίδραση χρήστη είναι ότι <b>οι χρήστες μπορούν να χρησιμοποιήσουν την "
-"κάμερα ή το μικρόφωνο για να αλληλεπιδράσουν με χαρακτήρες του Scratch ή να "
+"κάμερα ή το μικρόφωνο για να αλληλεπιδράσουν με χαρακτήρες του Snap ή να "
 "εκτελέσουν κάποια ενέργεια.</b>"
 
 #: app/templates/learn/UserInteractivity.html:65
@@ -3153,7 +3134,7 @@ msgid "Dimensions"
 msgstr ""
 
 #: app/templates/learn/base.html:236
-#, fuzzy
+
 #| msgid "Bad habits"
 msgid "Bad Habits"
 msgstr "Κακές συνήθειες"
@@ -3268,7 +3249,7 @@ msgstr "Έτσι, όταν χρειαστείτε μια αλλαγή, θα πά
 
 #: app/templates/learn/spriteNaming.html:8
 msgid ""
-"When you start to programming with Scratch, is very usually to leave the "
+"When you start to programming with Snap, is very usually to leave the "
 "default name of the new characters or scenarios(sprite 1, sprite2, "
 "backdrop1, backdrop2 ...). When we have few characters or backdrops, is very "
 "easy to know what character or scenario have each name. However, when the "
@@ -3276,7 +3257,7 @@ msgid ""
 "good practice naming(to recognize easily) each character and scenario of our "
 "projects, because our programs can be read more fast. Avoid default names!"
 msgstr ""
-"Όταν ξεκινάτε να προγραμματίζετε με το Scratch, είναι πολύ συνηθισμένο να "
+"Όταν ξεκινάτε να προγραμματίζετε με το Snap, είναι πολύ συνηθισμένο να "
 "αφήνετε τα προκαθορισμένα ονόματα για τους νέους χαρακτήρες (Αντικείμενο 1, "
 "Αντικείμενο 2, υπόβαθρο1, υπόβαθρο2 ...) Όταν έχουμε πολλούς τέτοιους "
 "χαρακτήρες, είναι πιο εύκολο να αναγνωρίζουμε τον κάθε χαρακτήρα από το "
@@ -3306,26 +3287,26 @@ msgstr "Θυμήσου με"
 #: app/templates/sign/organization.html:187
 #: app/templates/sign/registerOrganization.html:104
 #: app/templates/sign/registerOrganization.html:163
-#, fuzzy
-#| msgid "Dr. Scratch for organizations"
-msgid "Dr. Scratch for Organizations"
-msgstr "Dr. Scratch για Οργανισμούς"
+
+#| msgid "Dr. Snap for organizations"
+msgid "Dr. Snap for Organizations"
+msgstr "Dr. Snap για Οργανισμούς"
 
 #: app/templates/login/login.html:129
 #: app/templates/sign/createOrganization.html:106
 #: app/templates/sign/createUser.html:106
 #: app/templates/sign/registerOrganization.html:106
 msgid ""
-"Welcome to the Dr. Scratch website (version for organizations), an "
-"analytical tool that evaluates your Scratch projects in a variety of "
+"Welcome to the Dr. Snap website (version for organizations), an "
+"analytical tool that evaluates your Snap projects in a variety of "
 "computational areas. This analyzer is a helpful tool to evaluate your "
-"students' Scratch projects. You'll have a smart dashboard where you can see "
+"students' Snap projects. You'll have a smart dashboard where you can see "
 "the most important information about your students and their development."
 msgstr ""
-"Καλωσήρθατε στον ιστότοπο του Dr. Scratch (έκδοση για οργανισμούς), ένα "
-"αναλυτικό εργαλείο που επιτρέπει την αξιολόγηση των έργων Scratch σε ένα "
-"ευρύ πεδίο υπολογιστικών περιοχών. Αυτό το εργαλείο βοηθάει στην αξιολόγηση "
-"των έργων των μαθητών που μαθαίνουν Scratch. Θα έχετε ένα πίνακα όπου θα "
+"Καλωσήρθατε στον ιστότοπο του Dr. Snap (έκδοση για οργανισμούς), ένα "
+"αναλυτικό εργαλείο που αξιολογεί τα έργα Snap σε ένα πλήθος περιοχών "
+"υπολογιστικής σκέψης. Αυτό το εργαλείο βοηθάει στην αξιολόγηση "
+"των έργων Snap των μαθητών σας. Θα έχετε έναν έξυπνο πίνακα ελέγχου όπου θα "
 "μπορείτε να δείτε τις σημαντικότερες πληροφορίες σχετικά με την εξέλιξη των "
 "μαθητών σας."
 
@@ -3360,13 +3341,13 @@ msgstr "Γιατί"
 #: app/templates/sign/createOrganization.html:165
 #: app/templates/sign/createUser.html:165
 #: app/templates/sign/registerOrganization.html:165
-msgid "you’ll love Dr. Scratch"
-msgstr "θα αγαπήσετε το Dr. Scratch"
+msgid "you’ll love Dr. Snap"
+msgstr "θα αγαπήσετε το Dr. Snap"
 
 #: app/templates/login/login.html:193 app/templates/main/main.html:552
 #: app/templates/main/main_new.html:337
-msgid "A powerful tool to analyze your Scratch projects"
-msgstr "Ένα εργαλείο ανάλυσης έργων Scratch"
+msgid "A powerful tool to analyze your Snap projects"
+msgstr "Ένα εργαλείο ανάλυσης έργων Snap"
 
 #: app/templates/login/login.html:205 app/templates/main/main_new.html:349
 msgid "Simple & Fun"
@@ -3396,10 +3377,10 @@ msgstr "Το εργαλείο βελτιώνεται συνεχώς"
 
 #: app/templates/login/login.html:233 app/templates/main/main_new.html:377
 msgid ""
-"We're continually enhancing the features of Dr. Scratch, and we'd love to "
+"We're continually enhancing the features of Dr. Snap, and we'd love to "
 "hear your thoughts"
 msgstr ""
-"Συνεχώς αυξάνουμε τα χαρακτηριστικά του Dr. Scratch, και θα θέλαμε να "
+"Συνεχώς αυξάνουμε τα χαρακτηριστικά του Dr. Snap, και θα θέλαμε να "
 "ακούσουμε τις σκέψεις σας."
 
 #: app/templates/login/login.html:270 app/templates/main/main_new.html:414
@@ -3424,12 +3405,12 @@ msgstr "project.png"
 msgid ""
 "You can upload an sb2 file or just provide the project url, avoiding the "
 "need to previously download the project to your computer. By analyzing your "
-"projects with Dr. Scratch, you can easily check your Computational Thinking "
+"projects with Dr. Snap, you can easily check your Computational Thinking "
 "Score."
 msgstr ""
 "Μπορείτε να ανεβάσετε ένα sb2 αρχείο ή απλώς να δώσετε το url του έργου στην "
-"κοινότητα του Scratch, χωρίς προηγουμένως να κατεβάσετε το έργο στον "
-"υπολογιστή σας. Αναλύοντας τα έργα σας με το Dr. Scratch, μπορείτε νε δείτε "
+"κοινότητα του Snap, χωρίς προηγουμένως να κατεβάσετε το έργο στον "
+"υπολογιστή σας. Αναλύοντας τα έργα σας με το Dr. Snap, μπορείτε νε δείτε "
 "το Σκορ σας στην Υπολογιστική Σκέψη."
 
 #: app/templates/login/login.html:323 app/templates/main/main_new.html:467
@@ -3445,11 +3426,11 @@ msgid "Soon"
 msgstr "Σύντομα"
 
 #: app/templates/login/login.html:329 app/templates/main/main_new.html:473
-msgid "We are working on new features to improve Dr. Scratch"
-msgstr "Δουλεύουμε σε νέα χαρακτηριστικά για να βελτιώσουμε το Dr. Scratch"
+msgid "We are working on new features to improve Dr. Snap"
+msgstr "Δουλεύουμε σε νέα χαρακτηριστικά για να βελτιώσουμε το Dr. Snap"
 
 #: app/templates/login/login.html:344
-#, fuzzy
+
 #| msgid "Multilingual website"
 msgid "Multilingual Website"
 msgstr "Ιστότοπος σε πολλές γλώσσες"
@@ -3459,16 +3440,16 @@ msgstr "Ιστότοπος σε πολλές γλώσσες"
 #: app/templates/main/main_new.html:492
 msgid ""
 "We know the importance of receiving feedback on your own language to "
-"understand every little detail or hint, so we'll translate Dr. Scratch to "
+"understand every little detail or hint, so we'll translate Dr. Snap to "
 "facilitate coding learning to as many people as possible."
 msgstr ""
 "Αναγνωρίζουμε τη σπουδαιότητα του να λαμβάνετε ανατροφοδότηση στη γλώσσα σας "
 "ώστε να καταλαβαίνετε και τις πιο μικρές λεπτομέρειες και συμβουλές, έτσι θα "
-"μεταφράσουμε το Dr. Scratch για να διευκολύνουμε την εκμάθηση του "
+"μεταφράσουμε το Dr. Snap για να διευκολύνουμε την εκμάθηση του "
 "προγραμματισμού σε όσους περισσότερους ανθρώπους μπορούμε."
 
 #: app/templates/login/login.html:359
-#, fuzzy
+
 #| msgid "Teacher accounts"
 msgid "Teacher Accounts"
 msgstr "Λογαριασμοί εκπαιδευτικών"
@@ -3483,7 +3464,7 @@ msgstr ""
 "τρόπο."
 
 #: app/templates/login/login.html:374
-#, fuzzy
+
 #| msgid "Cloud platform"
 msgid "Cloud Platform"
 msgstr "Η πλατφόρμα στο σύννεφο"
@@ -3498,12 +3479,12 @@ msgstr ""
 
 #: app/templates/login/login.html:403 app/templates/main/main_new.html:547
 msgid ""
-"With Dr. Scratch plug-ins for Chrome and Firefox, students will analyze "
-"their project WHILE programming on the Scratch website."
+"With Dr. Snap plug-ins for Chrome and Firefox, students will analyze "
+"their project WHILE programming on the Snap website."
 msgstr ""
 "Με τα πρόσθετα για τον Chrome και τον Firefox, οι μαθητές μπορούν να "
-"χρησιμοποιούν το Dr. Scratch για να αναλύουν τα έργα τους ΕΝΩ "
-"προγραμματίζουν στον ιστότοπο του Scratch."
+"χρησιμοποιούν το Dr. Snap για να αναλύουν τα έργα τους ΕΝΩ "
+"προγραμματίζουν στον ιστότοπο του Snap."
 
 #: app/templates/login/login.html:414 app/templates/main/main_new.html:558
 msgid "Gamification"
@@ -3518,7 +3499,7 @@ msgstr ""
 "για το πώς να μετατρέψουμε την πλατφόρμα μας σε ένα παιχνίδι;"
 
 #: app/templates/login/login.html:429
-#, fuzzy
+
 #| msgid "Social network"
 msgid "Social Network"
 msgstr "Κοινωνική δικτύωση"
@@ -3537,8 +3518,8 @@ msgstr "Επικοινωνία"
 
 #: app/templates/login/login.html:455 app/templates/main/main.html:636
 #: app/templates/main/main_new.html:599
-msgid "<strong>Contact </strong> Dr. Scratch team</h2>"
-msgstr "<strong>Επικοινωνήστε</strong> με την ομάδα του Dr. Scratch </h2>"
+msgid "<strong>Contact </strong> Dr. Snap team</h2>"
+msgstr "<strong>Επικοινωνήστε</strong> με την ομάδα του Dr. Snap </h2>"
 
 #: app/templates/login/login.html:459 app/templates/main/main_new.html:603
 msgid "We would be pleased to receive your feedback"
@@ -3557,8 +3538,8 @@ msgid "Collaborators"
 msgstr "Συνεργάτες"
 
 #: app/templates/login/login.html:520 app/templates/main/main_new.html:666
-msgid "Are you a Dr. Scratch user?"
-msgstr "Είστε χρήστης του Dr. Scratch;"
+msgid "Are you a Dr. Snap user?"
+msgstr "Είστε χρήστης του Dr. Snap;"
 
 #: app/templates/login/login.html:523 app/templates/main/main_new.html:669
 msgid "Join now!"
@@ -3659,7 +3640,7 @@ msgstr "Σας ευχαριστούμε όλους"
 msgid ""
 "We are so pleased to receive so much help of you and we thought that the "
 "best way of show our appreciation is including your work in the website. In "
-"this space you can see who people help us to improve Dr. Scratch!"
+"this space you can see who people help us to improve Dr. Snap!"
 msgstr ""
 "Είμαστε στην ευχάριστη θέση να λαμβάνουμε τόση πολλή βοήθεια και σκεφτήκαμε "
 "ότι ο καλύτερος τρόπος για να δείξουμε την εκτίμησή μας είναι να "
@@ -3671,11 +3652,11 @@ msgid "Who we are"
 msgstr "Ποιοι είμαστε"
 
 #: app/templates/main/collaborators.html:252
-msgid "Dr. Scratch's team likes to thank you for your contributions."
-msgstr "Η ομάδα του Dr. Scratch θέλει να σας ευχαριστήσει για τη συμβολή σας."
+msgid "Dr. Snap's team likes to thank you for your contributions."
+msgstr "Η ομάδα του Dr. Snap θέλει να σας ευχαριστήσει για τη συμβολή σας."
 
 #: app/templates/main/collaborators.html:266
-#, fuzzy
+
 #| msgid "Remember me"
 msgid "Team Members"
 msgstr "Θυμήσου με"
@@ -3683,10 +3664,10 @@ msgstr "Θυμήσου με"
 #: app/templates/main/collaborators.html:271
 #: app/templates/main/collaborators.html:423
 msgid ""
-"Would you like help us to translate Dr. Scratch to your language? Many "
+"Would you like help us to translate Dr. Snap to your language? Many "
 "people have already helped us! "
 msgstr ""
-"Θέλετε να μας βοηθήσετε να μεταφράσουμε το Dr. Scratch στη δική σας γλώσσα; "
+"Θέλετε να μας βοηθήσετε να μεταφράσουμε το Dr. Snap στη δική σας γλώσσα; "
 "Πολλοί μας βοήθησαν ήδη!"
 
 #: app/templates/main/collaborators.html:286
@@ -3695,7 +3676,7 @@ msgstr ""
 #: app/templates/main/collaborators.html:350
 #: app/templates/main/collaborators.html:372
 #: app/templates/main/collaborators.html:391
-#, fuzzy
+
 #| msgid "Web Developer"
 msgid "Developer"
 msgstr "Web Developer"
@@ -3788,19 +3769,19 @@ msgid "Upload your two projects to compare them now!"
 msgstr ""
 
 #: app/templates/main/compare-uploader.html:185
-#, fuzzy
+
 #| msgid "Total projects"
 msgid "Original Project"
 msgstr "Συνολικά έργα"
 
 #: app/templates/main/compare-uploader.html:189
-#, fuzzy
+
 #| msgid " projects"
 msgid "New Project"
 msgstr " έργα"
 
 #: app/templates/main/compare-uploader.html:198
-#, fuzzy
+
 #| msgid ""
 #| "<input name=\"urlProject\" id=\"cf-name\" class=\"form-control input-box "
 #| "placeholder\" placeholder=\"http:/scratch.mit.edu/projects/your_number\" "
@@ -3815,7 +3796,7 @@ msgstr ""
 "type=\"text\">"
 
 #: app/templates/main/compare-uploader.html:211
-#, fuzzy
+
 #| msgid ""
 #| "<input  name='zipFile' type='file' class='filestyle' data-"
 #| "buttonText='Choose Project'>"
@@ -3827,7 +3808,7 @@ msgstr ""
 "buttonText='Επιλέξτε έργο'>"
 
 #: app/templates/main/compare-uploader.html:215
-#, fuzzy
+
 #| msgid ""
 #| "<input  name='zipFile' type='file' class='filestyle' data-"
 #| "buttonText='Choose Project'>"
@@ -3851,7 +3832,7 @@ msgid "No"
 msgstr ""
 
 #: app/templates/main/compare-uploader.html:238
-#, fuzzy
+
 #| msgid "Total projects"
 msgid "Compare Projects"
 msgstr "Συνολικά έργα"
@@ -3860,7 +3841,7 @@ msgstr "Συνολικά έργα"
 #: app/templates/main/compare-uploader.html:244
 #: app/templates/main/main.html:374 app/templates/main/rubric-uploader.html:150
 #: app/templates/main/rubric-uploader.html:153
-#, fuzzy
+
 #| msgid "Error! Please choose a .sb or .sb2 file or input an url"
 msgid "Error! Please choose a .sb or .sb3 file or input an url"
 msgstr "Σφάλμα! Επιλέξτε ή ένα αρχείο .sb ή ένα αρχείο .sb2 ή εισάγετε ένα url"
@@ -3880,7 +3861,7 @@ msgstr ""
 #: app/templates/main/dashboard-default.html:1449
 #: app/templates/main/dashboard-personal.html:323
 msgid "Close"
-msgstr ""
+msgstr "Κλείσιμο"
 
 #: app/templates/main/contact-form.html:103
 #: app/templates/main/contact-form.html:120
@@ -3892,33 +3873,30 @@ msgid "Fill out the form and we will contact you as soon as possible"
 msgstr ""
 
 #: app/templates/main/contact-form.html:110
-#, fuzzy
+
 #| msgid "Your username is: "
 msgid "Your name"
 msgstr "Το όνομα χρήστη σας είναι:"
 
 #: app/templates/main/contact-form.html:111
 msgid "Enter your name"
-msgstr ""
+msgstr "Εισάγετε το όνομά σας"
 
 #: app/templates/main/contact-form.html:112
 #: app/templates/main/contact-form.html:117
 msgid "Obligatory"
-msgstr ""
+msgstr "Υποχρεωτικό"
 
 #: app/templates/main/contact-form.html:115
 msgid "Your email"
-msgstr ""
+msgstr "Το email σας"
 
 #: app/templates/main/contact-form.html:116
 msgid "Enter email"
-msgstr ""
+msgstr "Εισάγετε email"
 
 #: app/templates/main/contact-form.html:123
-#, fuzzy
-#| msgid ""
-#| "<input  name='img' type='file' class='filestyle' data-buttonText='Choose "
-#| "img'>"
+
 msgid ""
 "<input  name='contact_media' type='file' class='filestyle' data-"
 "buttonText='Upload media'>"
@@ -3930,7 +3908,7 @@ msgstr ""
 #: app/templates/main/dashboard-bulk.html:209
 #: app/templates/main/dashboard-bulk_ol.html:120
 msgid "Analysis Complete!!"
-msgstr ""
+msgstr "Η Ανάλυση Ολοκληρώθηκε!!"
 
 #: app/templates/main/dashboard-bulk-emailv.html:165
 #: app/templates/main/dashboard-bulk.html:213
@@ -3948,29 +3926,29 @@ msgstr ""
 #: app/templates/main/dashboard-bulk.html:222
 #: app/templates/main/dashboard-bulk_ol.html:133
 msgid "Summary: "
-msgstr ""
+msgstr "Σύνοψη: "
 
 #: app/templates/main/dashboard-bulk-emailv.html:175
 #: app/templates/main/dashboard-bulk.html:223
 msgid "Projects Analyzed: "
-msgstr ""
+msgstr "Έργα που Αναλύθηκαν: "
 
 #: app/templates/main/dashboard-bulk-emailv.html:176
 #: app/templates/main/dashboard-bulk.html:224
 #: app/templates/main/dashboard-bulk_ol.html:136
 msgid "Average Score: "
-msgstr ""
+msgstr "Μέσος Όρος Βαθμολογίας: "
 
 #: app/templates/main/dashboard-bulk-emailv.html:210
 #: app/templates/main/dashboard-bulk.html:258
 #: app/templates/main/dashboard-bulk_ol.html:170
-#, fuzzy
+
 #| msgid "Average rate by code smell"
 msgid "Average Mastery: "
-msgstr "Μέσος όρος με βάση την ανάλυση κώδικα"
+msgstr "Μέσος όρος με βάση την ανάλυση κώδικα: "
 
 #: app/templates/main/dashboard-bulk-landing.html:156
-#, fuzzy
+
 #| msgid "Thanks for using our website!"
 msgid "Thanks for using Dr.Scratch!!"
 msgstr "Ευχαριστούμε που χρησιμοποιείτε τον ιστότοπό μας!"
@@ -3988,17 +3966,17 @@ msgstr ""
 #: app/templates/main/dashboard-bulk_ol.html:190
 #: app/templates/main/dashboard-default-old.html:1069
 #: app/templates/main/dashboard-personal-old.html:598
-#, fuzzy
-#| msgid "©2014 Dr. Scratch is powered by "
-msgid "©2024 Dr. Scratch"
-msgstr "©2014 Το Dr. Scratch λειτουργεί από"
+
+#| msgid "©2014 Dr. Snap is powered by "
+msgid "©2024 Dr. Snap"
+msgstr "©2014 Το Dr. Snap λειτουργεί από"
 
 #: app/templates/main/dashboard-compare-1.html:350
 #: app/templates/main/dashboard-compare-1.html:520
 #: app/templates/main/dashboard-compare-1.html:810
 #: app/templates/main/dashboard-compare-2.html:676
 msgid "BEFORE"
-msgstr ""
+msgstr "ΠΡΙΝ"
 
 #: app/templates/main/dashboard-compare-1.html:366
 #: app/templates/main/dashboard-compare-1.html:444
@@ -4007,7 +3985,7 @@ msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:369
 #: app/templates/main/dashboard-compare-1.html:447
-#, fuzzy
+
 #| msgid "Total projects"
 msgid "Total Blocks"
 msgstr "Συνολικά έργα"
@@ -4019,7 +3997,7 @@ msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:375
 #: app/templates/main/dashboard-compare-1.html:453
-#, fuzzy
+
 #| msgid "Total projects"
 msgid "Total Sprites"
 msgstr "Συνολικά έργα"
@@ -4027,7 +4005,7 @@ msgstr "Συνολικά έργα"
 #: app/templates/main/dashboard-compare-1.html:377
 #: app/templates/main/dashboard-compare-1.html:397
 #: app/templates/main/dashboard-compare-2.html:702
-#, fuzzy
+
 #| msgid " sprite naming."
 msgid " sprites"
 msgstr "ονόματα αντικειμένων."
@@ -4038,20 +4016,18 @@ msgid "Bad Smells:"
 msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:387
-#, fuzzy
+
 #| msgid " duplicated scripts."
 msgid " duplicated"
 msgstr " διπλασιασμένα προγράμματα."
 
 #: app/templates/main/dashboard-compare-1.html:392
-#, fuzzy
+
 #| msgid " dead code."
 msgid " dead blocks"
 msgstr " κώδικας που δεν εκτελείται."
 
 #: app/templates/main/dashboard-compare-1.html:402
-#, fuzzy
-#| msgid " backdrop naming."
 msgid " backdrops"
 msgstr " ακατάλληλο όνομα φόντου."
 
@@ -4067,7 +4043,7 @@ msgstr ""
 #: app/templates/main/dashboard-compare-1.html:820
 #: app/templates/main/dashboard-compare-2.html:681
 msgid "AFTER"
-msgstr ""
+msgstr "ΜΕΤΑ"
 
 #: app/templates/main/dashboard-compare-1.html:449
 #: app/templates/main/dashboard-compare-2.html:706
@@ -4077,13 +4053,13 @@ msgstr ""
 #: app/templates/main/dashboard-compare-1.html:455
 #: app/templates/main/dashboard-compare-1.html:475
 #: app/templates/main/dashboard-compare-2.html:710
-#, fuzzy
+
 #| msgid " sprite naming."
 msgid " sprites "
 msgstr "ονόματα αντικειμένων."
 
 #: app/templates/main/dashboard-compare-1.html:465
-#, fuzzy
+
 #| msgid " duplicated scripts."
 msgid " duplicated "
 msgstr " διπλασιασμένα προγράμματα."
@@ -4093,7 +4069,7 @@ msgid " dead blocks "
 msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:480
-#, fuzzy
+
 #| msgid " backdrop naming."
 msgid " backdrops "
 msgstr " ακατάλληλο όνομα φόντου."
@@ -4101,11 +4077,11 @@ msgstr " ακατάλληλο όνομα φόντου."
 #: app/templates/main/dashboard-compare-1.html:500
 #: app/templates/main/dashboard-compare-2.html:723
 msgid "Show more"
-msgstr ""
+msgstr "Προβολή περισσότερων"
 
 #: app/templates/main/dashboard-compare-1.html:511
 msgid "Similarity Percentage"
-msgstr ""
+msgstr "Ποσοστό Ομοιότητας"
 
 #: app/templates/main/dashboard-compare-1.html:512
 msgid "Percentage of Similarity between the 2 Projects"
@@ -4126,7 +4102,7 @@ msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:602
 #: app/templates/main/dashboard-compare-2.html:444
-#, fuzzy
+
 #| msgid "Bad habits"
 msgid "Original Bad habits"
 msgstr "Κακές συνήθειες"
@@ -4148,7 +4124,7 @@ msgstr ""
 #: app/templates/main/dashboard-compare-1.html:701
 #: app/templates/main/dashboard-compare-2.html:539
 #: app/templates/main/dashboard-default.html:315
-#, fuzzy
+
 #| msgid "Bad habits"
 msgid "New Bad habits"
 msgstr "Κακές συνήθειες"
@@ -4159,10 +4135,10 @@ msgstr "Κακές συνήθειες"
 #: app/templates/main/dashboard-default.html:758
 #: app/templates/main/dashboard-default.html:1150
 #: app/templates/main/dashboard-personal.html:188
-#, fuzzy
-#| msgid "Analyze your Scratch projects"
-msgid "Dimensions Evaluated in your Scratch Project"
-msgstr "Αναλύστε τα έργα Scratch"
+
+#| msgid "Analyze your Snap projects"
+msgid "Dimensions Evaluated in your Snap Project"
+msgstr "Αναλύστε τα έργα Snap"
 
 #: app/templates/main/dashboard-compare-1.html:814
 #: app/templates/main/dashboard-compare-1.html:824
@@ -4177,7 +4153,7 @@ msgstr ""
 #: app/templates/main/dashboard-compare-2.html:870
 #: app/templates/main/dashboard-default.html:1242
 #: app/templates/main/dashboard-personal.html:274
-#, fuzzy
+
 #| msgid "Duplicated scripts"
 msgid "Duplicates"
 msgstr "Διπλασιασμένα προγράμματα"
@@ -4190,7 +4166,7 @@ msgstr "Διπλασιασμένα προγράμματα"
 #: app/templates/main/dashboard-default.html:1406
 #: app/templates/main/dashboard-personal.html:287
 msgid "Display Original Blocks!"
-msgstr ""
+msgstr "Εμφάνιση Αρχικών Μπλοκ!"
 
 #: app/templates/main/dashboard-compare-1.html:941
 #: app/templates/main/dashboard-compare-1.html:996
@@ -4202,25 +4178,25 @@ msgstr ""
 #: app/templates/main/dashboard-default.html:1411
 #: app/templates/main/dashboard-personal.html:292
 msgid "Display Solution!"
-msgstr ""
+msgstr "Εμφάνιση Λύσης!"
 
 #: app/templates/main/dashboard-compare-1.html:1063
 msgid "Congrats!!"
-msgstr ""
+msgstr "Συγχαρητήρια!!"
 
 #: app/templates/main/dashboard-compare-1.html:1064
 #: app/templates/main/dashboard-compare-2.html:420
 msgid "You have improved this project by "
-msgstr ""
+msgstr "Βελτιώσατε αυτό το έργο κατά"
 
 #: app/templates/main/dashboard-compare-1.html:1067
 #: app/templates/main/dashboard-compare-2.html:411
 msgid "Oops..."
-msgstr ""
+msgstr "Ωχ..."
 
 #: app/templates/main/dashboard-compare-1.html:1068
 #: app/templates/main/dashboard-compare-2.html:422
-#, fuzzy
+
 #| msgid "You have dead code in "
 msgid "You have dropped this project by "
 msgstr "Έχετε κώδικα που δεν εκτελείται σε"
@@ -4259,7 +4235,7 @@ msgstr ""
 #: app/templates/main/dashboard-compare-2.html:633
 #: app/templates/main/dashboard-default.html:713
 #: app/templates/main/dashboard-default.html:1106
-#, fuzzy
+
 #| msgid "Total projects"
 msgid "Compare project"
 msgstr "Συνολικά έργα"
@@ -4271,18 +4247,18 @@ msgstr "Συνολικά έργα"
 #: app/templates/main/dashboard-default.html:1087
 #: app/templates/main/dashboard-default.html:1107
 #: app/templates/main/dashboard-personal.html:161
-#, fuzzy
-#| msgid "Come back to your Scratch project."
-msgid "Certificate of the Evaluation of your Scratch Project"
+
+#| msgid "Come back to your Snap project."
+msgid "Certificate of the Evaluation of your Snap Project"
 msgstr "Ελάτε να δούμε το έργο σας."
 
 #: app/templates/main/dashboard-compare-2.html:1014
 msgid "Show Less"
-msgstr ""
+msgstr "Προβολή λιγότερων"
 
 #: app/templates/main/dashboard-compare-2.html:1017
 msgid "Show More"
-msgstr ""
+msgstr "Προβολή περισσότερων"
 
 #: app/templates/main/dashboard-default-old.html:533
 #: app/templates/main/dashboard-default.html:764
@@ -4291,7 +4267,7 @@ msgid "Grade from 1 to 3 of each Dimension"
 msgstr ""
 
 #: app/templates/main/dashboard-default.html:265
-#, fuzzy
+
 #| msgid "Score:"
 msgid "New Score:"
 msgstr "Σκορ:"
@@ -4331,15 +4307,15 @@ msgstr ""
 
 #: app/templates/main/main.html:320 app/templates/main/main_new.html:226
 msgid ""
-"Welcome to the Dr. Scratch website, an analytical tool that evaluates your "
-"Scratch projects in a variety of computational areas. This analyzer is a "
-"helpful tool to evaluate your own projects, or those of your Scratch "
+"Welcome to the Dr. Snap website, an analytical tool that evaluates your "
+"Snap projects in a variety of computational areas. This analyzer is a "
+"helpful tool to evaluate your own projects, or those of your Snap "
 "students."
 msgstr ""
-"Καλωσήρθατε στον ιστότοπο του Dr. Scratch, ενός αναλυτικού εργαλείου που "
-"αξιολογεί τα έργα Scratch σε ένα πλήθος περιοχών υπολογιστικής σκέψης. Αυτό "
-"το εργαλείο βοηθάει στην αξιολόγηση των έργων σας και των έργων των μαθητών "
-"σας."
+"Καλωσήρθατε στον ιστότοπο του Dr. Snap, ένα αναλυτικό εργαλείο που "
+"αξιολογεί τα έργα Snap σε ένα πλήθος περιοχών υπολογιστικής σκέψης. Αυτό "
+"το εργαλείο βοηθάει στην αξιολόγηση των δικών σας έργων, καθώς και των έργων των μαθητών "
+"σας στο Snap."
 
 #: app/templates/main/main.html:452
 msgid "IMPORTANT!"
@@ -4352,7 +4328,7 @@ msgid ""
 msgstr ""
 
 #: app/templates/main/main.html:454
-#, fuzzy
+
 #| msgid ""
 #| "<input  name='zipFile' type='file' class='filestyle' data-"
 #| "buttonText='Choose Project'>"
@@ -4364,7 +4340,7 @@ msgstr ""
 "buttonText='Επιλέξτε έργο'>"
 
 #: app/templates/main/main.html:455
-#, fuzzy
+
 #| msgid ""
 #| "<input name=\"urlProject\" id=\"cf-name\" class=\"form-control input-box "
 #| "placeholder\" placeholder=\"http:/scratch.mit.edu/projects/your_number\" "
@@ -4414,16 +4390,18 @@ msgstr ""
 
 #: app/templates/main/main.html:510
 msgid ""
-"This mode gives you a feedback about the bad smells of your project and how "
-"to solved them with a assistant style."
+"This mode gives you a feedback about the bad smells of your project and "
+"how to solve them with a assistant interface."
 msgstr ""
+"Αυτή η λειτουργία σάς παρέχει ανατροφοδότηση σχετικά με τις κακές πρακτικές "
+"(bad smells) του έργου σας και πώς να τις διορθώσετε με μια διεπαφή βοηθού."
 
 #: app/templates/main/main.html:513
 msgid "Please enter a project!"
 msgstr ""
 
 #: app/templates/main/main.html:515
-#, fuzzy
+
 #| msgid "Analyze my projects"
 msgid "Analyze my Bad Smells"
 msgstr "Ανάλυσε τα έργα μου"
@@ -4440,7 +4418,7 @@ msgid ""
 msgstr ""
 
 #: app/templates/main/main.html:541
-#, fuzzy
+
 #| msgid "Analyze my projects"
 msgid "Compare my projects"
 msgstr "Ανάλυσε τα έργα μου"
@@ -4470,17 +4448,17 @@ msgid " wiki "
 msgstr ""
 
 #: app/templates/main/main.html:598
-#, fuzzy
-#| msgid "The Dr. Scratch team"
+
+#| msgid "The Dr. Snap team"
 msgid "of Dr.Scratch."
-msgstr "Η ομάδα του Dr. Scratch"
+msgstr "Η ομάδα του Dr. Snap"
 
 #: app/templates/main/main.html:772 app/templates/main/main_new.html:775
-msgid "It's easy -and free- sign up an account in Dr. Scratch"
+msgid "It's easy -and free- sign up an account in Dr. Snap"
 msgstr ""
 
 #: app/templates/main/main.html:778 app/templates/main/main_new.html:781
-msgid "Choose a Dr. Scratch Username"
+msgid "Choose a Dr. Snap Username"
 msgstr ""
 
 #: app/templates/main/main.html:780 app/templates/main/main_new.html:783
@@ -4541,7 +4519,7 @@ msgstr ""
 
 #: app/templates/main/main.html:829 app/templates/main/main.html:842
 msgid "Birth Month and Year"
-msgstr ""
+msgstr "Μήνας και Έτος Γέννησης"
 
 #: app/templates/main/main.html:831
 msgid ""
@@ -4552,11 +4530,11 @@ msgstr ""
 
 #: app/templates/main/main.html:834 app/templates/main/main.html:866
 msgid "Gender"
-msgstr ""
+msgstr "Φύλο"
 
 #: app/templates/main/main.html:836
 msgid ""
-"This helps the Dr. Scratch design team understand who is using Dr. Scratch, "
+"This helps the Dr. Snap design team understand who is using Dr. Snap, "
 "and provides information that helps us broaden participation.  This "
 "information is not visible on your account, and is only used to describe "
 "overall participation."
@@ -4564,71 +4542,71 @@ msgstr ""
 
 #: app/templates/main/main.html:844
 msgid "- Month -"
-msgstr ""
+msgstr "- Μήνας -"
 
 #: app/templates/main/main.html:845
 msgid "January"
-msgstr ""
+msgstr "Ιανουάριος"
 
 #: app/templates/main/main.html:846
 msgid "February"
-msgstr ""
+msgstr "Φεβρουάριος"
 
 #: app/templates/main/main.html:847
 msgid "March"
-msgstr ""
+msgstr "Μάρτιος"
 
 #: app/templates/main/main.html:848
 msgid "April"
-msgstr ""
+msgstr "Απρίλιος"
 
 #: app/templates/main/main.html:849
 msgid "May"
-msgstr ""
+msgstr "Μάιος"
 
 #: app/templates/main/main.html:850
 msgid "June"
-msgstr ""
+msgstr "Ιούνιος"
 
 #: app/templates/main/main.html:851
 msgid "July"
-msgstr ""
+msgstr "Ιούλιος"
 
 #: app/templates/main/main.html:852
 msgid "August"
-msgstr ""
+msgstr "Αύγουστος"
 
 #: app/templates/main/main.html:853
 msgid "September"
-msgstr ""
+msgstr "Σεπτέμβριος"
 
 #: app/templates/main/main.html:854
 msgid "October"
-msgstr ""
+msgstr "Οκτώβριος"
 
 #: app/templates/main/main.html:855
 msgid "November"
-msgstr ""
+msgstr "Νοέμβριος"
 
 #: app/templates/main/main.html:856
 msgid "December"
-msgstr ""
+msgstr "Δεκέμβριος"
 
 #: app/templates/main/main.html:860
 msgid "- Year -"
-msgstr ""
+msgstr "- Έτος -"
 
 #: app/templates/main/main.html:867
 msgid "Male"
-msgstr ""
+msgstr "Άνδρας"
 
 #: app/templates/main/main.html:869
 msgid "Female"
-msgstr ""
+msgstr "Γυναίκα"
 
 #: app/templates/main/main.html:879
 msgid "Country"
-msgstr ""
+msgstr "Χώρα"
 
 #: app/templates/main/main.html:881
 msgid "- Country -"
@@ -4655,8 +4633,8 @@ msgid "Organizations"
 msgstr "Οργανισμοί"
 
 #: app/templates/main/main_new.html:224
-msgid "Analyze your Scratch projects"
-msgstr "Αναλύστε τα έργα Scratch"
+msgid "Analyze your Snap projects"
+msgstr "Αναλύστε τα έργα Snap"
 
 #: app/templates/main/main_new.html:488
 msgid "Multilingual website"
@@ -4732,14 +4710,14 @@ msgstr "Η πρόοδός σας μέρα με την ημέρα"
 
 #: app/templates/main/main_organization.html:159
 #: app/templates/upload/dashboard-organization.html:107
-msgid "Welcome to the Dr. Scratch website, "
-msgstr "Καλωσήρθατε στον ιστότοπο του Dr. Scratch,"
+msgid "Welcome to the Dr. Snap website, "
+msgstr "Καλωσήρθατε στον ιστότοπο του Dr. Snap,"
 
 #: app/templates/main/main_organization.html:177
 #: app/templates/organization/main.html:57
 #: app/templates/upload/dashboard-organization.html:150
 msgid ""
-"You can analyze at the same time all the Scratch proyects of your students!"
+"You can analyze at the same time all the Snap proyects of your students!"
 msgstr "Μπορείτε να αναλύετε τα έργα των μαθητών σας και τα δικά σας!"
 
 #: app/templates/main/main_organization.html:181
@@ -4757,7 +4735,7 @@ msgstr "αρχείο CSV"
 #: app/templates/main/main_organization.html:181
 #: app/templates/organization/main.html:60
 #: app/templates/upload/dashboard-organization.html:153
-msgid " with the urls of the Scratch projects you want to analyze:"
+msgid " with the urls of the Snap projects you want to analyze:"
 msgstr "με τα url των έργων που θέλετε να αναλύσετε:"
 
 #: app/templates/main/main_organization.html:182
@@ -4772,7 +4750,7 @@ msgstr ""
 
 #: app/templates/main/rubric-creator.html:392
 msgid "Build your rubric!"
-msgstr ""
+msgstr "Δημιουργήστε τη ρουμπρίκα σας!"
 
 #: app/templates/main/rubric-creator.html:407
 msgid ""
@@ -4811,7 +4789,7 @@ msgid ""
 msgstr ""
 
 #: app/templates/main/rubric-creator.html:426
-#, fuzzy
+
 #| msgid "Parallelism"
 msgid "Parallelization"
 msgstr "Παραλληλισμός"
@@ -4854,7 +4832,7 @@ msgstr ""
 
 #: app/templates/main/rubric-creator.html:443
 msgid "Logic Thinking"
-msgstr ""
+msgstr "Λογική Σκέψη"
 
 #: app/templates/main/rubric-creator.html:448
 msgid ""
@@ -5038,7 +5016,7 @@ msgstr ""
 
 #: app/templates/main/rubric-creator.html:532
 msgid "Math Operators"
-msgstr ""
+msgstr "Μαθηματικοί Τελεστές"
 
 #: app/templates/main/rubric-creator.html:537
 msgid ""
@@ -5078,7 +5056,7 @@ msgstr ""
 
 #: app/templates/main/rubric-creator.html:549
 msgid "Motion Operators"
-msgstr ""
+msgstr "Τελεστές Κίνησης"
 
 #: app/templates/main/rubric-creator.html:554
 msgid ""
@@ -5118,44 +5096,42 @@ msgstr ""
 
 #: app/templates/main/rubric-creator.html:564
 msgid "Generate rubric"
-msgstr ""
+msgstr "Δημιουργία Ρουμπρίκας"
 
 #: app/templates/main/rubric-creator.html:579
 msgid "You can share this url:"
-msgstr ""
+msgstr "Μπορείτε να μοιραστείτε αυτόν τον σύνδεσμο:"
 
 #: app/templates/main/rubric-creator.html:581
 msgid "First fill the form"
-msgstr ""
+msgstr "Συμπληρώστε πρώτα τη φόρμα"
 
 #: app/templates/main/rubric-creator.html:587
 msgid "Here there are some rubrics examples:"
-msgstr ""
+msgstr "Εδώ υπάρχουν μερικά παραδείγματα:"
 
 #: app/templates/main/rubric-creator.html:589
 msgid "Arts"
-msgstr ""
+msgstr "Τέχνες"
 
 #: app/templates/main/rubric-creator.html:590
 msgid "Music"
-msgstr ""
+msgstr "Μουσική"
 
 #: app/templates/main/rubric-creator.html:591
-#, fuzzy
-#| msgid "Organizations"
 msgid "Animations"
 msgstr "Οργανισμοί"
 
 #: app/templates/main/rubric-creator.html:592
 msgid "Stories"
-msgstr ""
+msgstr "Ιστορίες"
 
 #: app/templates/main/rubric-creator.html:593
 msgid "Games"
-msgstr ""
+msgstr "Παιχνίδια"
 
 #: app/templates/main/rubric-uploader.html:140
-#, fuzzy
+
 #| msgid ""
 #| "2. If you have your <span class='colored-text'><a data-toggle='modal' "
 #| "href='#modalProject'>project</a></span> downloaded in the computer you "
@@ -5169,7 +5145,7 @@ msgstr ""
 "εδώ:"
 
 #: app/templates/main/rubric-uploader.html:141
-#, fuzzy
+
 #| msgid ""
 #| "<input  name='zipFile' type='file' class='filestyle' data-"
 #| "buttonText='Choose Project'>"
@@ -5186,14 +5162,14 @@ msgstr ""
 
 #: app/templates/organization/base.html:77
 #: app/templates/statistics/statistics.html:65
-#, fuzzy
+
 #| msgid "Scores of 2019"
 msgid "Scores of 2015"
 msgstr "Στοιχεία του 2019"
 
 #: app/templates/organization/base.html:104
 #: app/templates/statistics/statistics.html:92
-#, fuzzy
+
 #| msgid "Number of projects analyzed in 2019"
 msgid "Number of projects analyzed in 2015"
 msgstr "Αριθμός έργων που αναλύθηκαν το 2019"
@@ -5208,8 +5184,8 @@ msgstr ""
 
 #: app/templates/organization/email-sign-up.html:5
 #: app/templates/sign/email.html:5
-msgid "New organization in Dr. Scratch!"
-msgstr "Νέος οργανισμός στο Dr. Scratch!"
+msgid "New organization in Dr. Snap!"
+msgstr "Νέος οργανισμός στο Dr. Snap!"
 
 #: app/templates/organization/email-sign-up.html:7
 #: app/templates/sign/email.html:7
@@ -5217,40 +5193,40 @@ msgid ""
 "You're receiving this email because you have successfully signed up in Dr. "
 "Scratch for organizations."
 msgstr ""
-"Λαμβάνετε αυτό το email γιατί εγγραφήκατε επιτυχώς στο Dr. Scratch για "
+"Λαμβάνετε αυτό το email γιατί εγγραφήκατε επιτυχώς στο Dr. Snap για "
 "οργανισμούς."
 
 #: app/templates/organization/main.html:55
 msgid "Do you want to analyze many projects?"
-msgstr ""
+msgstr "Θέλετε να αναλύσετε πολλά έργα;"
 
 #: app/templates/organization/organization.html:129
 #: app/templates/organization/organization.html:188
-msgid "Dr. Scratch for organizations"
-msgstr "Dr. Scratch για Οργανισμούς"
+msgid "Dr. Snap for organizations"
+msgstr "Dr. Snap για Οργανισμούς"
 
 #: app/templates/organization/organization.html:130
 #: app/templates/sign/organization.html:129
-msgid "Welcome to the organizations version of Dr. Scratch"
-msgstr "Καλωσήρθατε στην έκδοση του Dr. Scratch για οργανισμούς"
+msgid "Welcome to the organizations version of Dr. Snap"
+msgstr "Καλωσήρθατε στην έκδοση του Dr. Snap για οργανισμούς"
 
 #: app/templates/organization/organization.html:131
 #: app/templates/sign/organization.html:130
 msgid ""
-"Dr. Scratch for organizations is an analytical tool that can help you "
-"evaluate the Scratch projects of the students participating in your "
+"Dr. Snap for organizations is an analytical tool that can help you "
+"evaluate the Snap projects of the students participating in your "
 "initiatives to asses their progression in terms of coding and computational "
 "thinking skills. "
 msgstr ""
-"Το Dr. Scratch για οργανισμούς είναι ένα αναλυτικό εργαλείο που βοηθάει την "
-"αξιολόγηση έργων Scratch μαθητών που συμμετέχουν στις δράσεις του οργανισμού "
+"Το Dr. Snap για οργανισμούς είναι ένα αναλυτικό εργαλείο που βοηθάει την "
+"αξιολόγηση έργων Snap μαθητών που συμμετέχουν στις δράσεις του οργανισμού "
 "και αξιολογεί την πρόοδό τους με βάση τις δεξιότητες προγραμματισμού και "
 "υπολογιστικές σκέψης που αναπτύσσουν."
 
 #: app/templates/organization/organization.html:190
 #: app/templates/sign/organization.html:189
-msgid "to join Dr. Scratch for organizations?"
-msgstr "να εγγραφείτε στο Dr. Scratch για οργανισμούς;"
+msgid "to join Dr. Snap for organizations?"
+msgstr "να εγγραφείτε στο Dr. Snap για οργανισμούς;"
 
 #: app/templates/organization/organization.html:193
 #: app/templates/sign/organization.html:192
@@ -5321,10 +5297,10 @@ msgstr "Επαναφορά κωδικού"
 #: app/templates/sign-password/email-reset-pwd.html:6
 msgid ""
 "You're receiving this email because you requested a password reset for your "
-"user account at Dr. Scratch."
+"user account at Dr. Snap."
 msgstr ""
 "Λαμβάνετε αυτό το email επειδή ζητήσατε επαναφορά κωδικού του λογαριασμού "
-"σας στον ιστότοπο του Dr. Scratch."
+"σας στον ιστότοπο του Dr. Snap."
 
 #: app/templates/password/email.html:7
 #: app/templates/sign-password/email-reset-pwd.html:7
@@ -5390,11 +5366,11 @@ msgstr ""
 
 #: app/templates/sign/createOrganization.html:170
 msgid ""
-"If you want to be one of the ten first organizations which prove Dr. Scratch "
+"If you want to be one of the ten first organizations which prove Dr. Snap "
 "send us an email to "
 msgstr ""
 "Εάν θέλετε να είστε ένας από τους πρώτους οργανισμούς που θα χρησιμοποιούν "
-"το Dr. Scratch στείλτε μας ένα email στο"
+"το Dr. Snap στείλτε μας ένα email στο"
 
 #: app/templates/sign/createOrganization.html:170
 msgid " and we'll give you your hash to can sign up in the web"
@@ -5404,7 +5380,7 @@ msgstr " και θα σας δώσουμε ένα κλειδί για να εγ�
 #: app/templates/sign/createUser.html:197
 #: app/templates/sign/organization.html:224
 #: app/templates/sign/registerOrganization.html:197
-#, fuzzy
+
 #| msgid ""
 #| "<input type='password' class='form-control'  name='password' "
 #| "placeholder='Password'>"
@@ -5420,7 +5396,7 @@ msgid "You can download your results. You do click in the following button:"
 msgstr "Μπορείτε να κατεβάσετε τα αποτελέσματά σας. Κάντε κλικ στο κουμπί:"
 
 #: app/templates/upload/dashboard-organization.html:125
-#, fuzzy
+
 #| msgid "Download my CSV files."
 msgid "Download .csv file"
 msgstr "Κατεβάστε το αρχείο .csv"
@@ -5438,13 +5414,13 @@ msgid "Error! Please choose a .csv file"
 msgstr "Σφάλμα! Παρακαλώ επιλέξτε αρχείο .csv"
 
 #: app/templates/upload/dashboard-organization.html:245
-#, fuzzy
+
 #| msgid "<img class='framed' src='../static/app/images/url-en.png' />"
 msgid "<img class='framed' src='../../static/app/images/url-en.png' />"
 msgstr "<img class='framed' src='../static/app/images/url-en.png' />"
 
 #: app/templates/upload/dashboard-organization.html:270
-#, fuzzy
+
 #| msgid "<img class='framed' src='../static/app/images/project-en.png' />"
 msgid "<img class='framed' src='../../static/app/images/project-en.png' />"
 msgstr "<img class='framed' src='../static/app/images/project-en.png' />"
@@ -5467,13 +5443,13 @@ msgstr ""
 #: app/templates/upload/dashboard-unregistered-basic.html:74
 #: app/templates/upload/dashboard-unregistered-developing.html:74
 #: app/templates/upload/dashboard-unregistered-master.html:93
-#, fuzzy
+
 #| msgid "Average rate by programming skill"
 msgid "Here we show the score in each programming skill."
 msgstr "Μέσος όρος με βάση την προγραμματιστική δεξιότητα"
 
 #: app/templates/upload/dashboard-unregistered-basic.html:122
-#, fuzzy
+
 #| msgid ""
 #| "<h3 class='text-left dark-text'>The level of your project is... "
 #| "<strong>BASIC! </strong></h3>"
@@ -5500,13 +5476,7 @@ msgstr "Θέλετε να ανεβείτε επίπεδο;"
 #: app/templates/upload/dashboard-unregistered-master.html:198
 #: app/templates/upload/dashboard-unregistered-master.html:208
 #: app/templates/upload/dashboard-unregistered-master.html:218
-#: app/templates/upload/dashboard-unregistered-master.html:304
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                                        <a href=\"/learn/%(key)s/"
-#| "\">%(key)s</a>\n"
-#| "                                        "
+#: app/templates/upload/dashboard-unregistered-master.html:304                                "
 msgid ""
 "\n"
 "                                        %(key)s\n"
@@ -5532,10 +5502,6 @@ msgid "Points"
 msgstr "Βαθμοί"
 
 #: app/templates/upload/dashboard-unregistered-developing.html:131
-#, fuzzy
-#| msgid ""
-#| "<h3 class='text-left dark-text'>The level of your project is... "
-#| "<strong>DEVELOPING! </strong></h3>"
 msgid ""
 "<h3 class='text-left dark-text'>Your level is... <br></br> "
 "<strong>DEVELOPING! </strong></h3>"
@@ -5544,7 +5510,7 @@ msgstr ""
 "<strong>DEVELOPING! </strong></h3>"
 
 #: app/templates/upload/dashboard-unregistered-developing.html:132
-#, fuzzy
+
 #| msgid "You're doing a great job. Keep it up!!!"
 msgid "You're doing a great job.<br> Keep it up!!!"
 msgstr "Κάνετε καλή δουλειά. Συνεχίστε έτσι!!!!"
@@ -5555,10 +5521,6 @@ msgid "Details to fix:"
 msgstr "Λεπτομέρειες που μπορείτε να διορθώσετε:"
 
 #: app/templates/upload/dashboard-unregistered-master.html:170
-#, fuzzy
-#| msgid ""
-#| "<h3 class='text-left dark-text'>The level of your project is...  <strong> "
-#| "MASTER! </strong></h3>"
 msgid ""
 "<h3 class='text-left dark-text'>Your level is...  <strong>MASTER! </strong></"
 "h3>"
@@ -5572,26 +5534,26 @@ msgstr "Έχετε κώδικα που δεν εκτελείται σε"
 
 #: app/templates/upload/dashboard-unregistered.html:10
 msgid "Project results"
-msgstr ""
+msgstr "Αποτελέσματα έργου"
 
 #: app/templates/upload/dashboard-unregistered.html:48
 #: app/templates/upload/dashboard-unregistered.html:57
 #: app/templates/upload/dashboard-unregistered.html:59
 msgid "Dashboard"
-msgstr ""
+msgstr "Πίνακας Ελέγχου"
 
 #: app/templates/upload/dashboard-unregistered.html:57
 msgid "Overview"
-msgstr ""
+msgstr "Επισκόπηση"
 
 #: app/templates/upload/dashboard-unregistered.html:63
-#, fuzzy
-#| msgid "Come back to your Scratch project."
-msgid "Welcome to Doctor Scratch. Project results."
+
+#| msgid "Come back to your Snap project."
+msgid "Welcome to Doctor Snap. Project results."
 msgstr "Ελάτε να δούμε το έργο σας."
 
 #: app/templates/upload/dashboard-unregistered.html:79
-#, fuzzy
+
 #| msgid "Score:"
 msgid "CT Score:"
 msgstr "Σκορ:"
@@ -5601,25 +5563,25 @@ msgid "Your level:"
 msgstr ""
 
 #: app/templates/upload/dashboard-unregistered.html:90
-#, fuzzy
+
 #| msgid "Development"
 msgid "Developing"
 msgstr "Development"
 
 #: app/templates/upload/dashboard-unregistered.html:101
-#, fuzzy, python-format
+
 #| msgid ""
 #| " I have just obtained %(points)s points analyzing my project in Dr. "
 #| "Scratch! Beat it! @DrScratchTool "
 msgid ""
-"I have just obtained %(points)s points analyzing my project in Dr. Scratch! "
+"I have just obtained %(points)s points analyzing my project in Dr. Snap! "
 "Beat it! @DrScratchTool "
 msgstr ""
-"Μόλις πήρα %(points)s αναλύοντας το έργο μου με το  Dr. Scratch! Μπορείτε να "
+"Μόλις πήρα %(points)s αναλύοντας το έργο μου με το  Dr. Snap! Μπορείτε να "
 "πάτε καλύτερα; @DrScratchTool "
 
 #: app/templates/upload/dashboard-unregistered.html:109
-#, fuzzy
+
 #| msgid "Score in detail"
 msgid "CT Score in detail:"
 msgstr "Το σκορ αναλυτικά"
@@ -5627,7 +5589,7 @@ msgstr "Το σκορ αναλυτικά"
 #: app/templates/upload/dashboard-unregistered.html:127
 #: app/templates/upload/dashboard-unregistered.html:131
 #: app/templates/upload/dashboard-unregistered.html:135
-#, fuzzy
+
 #| msgid "Learn more"
 msgid "Learn more!!!"
 msgstr "Μάθετε περισσότερα"
@@ -5637,13 +5599,13 @@ msgid "Well done!!!"
 msgstr ""
 
 #: app/templates/upload/dashboard-unregistered.html:181
-#, fuzzy
+
 #| msgid "Sprite naming"
 msgid "Sprites naming"
 msgstr "Ονόματα αντικειμένων"
 
 #: app/templates/upload/dashboard-unregistered.html:190
-#, fuzzy
+
 #| msgid "Incorrect names"
 msgid "Incorrect name:"
 msgstr "Λάθος ονόματα"
@@ -5653,14 +5615,14 @@ msgid "blocks"
 msgstr ""
 
 #: app/templates/upload/dashboard-unregistered.html:242
-#, fuzzy
+
 #| msgid "Attribute initialization"
 msgid "Sprite attributes initialization"
 msgstr "Αρχικοποίηση ιδιοτήτων"
 
 #: app/templates/upload/dashboard-unregistered.html:254
 msgid "modified but not initialized correctly."
-msgstr ""
+msgstr "τροποποιήθηκε αλλά δεν αρχικοποιήθηκε σωστά."
 
 #: drScratch/settings.py:93
 msgid "Spanish"
@@ -5708,3 +5670,8 @@ msgstr ""
 
 #~ msgid "Hungarian"
 #~ msgstr "Ουγγρικά"
+
+
+#: app/templates/main/main.html:268
+msgid "This is a Final Degree project version"
+msgstr "Αυτή είναι μια έκδοση Πτυχιακής Εργασίας"

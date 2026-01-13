@@ -55,6 +55,7 @@ from app.hairball3.comparsionMode import ComparsionMode
 from app.exception import DrScratchException
 from app.hairball3.scratchGolfing import ScratchGolfing
 from app.hairball3.block_sprite_usage import Block_Sprite_Usage
+from django.shortcuts import render, redirect
 
 import logging
 import coloredlogs
@@ -132,9 +133,24 @@ def calc_eta(num_projects: int) -> str:
 
     eta_format = f'{int(eta_h)}h: {int(eta_m)}min: {round(eta_s,2)}s'
     return eta_format
- 
+
+
+from django.shortcuts import render, redirect
+
+# Añade esta función de ayuda al principio del archivo (o asegúrate de que esté)
+# Sirve para que la sesión no falle con datos raros
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+
+def sanitize_data(data):
+    try:
+        return json.loads(json.dumps(data, cls=DjangoJSONEncoder))
+    except:
+        return data
+
 def show_dashboard(request, skill_points=None):
     
+    # --- PARTE 1: PETICIÓN POST (Subida de archivo - IGUAL QUE EL ORIGINAL) ---
     if request.method == 'POST':
         url = request.path.split('/')[-1]
         if url != '':
@@ -142,36 +158,49 @@ def show_dashboard(request, skill_points=None):
         else:
             numbers = ''
         print(f"Mi url {url}")
+        
         skill_rubric = generate_rubric(numbers)
         user = str(identify_user_type(request))
+        
+        # Modo Comparación
         if request.POST.get('dashboard_mode') == 'Comparison':
             print("Comparison mode:", request.POST)
             d = build_dictionary_with_automatic_analysis(request, skill_rubric)
             print("Context Dictionary:", d)
+            
+            # --- NUEVO: Guardar en memoria ---
+            request.session['last_analysis_data'] = sanitize_data(d)
+            request.session['last_dashboard_mode'] = 'Comparison'
             return render(request, user + '/dashboard-compare.html', d)   
+        
+        # Modo Normal
         print("Mode:", request.POST)
         d = build_dictionary_with_automatic_analysis(request, skill_rubric)
         print("Context Dictionary:")
         print(d)
         print("Skill rubric")
         print(skill_rubric)
-        d = d[0]
         
-        # 1. Comprobación segura de multiproyecto
+        # Tu línea original clave: Sacar el diccionario de la lista
+        d = d[0] 
+        
+        # --- NUEVO: Guardar en memoria ---
+        request.session['last_analysis_data'] = sanitize_data(d)
+        request.session['last_dashboard_mode'] = 'Normal'
+        request.session.modified = True
+        
+        # Lógica original de renderizado
         if d.get('multiproject'):
             context = {
                 'ETA': calc_eta(d.get('num_projects', 0))
             }
             return render(request, user + '/dashboard-bulk-landing.html', context)
         
-        # 2. Comprobación de errores (usando .get para seguridad)
         error_type = d.get('Error')
-        
         if error_type:
             if error_type == 'analyzing':
                 return render(request, 'error/analyzing.html')
             elif error_type == 'MultiValueDict':
-                # Este es el error que probablemente estás teniendo
                 print("DEBUG: Falta algún parámetro en el POST. Recibido:", request.POST) 
                 return render(request, user + '/main.html', {'error': True})
             elif error_type == 'id_error':
@@ -179,7 +208,6 @@ def show_dashboard(request, skill_points=None):
             elif error_type == 'no_exists':
                 return render(request, user + '/main.html', {'no_exists': True})
 
-        # 3. Si no hay errores, mostramos el dashboard según el modo
         mode = d.get("dashboard_mode")
 
         if mode == 'Default':
@@ -189,7 +217,28 @@ def show_dashboard(request, skill_points=None):
         elif mode == 'Recommender':
             return render(request, user + '/dashboard-recommender.html', d)
         
-        # Fallback: Si no coincide ningún modo, mostramos por defecto para no mostrar página en blanco
+        return render(request, user + '/dashboard-default.html', d)
+
+    # --- PARTE 2: PETICIÓN GET (Recarga / Cambio de Idioma - NUEVO) ---
+    else:
+        user = str(identify_user_type(request))
+        d = request.session.get('last_analysis_data')
+        dashboard_mode = request.session.get('last_dashboard_mode')
+
+        # Si no hay datos, volvemos a la portada
+        if not d:
+            return redirect('/')
+
+        if dashboard_mode == 'Comparison':
+             return render(request, user + '/dashboard-compare.html', d)
+        
+        # Renderizado GET (copia del final del POST)
+        mode = d.get("dashboard_mode")
+        if mode == 'Personalized':
+            return render(request, user + '/dashboard-personal.html', d)               
+        elif mode == 'Recommender':
+            return render(request, user + '/dashboard-recommender.html', d)
+        
         return render(request, user + '/dashboard-default.html', d)
 
 @csrf_exempt

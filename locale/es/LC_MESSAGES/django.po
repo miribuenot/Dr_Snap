@@ -370,10 +370,10 @@ msgstr "Ajustes"
 #: app/templates/upload/dashboard-unregistered-basic.html:255
 #: app/templates/upload/dashboard-unregistered-developing.html:292
 #: app/templates/upload/dashboard-unregistered-master.html:353
-#, fuzzy
-#| msgid "©2014 Dr. Scratch is powered by "
-msgid "©2019 Dr. Scratch"
-msgstr "©2014 Dr. Scratch está implementado con "
+
+#| msgid "©2014 Dr. Snap is powered by "
+msgid "©2019 Dr. Snap"
+msgstr "©2014 Dr. Snap está implementado con "
 
 #: app/templates/coder/base.html:425
 #: app/templates/main/main_organization.html:273
@@ -413,7 +413,7 @@ msgstr "<img class='framed' src='../static/app/images/url-es.png' />"
 #: app/templates/organization/base.html:480
 #: app/templates/upload/dashboard-organization.html:264
 msgid "I want to download my project from Scratch!"
-msgstr "¡Quiero descargar mi proyecto de Scratch!"
+msgstr "¡Quiero descargar mi proyecto de Snap!"
 
 #: app/templates/coder/base.html:475 app/templates/login/login.html:590
 #: app/templates/main/main.html:715 app/templates/main/main.html:739
@@ -421,7 +421,7 @@ msgstr "¡Quiero descargar mi proyecto de Scratch!"
 #: app/templates/organization/base.html:482
 #: app/templates/upload/dashboard-organization.html:266
 msgid "How I can download my Scratch project to my computer?"
-msgstr "¿Cómo puedo descargar mi proyecto de Scratch a mi ordenador?"
+msgstr "¿Cómo puedo descargar mi proyecto de Snap a mi ordenador?"
 
 #: app/templates/coder/base.html:479 app/templates/organization/base.html:486
 msgid "<img class='framed' src='../static/app/images/project-en.png' />"
@@ -555,8 +555,8 @@ msgstr "AYUDA"
 #: app/templates/upload/dashboard-unregistered-basic.html:99
 #: app/templates/upload/dashboard-unregistered-developing.html:110
 #: app/templates/upload/dashboard-unregistered-master.html:148
-msgid "Dr. Scratch(Beta Version)"
-msgstr "Dr. Scratch(Versión Beta)"
+msgid "Dr. Snap(Beta Version)"
+msgstr "Dr. Snap(Versión Beta)"
 
 #: app/templates/coder/dashboard-basic.html:162
 #: app/templates/coder/dashboard-default-basic.html:355
@@ -603,10 +603,10 @@ msgstr "Puntuación:"
 #: app/templates/upload/dashboard-unregistered-master.html:165
 #, python-format
 msgid ""
-" I have just obtained %(points)s points analyzing my project in Dr. Scratch! "
+" I have just obtained %(points)s points analyzing my project in Dr. Snap! "
 "Beat it! @DrScratchTool "
 msgstr ""
-"He conseguido %(points)s puntos analizando mi proyecto en Dr. Scratch!¡A ver "
+"He conseguido %(points)s puntos analizando mi proyecto en Dr. Snap!¡A ver "
 "si lo superas! @DrScratchTool"
 
 #: app/templates/coder/dashboard-basic.html:167
@@ -651,8 +651,8 @@ msgstr "Estás al principio de una gran aventura. . . <br>¡Continúa así!"
 #: app/templates/upload/dashboard-unregistered-basic.html:135
 #: app/templates/upload/dashboard-unregistered-developing.html:143
 #: app/templates/upload/dashboard-unregistered-master.html:186
-msgid "Come back to your Scratch project."
-msgstr "Vuelve a tu proyecto Scratch"
+msgid "Come back to your Snap project."
+msgstr "Vuelve a tu proyecto de Snap"
 
 #: app/templates/coder/dashboard-basic.html:182
 #: app/templates/coder/dashboard-default-basic.html:373
@@ -772,7 +772,7 @@ msgstr "Tu proyecto no tiene código duplicado. ¡Buen trabajo!"
 #: app/templates/main/dashboard-default-old.html:303
 #: app/templates/main/dashboard-default.html:10
 msgid "Rethinking Mode"
-msgstr ""
+msgstr "Modo Reflexión"
 
 #: app/templates/coder/dashboard-default-basic.html:299
 #: app/templates/coder/dashboard-default-developing.html:287
@@ -780,7 +780,7 @@ msgstr ""
 #: app/templates/main/dashboard-default-old.html:304
 #: app/templates/main/dashboard-default.html:11
 msgid "Vanilla Mode"
-msgstr ""
+msgstr "Modo Estándar"
 
 #: app/templates/coder/dashboard-default-basic.html:300
 #: app/templates/coder/dashboard-default-developing.html:288
@@ -788,7 +788,7 @@ msgstr ""
 #: app/templates/main/dashboard-default-old.html:305
 #: app/templates/main/dashboard-default.html:12
 msgid "Extended Mode"
-msgstr ""
+msgstr "Modo Extendido"
 
 #: app/templates/coder/dashboard-default-basic.html:309
 #: app/templates/coder/dashboard-default-developing.html:297
@@ -796,7 +796,7 @@ msgstr ""
 #: app/templates/main/dashboard-default-old.html:316
 #: app/templates/main/dashboard-default.html:486
 msgid "Bad Smells World"
-msgstr ""
+msgstr "Mundo de los Bad Smells"
 
 #: app/templates/coder/dashboard-default-basic.html:315
 #: app/templates/coder/dashboard-default-developing.html:303
@@ -818,7 +818,7 @@ msgstr "Nombres de objetos"
 #: app/templates/main/dashboard-default-old.html:329
 #: app/templates/main/dashboard-default.html:499
 #: app/templates/main/dashboard-default.html:1346
-#, fuzzy
+
 #| msgid "Backdrop naming"
 msgid "Backdrop Naming"
 msgstr "Nombres de escenarios"
@@ -950,10 +950,10 @@ msgstr ""
 #: app/templates/coder/dashboard-default-developing.html:749
 #: app/templates/coder/dashboard-default-master.html:750
 #: app/templates/coder/dashboard-master.html:540
-#, fuzzy
-#| msgid "©2014 Dr. Scratch is powered by "
-msgid "© 2019 Dr. Scratch."
-msgstr "©2014 Dr. Scratch está implementado con "
+
+#| msgid "©2014 Dr. Snap is powered by "
+msgid "© 2019 Dr. Snap."
+msgstr "©2014 Dr. Snap está implementado con "
 
 #: app/templates/coder/dashboard-default-developing.html:324
 #: app/templates/coder/dashboard-default-master.html:324
@@ -967,7 +967,7 @@ msgid "Duplicated Scripts"
 msgstr "Programas duplicados"
 
 #: app/templates/coder/dashboard-default-developing.html:346
-#, fuzzy
+
 #| msgid ""
 #| "<h3 class='text-left dark-text'>The level of your project is... "
 #| "<strong>DEVELOPING! </strong></h3>"
@@ -1245,8 +1245,8 @@ msgid "Downloads"
 msgstr "Descargas"
 
 #: app/templates/coder/email-sign-up.html:5
-msgid "New coder in Dr. Scratch!"
-msgstr "¡Nuevo programador en Dr. Scratch!"
+msgid "New coder in Dr. Snap!"
+msgstr "¡Nuevo programador en Dr. Snap!"
 
 #: app/templates/coder/email-sign-up.html:7
 msgid ""
@@ -1269,8 +1269,8 @@ msgstr "¡Gracias por usar nuestra web!"
 #: app/templates/password/email.html:14
 #: app/templates/sign-password/email-reset-pwd.html:14
 #: app/templates/sign/email.html:12
-msgid "The Dr. Scratch team"
-msgstr "El equipo de Dr. Scratch"
+msgid "The Dr. Snap team"
+msgstr "El equipo de Dr. Snap"
 
 #: app/templates/coder/main.html:12 app/templates/main/rubric-uploader.html:123
 #: app/templates/organization/main.html:12
@@ -1282,21 +1282,8 @@ msgstr "¿Quieres analizar un proyecto?"
 #: app/templates/main/rubric-uploader.html:125
 #: app/templates/organization/main.html:14
 msgid "There are two options to analyze your Scratch project now!"
-msgstr "Hay dos opciones para analizar un proyecto de Scratch con Dr. Scratch"
+msgstr "Hay dos opciones para analizar un proyecto de Snap con Dr. Snap"
 
-#: app/templates/coder/main.html:18
-#: app/templates/main/compare-uploader.html:194
-#: app/templates/main/main.html:353 app/templates/main/main_new.html:251
-#: app/templates/main/rubric-uploader.html:130
-#: app/templates/organization/main.html:19
-msgid ""
-"1. Introduce the <span class='colored-text'><a data-toggle='modal' "
-"href='#modalUrl'>url</a></span> of your Scratch project, you don't have to "
-"download it:"
-msgstr ""
-"1. Introduce la <span class='colored-text'><a data-toggle='modal' "
-"href='#modalUrl'>url</a></span> de tu proyecto Scratch, no tendrás que "
-"descargarlo:"
 
 #: app/templates/coder/main.html:19
 #: app/templates/main/compare-uploader.html:202
@@ -1316,6 +1303,20 @@ msgstr ""
 "placeholder\" placeholder=\"http://scratch.mit.edu/projects/tu_número\" "
 "type=\"text\">"
 
+#: app/templates/coder/main.html:18
+#: app/templates/main/compare-uploader.html:194
+#: app/templates/main/main.html:353 app/templates/main/main_new.html:251
+#: app/templates/main/rubric-uploader.html:130
+#: app/templates/organization/main.html:19
+msgid ""
+"1. Introduce the <span class='colored-text'><a data-toggle='modal' "
+"href='#modalUrl'>url</a></span> of your Snap project, you don't have to "
+"download it:"
+msgstr ""
+"1. Introduce la <span class='colored-text'><a data-toggle='modal' "
+"href='#modalUrl'>url</a></span> de tu proyecto Snap, no hace falta que lo "
+"descargues:"
+
 #: app/templates/coder/main.html:20
 #: app/templates/main/dashboard-compare-2.html:647
 #: app/templates/main/dashboard-default.html:727
@@ -1324,7 +1325,7 @@ msgstr ""
 #: app/templates/main/rubric-uploader.html:132
 #: app/templates/organization/main.html:21
 msgid "Analyze by url"
-msgstr "Analizar por url"
+msgstr "Analizar por URL"
 
 #: app/templates/coder/main.html:25
 #: app/templates/main/compare-uploader.html:207
@@ -1337,26 +1338,22 @@ msgid ""
 "analyze it here:"
 msgstr ""
 "2. Si tienes tu <span class='colored-text'><a data-toggle='modal' "
-"href='#modalProject'>proyecto</a></span> descargado en tu ordenador, podrás "
+"href='#modalProject'>proyecto</a></span> descargado en tu ordenador, puedes "
 "analizarlo aquí:"
 
 #: app/templates/coder/main.html:26 app/templates/main/main.html:360
 #: app/templates/main/main_new.html:259
 #: app/templates/main/rubric-uploader.html:137
 #: app/templates/organization/main.html:27
-msgid ""
-"<input  name='zipFile' type='file' class='filestyle' data-buttonText='Choose "
-"Project'>"
-msgstr ""
-"<input  name='zipFile' type='file' class='filestyle' data-buttonText='Elige "
-"Proyecto'>"
+msgid "<input name=\"zipFile\" id=\"cf-upload\" type=\"file\" class=\"filestyle\" data-buttonText=\"Choose Project\">"
+msgstr "<input name=\"zipFile\" id=\"cf-upload\" type=\"file\" class=\"filestyle\" data-buttonText=\"Elegir Proyecto\">"
 
 #: app/templates/coder/main.html:27 app/templates/main/main.html:361
 #: app/templates/main/main_new.html:260
 #: app/templates/main/rubric-uploader.html:138
 #: app/templates/organization/main.html:28
 msgid "Analyze my project"
-msgstr "Analiza mi proyecto"
+msgstr "Analizar mi proyecto"
 
 #: app/templates/coder/main.html:34 app/templates/coder/main.html:37
 #: app/templates/main/contact-form.html:142
@@ -1435,8 +1432,8 @@ msgid "Statistics"
 msgstr "Estadísticas"
 
 #: app/templates/discuss.html:78
-msgid "What do you think about Dr. Scratch?"
-msgstr "¿Qué piensas de Dr. Scratch?"
+msgid "What do you think about Dr. Snap?"
+msgstr "¿Qué piensas de Dr. Snap?"
 
 #: app/templates/discuss.html:86
 msgid "Leave your comment"
@@ -1448,9 +1445,9 @@ msgstr "Regístrate o identifícate"
 
 #: app/templates/discuss.html:100
 msgid ""
-"Tell us what do you think about Dr. Scratch, your thoughts, suggestions,"
+"Tell us what do you think about Dr. Snap, your thoughts, suggestions,"
 "etc..."
-msgstr "Cuentanos que piensas de Dr. Scratch, tus ideas, sugerencias, etc..."
+msgstr "Cuentanos que piensas de Dr. Snap, tus ideas, sugerencias, etc..."
 
 #: app/templates/discuss.html:112
 msgid "says.."
@@ -2045,7 +2042,7 @@ msgid "change size by (10)"
 msgstr "cambiar tamaño por (-1)"
 
 #: app/templates/learn/DataRepresentation.html:39
-#, fuzzy
+
 #| msgid "set size to (120) &percnt;"
 msgid "set size to (120)"
 msgstr "fijar tamaño a (120) %"
@@ -2286,19 +2283,19 @@ msgstr "Modo Vanilla"
 
 #: app/templates/learn/DefaultMode.html:24 app/templates/login/login.html:276
 #: app/templates/main/main_new.html:420
-msgid "There are two options to analyze a Scratch project with Dr. Scratch"
-msgstr "Hay dos opciones para analizar un proyecto de Scratch con Dr. Scratch"
+msgid "There are two options to analyze a Scratch project with Dr. Snap"
+msgstr "Hay dos opciones para analizar un proyecto de Snap con Dr. Snap"
 
 #: app/templates/learn/DefaultMode.html:28
 msgid ""
 "You can upload an sb3 file or just provide the project url, avoiding the "
 "need to previously download the project to your computer. By analyzing your "
-"projects with Dr. Scratch, you can easily check your Computational Thinking "
+"projects with Dr. Snap, you can easily check your Computational Thinking "
 "Score."
 msgstr ""
 "Puedes subir un fichero de extensión sb3 o utilizar la url que Scratch "
 "facilita sin necesidad de bajar previamente el proyecto a tu ordenador. "
-"Mediante el análisis de Dr. Scratch, puedes conocer fácilmente tu Nivel de "
+"Mediante el análisis de Dr. Snap, puedes conocer fácilmente tu Nivel de "
 "Pensamiento Computacional."
 
 #: app/templates/learn/FlowControl.html:5
@@ -2658,7 +2655,7 @@ msgid "when this sprite clicked"
 msgstr "al hacer clic en este objeto"
 
 #: app/templates/learn/Parallelization.html:48
-#, fuzzy
+
 #| msgid "if &lt;touching [the mouse pointer v]? &gt;"
 msgid "if &lt;touching [the mouse pointer v]? &gt; then"
 msgstr "si  &lt; ¿tocando [puntero del raton v]? &gt;"
@@ -3290,32 +3287,27 @@ msgstr "Recordarme"
 #: app/templates/sign/organization.html:187
 #: app/templates/sign/registerOrganization.html:104
 #: app/templates/sign/registerOrganization.html:163
-#, fuzzy
-#| msgid "Dr. Scratch for organizations"
-msgid "Dr. Scratch for Organizations"
-msgstr "Dr. Scratch para organizaciones"
+
+#| msgid "Dr. Snap for organizations"
+msgid "Dr. Snap for Organizations"
+msgstr "Dr. Snap para organizaciones"
 
 #: app/templates/login/login.html:129
 #: app/templates/sign/createOrganization.html:106
 #: app/templates/sign/createUser.html:106
 #: app/templates/sign/registerOrganization.html:106
-#, fuzzy
-#| msgid ""
-#| "Welcome to the Dr. Scratch website, an analytical tool that evaluates "
-#| "your Scratch projects in a variety of computational areas. This analyzer "
-#| "is a helpful tool to evaluate your own projects, or those of your Scratch "
-#| "students."
 msgid ""
-"Welcome to the Dr. Scratch website (version for organizations), an "
-"analytical tool that evaluates your Scratch projects in a variety of "
+"Welcome to the Dr. Snap website (version for organizations), an "
+"analytical tool that evaluates your Snap projects in a variety of "
 "computational areas. This analyzer is a helpful tool to evaluate your "
-"students' Scratch projects. You'll have a smart dashboard where you can see "
+"students' Snap projects. You'll have a smart dashboard where you can see "
 "the most important information about your students and their development."
 msgstr ""
-"Bienvenido a la Web de Dr. Scratch, es una aplicación que evalúa proyectos "
-"Scratch en relación a varios aspectos del pensamiento computacional. Este "
-"analizador es una herramienta muy útil tanto para evaluar tus proyectos "
-"Scratch como los de tus estudiantes."
+"Bienvenido a la web de Dr. Snap (versión para organizaciones), una "
+"herramienta analítica que evalúa tus proyectos de Snap en varias áreas del "
+"pensamiento computacional. Este analizador es una herramienta útil para "
+"evaluar los proyectos de Snap de tus estudiantes. Dispondrás de un panel "
+"inteligente donde verás la información más importante sobre tus alumnos."
 
 #: app/templates/login/login.html:133
 #: app/templates/organization/organization.html:135
@@ -3348,8 +3340,8 @@ msgstr "Por qué "
 #: app/templates/sign/createOrganization.html:165
 #: app/templates/sign/createUser.html:165
 #: app/templates/sign/registerOrganization.html:165
-msgid "you’ll love Dr. Scratch"
-msgstr "te encantará Dr. Scratch"
+msgid "you’ll love Dr. Snap"
+msgstr "te encantará Dr. Snap"
 
 #: app/templates/login/login.html:193 app/templates/main/main.html:552
 #: app/templates/main/main_new.html:337
@@ -3377,7 +3369,7 @@ msgid ""
 "We provide feedback on several aspects which are related to Computational "
 "Thinking."
 msgstr ""
-"Dr. Scratch ofrece realimentación en aspectos relacionados con el "
+"Dr. Snap ofrece realimentación en aspectos relacionados con el "
 "Pensamiento Computacional ayudándote a mejorarlos."
 
 #: app/templates/login/login.html:231 app/templates/main/main_new.html:375
@@ -3386,7 +3378,7 @@ msgstr "Mejorando constantemente"
 
 #: app/templates/login/login.html:233 app/templates/main/main_new.html:377
 msgid ""
-"We're continually enhancing the features of Dr. Scratch, and we'd love to "
+"We're continually enhancing the features of Dr. Snap, and we'd love to "
 "hear your thoughts"
 msgstr ""
 "Intentamos mejorar continuamente, por lo que nos gustaría escuchar tus "
@@ -3414,12 +3406,12 @@ msgstr "proyecto.png"
 msgid ""
 "You can upload an sb2 file or just provide the project url, avoiding the "
 "need to previously download the project to your computer. By analyzing your "
-"projects with Dr. Scratch, you can easily check your Computational Thinking "
+"projects with Dr. Snap, you can easily check your Computational Thinking "
 "Score."
 msgstr ""
 "Puedes subir un fichero de extensión sb2 o utilizar la url que Scratch "
 "facilita sin necesidad de bajar previamente el proyecto a tu ordenador. "
-"Mediante el análisis de Dr. Scratch, puedes conocer fácilmente tu Nivel de "
+"Mediante el análisis de Dr. Snap, puedes conocer fácilmente tu Nivel de "
 "Pensamiento Computacional."
 
 #: app/templates/login/login.html:323 app/templates/main/main_new.html:467
@@ -3435,11 +3427,11 @@ msgid "Soon"
 msgstr "Funcionalidades"
 
 #: app/templates/login/login.html:329 app/templates/main/main_new.html:473
-msgid "We are working on new features to improve Dr. Scratch"
-msgstr "Estamos trabajando en nuevas características que mejoren Dr. Scratch"
+msgid "We are working on new features to improve Dr. Snap"
+msgstr "Estamos trabajando en nuevas características que mejoren Dr. Snap"
 
 #: app/templates/login/login.html:344
-#, fuzzy
+
 #| msgid "Multilingual website"
 msgid "Multilingual Website"
 msgstr "Web multilenguaje"
@@ -3449,15 +3441,15 @@ msgstr "Web multilenguaje"
 #: app/templates/main/main_new.html:492
 msgid ""
 "We know the importance of receiving feedback on your own language to "
-"understand every little detail or hint, so we'll translate Dr. Scratch to "
+"understand every little detail or hint, so we'll translate Dr. Snap to "
 "facilitate coding learning to as many people as possible."
 msgstr ""
 "Sabemos que es más fácil entender cada detalle o indicación si la recibes en "
-"tu propio idioma, por ello traduciremos Dr. Scratch para facilitar el "
+"tu propio idioma, por ello traduciremos Dr. Snap para facilitar el "
 "aprendizaje del mayor número de personas posible."
 
 #: app/templates/login/login.html:359
-#, fuzzy
+
 #| msgid "Teacher accounts"
 msgid "Teacher Accounts"
 msgstr "Cuentas para profesores"
@@ -3471,7 +3463,7 @@ msgstr ""
 "seguimiento de sus progresos de una forma rápida y simple."
 
 #: app/templates/login/login.html:374
-#, fuzzy
+
 #| msgid "Cloud platform"
 msgid "Cloud Platform"
 msgstr "Plataforma en la nube"
@@ -3486,10 +3478,10 @@ msgstr ""
 
 #: app/templates/login/login.html:403 app/templates/main/main_new.html:547
 msgid ""
-"With Dr. Scratch plug-ins for Chrome and Firefox, students will analyze "
+"With Dr. Snap plug-ins for Chrome and Firefox, students will analyze "
 "their project WHILE programming on the Scratch website."
 msgstr ""
-"Con los plugins de Dr. Scratch para Chrome y Firefox, los estudiantes podrán "
+"Con los plugins de Dr. Snap para Chrome y Firefox, los estudiantes podrán "
 "analizar sus proyectos MIENTRAS programan en la web de Scratch."
 
 #: app/templates/login/login.html:414 app/templates/main/main_new.html:558
@@ -3505,7 +3497,7 @@ msgstr ""
 "ideas interesantes para gamificar nuestra plataforma?"
 
 #: app/templates/login/login.html:429
-#, fuzzy
+
 #| msgid "Social network"
 msgid "Social Network"
 msgstr "Red social"
@@ -3524,8 +3516,8 @@ msgstr "Contacto"
 
 #: app/templates/login/login.html:455 app/templates/main/main.html:636
 #: app/templates/main/main_new.html:599
-msgid "<strong>Contact </strong> Dr. Scratch team</h2>"
-msgstr "<strong>Contacta </strong>con el equipo Dr. Scratch</h2>"
+msgid "<strong>Contact </strong> Dr. Snap team</h2>"
+msgstr "<strong>Contacta </strong>con el equipo Dr. Snap</h2>"
 
 #: app/templates/login/login.html:459 app/templates/main/main_new.html:603
 msgid "We would be pleased to receive your feedback"
@@ -3544,8 +3536,8 @@ msgid "Collaborators"
 msgstr "Colaboradores"
 
 #: app/templates/login/login.html:520 app/templates/main/main_new.html:666
-msgid "Are you a Dr. Scratch user?"
-msgstr "¿Eres usuario de Dr. Scratch?"
+msgid "Are you a Dr. Snap user?"
+msgstr "¿Eres usuario de Dr. Snap?"
 
 #: app/templates/login/login.html:523 app/templates/main/main_new.html:669
 msgid "Join now!"
@@ -3652,7 +3644,7 @@ msgstr "¡Gracias a todos!"
 msgid ""
 "We are so pleased to receive so much help of you and we thought that the "
 "best way of show our appreciation is including your work in the website. In "
-"this space you can see who people help us to improve Dr. Scratch!"
+"this space you can see who people help us to improve Dr. Snap!"
 msgstr ""
 "Estamos muy agradecidos de recibir vuestra ayuda y hemos pensado que la "
 "mejor manera de mostrar nuestro aprecio es incluyendo vuestro trabajo en la "
@@ -3664,8 +3656,8 @@ msgid "Who we are"
 msgstr "Quiénes somos"
 
 #: app/templates/main/collaborators.html:252
-msgid "Dr. Scratch's team likes to thank you for your contributions."
-msgstr "El equipo de Dr. Scratch agradece vuestras contribuciones."
+msgid "Dr. Snap's team likes to thank you for your contributions."
+msgstr "El equipo de Dr. Snap agradece vuestras contribuciones."
 
 #: app/templates/main/collaborators.html:266
 msgid "Team Members"
@@ -3674,10 +3666,10 @@ msgstr "Miembros del Equipo"
 #: app/templates/main/collaborators.html:271
 #: app/templates/main/collaborators.html:423
 msgid ""
-"Would you like help us to translate Dr. Scratch to your language? Many "
+"Would you like help us to translate Dr. Snap to your language? Many "
 "people have already helped us! "
 msgstr ""
-"¿Te gustaría ayudarnos a traducir Dr. Scratch a tu lengua? ¡Mucha gente nos "
+"¿Te gustaría ayudarnos a traducir Dr. Snap a tu lengua? ¡Mucha gente nos "
 "ha ayudado ya!"
 
 #: app/templates/main/collaborators.html:286
@@ -3768,7 +3760,7 @@ msgid "<strong>More thanks</strong></h2>"
 msgstr "<strong>Más agradecimientos</strong></h2>"
 
 #: app/templates/main/compare-uploader.html:179
-#, fuzzy
+
 #| msgid "Do you want to analyze one project?"
 msgid "Do you want to compare two projects?"
 msgstr "¿Quieres analizar un proyecto?"
@@ -3778,19 +3770,19 @@ msgid "Upload your two projects to compare them now!"
 msgstr ""
 
 #: app/templates/main/compare-uploader.html:185
-#, fuzzy
+
 #| msgid "Total projects"
 msgid "Original Project"
 msgstr "Projectos totales"
 
 #: app/templates/main/compare-uploader.html:189
-#, fuzzy
+
 #| msgid " projects"
 msgid "New Project"
 msgstr " proyectos"
 
 #: app/templates/main/compare-uploader.html:198
-#, fuzzy
+
 #| msgid ""
 #| "<input name=\"urlProject\" id=\"cf-name\" class=\"form-control input-box "
 #| "placeholder\" placeholder=\"http:/scratch.mit.edu/projects/your_number\" "
@@ -3805,7 +3797,7 @@ msgstr ""
 "type=\"text\">"
 
 #: app/templates/main/compare-uploader.html:211
-#, fuzzy
+
 #| msgid ""
 #| "<input  name='zipFile' type='file' class='filestyle' data-"
 #| "buttonText='Choose Project'>"
@@ -3817,7 +3809,7 @@ msgstr ""
 "Proyecto'>"
 
 #: app/templates/main/compare-uploader.html:215
-#, fuzzy
+
 #| msgid ""
 #| "<input  name='zipFile' type='file' class='filestyle' data-"
 #| "buttonText='Choose Project'>"
@@ -3841,7 +3833,7 @@ msgid "No"
 msgstr ""
 
 #: app/templates/main/compare-uploader.html:238
-#, fuzzy
+
 #| msgid "Total projects"
 msgid "Compare Projects"
 msgstr "Projectos totales"
@@ -3850,7 +3842,7 @@ msgstr "Projectos totales"
 #: app/templates/main/compare-uploader.html:244
 #: app/templates/main/main.html:374 app/templates/main/rubric-uploader.html:150
 #: app/templates/main/rubric-uploader.html:153
-#, fuzzy
+
 #| msgid "Error! Please choose a .sb or .sb2 file or input an url"
 msgid "Error! Please choose a .sb or .sb3 file or input an url"
 msgstr "¡Error! Por favor elige un fichero .sb o .sb2 o pon una url"
@@ -3954,7 +3946,7 @@ msgid "Average Mastery: "
 msgstr "Maestría promedio: "
 
 #: app/templates/main/dashboard-bulk-landing.html:156
-#, fuzzy
+
 #| msgid "Thanks for using our website!"
 msgid "Thanks for using Dr.Scratch!!"
 msgstr "¡Gracias por usar nuestra web!"
@@ -3966,7 +3958,7 @@ msgid ""
 msgstr ""
 
 #: app/templates/main/dashboard-bulk.html:183
-#, fuzzy
+
 #| msgid "The level of your project is..."
 msgid "The mean level of your projects is..."
 msgstr "El nivel de tu proyecto es..."
@@ -3974,10 +3966,10 @@ msgstr "El nivel de tu proyecto es..."
 #: app/templates/main/dashboard-bulk_ol.html:190
 #: app/templates/main/dashboard-default-old.html:1069
 #: app/templates/main/dashboard-personal-old.html:598
-#, fuzzy
-#| msgid "©2014 Dr. Scratch is powered by "
-msgid "©2024 Dr. Scratch"
-msgstr "©2014 Dr. Scratch está implementado con "
+
+#| msgid "©2014 Dr. Snap is powered by "
+msgid "©2024 Dr. Snap"
+msgstr "©2014 Dr. Snap está implementado con "
 
 #: app/templates/main/dashboard-compare-1.html:350
 #: app/templates/main/dashboard-compare-1.html:520
@@ -3993,7 +3985,7 @@ msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:369
 #: app/templates/main/dashboard-compare-1.html:447
-#, fuzzy
+
 #| msgid "Total projects"
 msgid "Total Blocks"
 msgstr "Projectos totales"
@@ -4005,7 +3997,7 @@ msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:375
 #: app/templates/main/dashboard-compare-1.html:453
-#, fuzzy
+
 #| msgid "Total projects"
 msgid "Total Sprites"
 msgstr "Projectos totales"
@@ -4013,7 +4005,7 @@ msgstr "Projectos totales"
 #: app/templates/main/dashboard-compare-1.html:377
 #: app/templates/main/dashboard-compare-1.html:397
 #: app/templates/main/dashboard-compare-2.html:702
-#, fuzzy
+
 #| msgid " sprite naming."
 msgid " sprites"
 msgstr "nombres de objetos inadecuados."
@@ -4024,19 +4016,19 @@ msgid "Bad Smells:"
 msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:387
-#, fuzzy
+
 #| msgid " duplicated scripts."
 msgid " duplicated"
 msgstr "programas duplicados."
 
 #: app/templates/main/dashboard-compare-1.html:392
-#, fuzzy
+
 #| msgid " dead code."
 msgid " dead blocks"
 msgstr " código muerto."
 
 #: app/templates/main/dashboard-compare-1.html:402
-#, fuzzy
+
 #| msgid " backdrop naming."
 msgid " backdrops"
 msgstr " nombres de escenarios inadecuados."
@@ -4063,13 +4055,13 @@ msgstr ""
 #: app/templates/main/dashboard-compare-1.html:455
 #: app/templates/main/dashboard-compare-1.html:475
 #: app/templates/main/dashboard-compare-2.html:710
-#, fuzzy
+
 #| msgid " sprite naming."
 msgid " sprites "
 msgstr "nombres de objetos inadecuados."
 
 #: app/templates/main/dashboard-compare-1.html:465
-#, fuzzy
+
 #| msgid " duplicated scripts."
 msgid " duplicated "
 msgstr "programas duplicados."
@@ -4079,7 +4071,7 @@ msgid " dead blocks "
 msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:480
-#, fuzzy
+
 #| msgid " backdrop naming."
 msgid " backdrops "
 msgstr " nombres de escenarios inadecuados."
@@ -4112,7 +4104,7 @@ msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:602
 #: app/templates/main/dashboard-compare-2.html:444
-#, fuzzy
+
 #| msgid "Bad habits"
 msgid "Original Bad habits"
 msgstr "Malos hábitos"
@@ -4136,7 +4128,7 @@ msgstr ""
 #: app/templates/main/dashboard-compare-1.html:701
 #: app/templates/main/dashboard-compare-2.html:539
 #: app/templates/main/dashboard-default.html:315
-#, fuzzy
+
 #| msgid "Bad habits"
 msgid "New Bad habits"
 msgstr "Malos hábitos"
@@ -4148,7 +4140,7 @@ msgstr "Malos hábitos"
 #: app/templates/main/dashboard-default.html:1150
 #: app/templates/main/dashboard-personal.html:188
 msgid "Dimensions Evaluated in your Scratch Project"
-msgstr "Dimensiones evaluadas en tu proyecto de Scratch"
+msgstr "Dimensiones evaluadas en tu proyecto de Snap"
 
 #: app/templates/main/dashboard-compare-1.html:814
 #: app/templates/main/dashboard-compare-1.html:824
@@ -4163,7 +4155,7 @@ msgstr "Escala de la nota de cada Dimensión"
 #: app/templates/main/dashboard-compare-2.html:870
 #: app/templates/main/dashboard-default.html:1242
 #: app/templates/main/dashboard-personal.html:274
-#, fuzzy
+
 #| msgid "Duplicated scripts"
 msgid "Duplicates"
 msgstr "Programas duplicados"
@@ -4206,7 +4198,7 @@ msgstr ""
 
 #: app/templates/main/dashboard-compare-1.html:1068
 #: app/templates/main/dashboard-compare-2.html:422
-#, fuzzy
+
 #| msgid " dead code."
 msgid "You have dropped this project by "
 msgstr " código muerto."
@@ -4245,7 +4237,7 @@ msgstr ""
 #: app/templates/main/dashboard-compare-2.html:633
 #: app/templates/main/dashboard-default.html:713
 #: app/templates/main/dashboard-default.html:1106
-#, fuzzy
+
 #| msgid "Total projects"
 msgid "Compare project"
 msgstr "Projectos totales"
@@ -4258,7 +4250,7 @@ msgstr "Projectos totales"
 #: app/templates/main/dashboard-default.html:1107
 #: app/templates/main/dashboard-personal.html:161
 msgid "Certificate of the Evaluation of your Scratch Project"
-msgstr "Certificado de la Evaluación de tu proyecto de Scratch"
+msgstr "Certificado de la Evaluación de tu proyecto de Snap"
 
 #: app/templates/main/dashboard-compare-2.html:1014
 msgid "Show Less"
@@ -4275,13 +4267,13 @@ msgid "Grade from 1 to 3 of each Dimension"
 msgstr "Escala de 1 a 3 de la nota de cada Dimensión"
 
 #: app/templates/main/dashboard-default.html:265
-#, fuzzy
+
 #| msgid "Score:"
 msgid "New Score:"
 msgstr "Puntuación:"
 
 #: app/templates/main/dashboard-default.html:272
-#, fuzzy
+
 #| msgid "The level of your project is..."
 msgid "The new level of your project is..."
 msgstr "El nivel de tu proyecto es..."
@@ -4319,15 +4311,22 @@ msgstr "aquí"
 
 #: app/templates/main/main.html:320 app/templates/main/main_new.html:226
 msgid ""
-"Welcome to the Dr. Scratch website, an analytical tool that evaluates your "
-"Scratch projects in a variety of computational areas. This analyzer is a "
-"helpful tool to evaluate your own projects, or those of your Scratch "
+"Welcome to the Dr. Snap website, an analytical tool that evaluates your "
+"Snap projects in a variety of computational areas. This analyzer is a "
+"helpful tool to evaluate your own projects, or those of your Snap "
 "students."
 msgstr ""
-"Bienvenido a la Web de Dr. Scratch, es una aplicación que evalúa proyectos "
-"Scratch en relación a varios aspectos del pensamiento computacional. Este "
-"analizador es una herramienta muy útil tanto para evaluar tus proyectos "
-"Scratch como los de tus estudiantes."
+"Bienvenido a la web de Dr. Snap, una herramienta analítica que evalúa "
+"proyectos de Snap en relación a varios aspectos del pensamiento computacional. "
+"Este analizador es una herramienta muy útil tanto para evaluar tus propios "
+"proyectos como los de tus estudiantes."
+
+#: app/templates/coder/main.html:14 app/templates/main/main.html:344
+#: app/templates/main/main_new.html:246
+#: app/templates/main/rubric-uploader.html:125
+#: app/templates/organization/main.html:14
+msgid "There are two options to analyze your Snap project now!"
+msgstr "¡Hay dos opciones para analizar un proyecto de Snap ahora!"
 
 #: app/templates/main/main.html:452
 msgid "IMPORTANT!"
@@ -4342,7 +4341,7 @@ msgstr ""
 "por linea. (Max. 10)"
 
 #: app/templates/main/main.html:454
-#, fuzzy
+
 #| msgid ""
 #| "<input  name='urlsFile' type='file' class='filestyle' data-"
 #| "buttonText='Choose txt'>"
@@ -4354,7 +4353,7 @@ msgstr ""
 "Proyecto'>"
 
 #: app/templates/main/main.html:455
-#, fuzzy
+
 #| msgid ""
 #| "<input name=\"urlProject\" id=\"cf-name\" class=\"form-control input-box "
 #| "placeholder\" placeholder=\"http:/scratch.mit.edu/projects/your_number\" "
@@ -4368,7 +4367,7 @@ msgstr ""
 "type=\"text\">"
 
 #: app/templates/main/main.html:456 app/templates/main/main.html:512
-#, fuzzy
+
 #| msgid "Enter email"
 msgid "Please enter an email!"
 msgstr "Introduce tu correo: "
@@ -4409,8 +4408,8 @@ msgstr "NUEVO!!"
 
 #: app/templates/main/main.html:510
 msgid ""
-"This mode gives you a feedback about the bad smells of your project and how "
-"to solved them with a assistant style."
+"This mode gives you a feedback about the bad smells of your project"
+" and how to solve them with a assistant interface."
 msgstr "Este modo te da una retroalimentación acerca de los bad smells de tu proyecto "
 "y como solucionarlos."
 
@@ -4436,7 +4435,7 @@ msgstr "El modo comparativa te permite ver y comparar diferentes "
 "proyectos o diferentes versiones y marccando los detalles mas imporantes."
 
 #: app/templates/main/main.html:541
-#, fuzzy
+
 #| msgid "Analyze my projects"
 msgid "Compare my projects"
 msgstr "Analiza mis proyectos"
@@ -4455,7 +4454,7 @@ msgstr ""
 "Por primera vez un equipo español, formado por investigadores de la "
 "Universidad Rey Juan Carlos de Madrid y docentes de la asociación sevillana "
 "Programamos, ha sido galardonado con un Google RISE Award, por el proyecto "
-"Dr. Scratch."
+"Dr. Snap."
 
 #: app/templates/main/main.html:581
 msgid "Article of "
@@ -4474,12 +4473,12 @@ msgid "of Dr.Scratch."
 msgstr "de Dr.Scratch"
 
 #: app/templates/main/main.html:772 app/templates/main/main_new.html:775
-msgid "It's easy -and free- sign up an account in Dr. Scratch"
-msgstr "Es fácil -y gratis- registrarte en Dr. Scratch"
+msgid "It's easy -and free- sign up an account in Dr. Snap"
+msgstr "Es fácil -y gratis- registrarte en Dr. Snap"
 
 #: app/templates/main/main.html:778 app/templates/main/main_new.html:781
-msgid "Choose a Dr. Scratch Username"
-msgstr "Elige un nombre de usuario en Dr. Scratch"
+msgid "Choose a Dr. Snap Username"
+msgstr "Elige un nombre de usuario en Dr. Snap"
 
 #: app/templates/main/main.html:780 app/templates/main/main_new.html:783
 msgid ""
@@ -4551,7 +4550,7 @@ msgid ""
 "us.  Your birth month and year will not be made public."
 msgstr ""
 "Usamos esta información para calcular el rango de edad de las personas que "
-"utilizan Dr. Scratch, y confirmar que tu eres el propietario de la cuenta si "
+"utilizan Dr. Snap, y confirmar que tu eres el propietario de la cuenta si "
 "nos contactas. Esto no será publico."
 
 #: app/templates/main/main.html:834 app/templates/main/main.html:866
@@ -4560,13 +4559,13 @@ msgstr "Género"
 
 #: app/templates/main/main.html:836
 msgid ""
-"This helps the Dr. Scratch design team understand who is using Dr. Scratch, "
+"This helps the Dr. Snap design team understand who is using Dr. Snap, "
 "and provides information that helps us broaden participation.  This "
 "information is not visible on your account, and is only used to describe "
 "overall participation."
 msgstr ""
-"Sirve para ayudar al equipo de diseño de Dr. Scratch a entender quien está "
-"usando Dr. Scratch, y nos proporciona información que nos ayuda a ampliar la "
+"Sirve para ayudar al equipo de diseño de Dr. Snap a entender quien está "
+"usando Dr. Snap, y nos proporciona información que nos ayuda a ampliar la "
 "participación. Esta información no es visible en tu cuenta, y solo es "
 "utilizada para describir la participación."
 
@@ -4740,10 +4739,10 @@ msgstr ""
 
 #: app/templates/main/main_organization.html:159
 #: app/templates/upload/dashboard-organization.html:107
-#, fuzzy
-#| msgid "The Dr. Scratch team"
-msgid "Welcome to the Dr. Scratch website, "
-msgstr "El equipo de Dr. Scratch"
+
+#| msgid "The Dr. Snap team"
+msgid "Welcome to the Dr. Snap website, "
+msgstr "El equipo de Dr. Snap"
 
 #: app/templates/main/main_organization.html:177
 #: app/templates/organization/main.html:57
@@ -4834,7 +4833,7 @@ msgstr ""
 "flexible para adaptarse a cambios futuros y reutilización."
 
 #: app/templates/main/rubric-creator.html:426
-#, fuzzy
+
 #| msgid "Parallelism"
 msgid "Parallelization"
 msgstr "Paralelismo"
@@ -5260,7 +5259,7 @@ msgid "Music"
 msgstr "Música"
 
 #: app/templates/main/rubric-creator.html:591
-#, fuzzy
+
 #| msgid "Organizations"
 msgid "Animations"
 msgstr "Animaciones"
@@ -5296,20 +5295,20 @@ msgstr ""
 
 #: app/templates/organization/base.html:77
 #: app/templates/statistics/statistics.html:65
-#, fuzzy
+
 #| msgid "Scores of 2019"
 msgid "Scores of 2015"
 msgstr "Puntuación de 2019"
 
 #: app/templates/organization/base.html:104
 #: app/templates/statistics/statistics.html:92
-#, fuzzy
+
 #| msgid "Number of projects analyzed in 2019"
 msgid "Number of projects analyzed in 2015"
 msgstr "Número de proyectos analizados en 2019"
 
 #: app/templates/organization/dashboard-master.html:174
-#, fuzzy
+
 #| msgid ""
 #| "<h3 class='text-left dark-text'>The level of your project is... <strong> "
 #| "MASTER! </strong></h3>"
@@ -5322,8 +5321,8 @@ msgstr ""
 
 #: app/templates/organization/email-sign-up.html:5
 #: app/templates/sign/email.html:5
-msgid "New organization in Dr. Scratch!"
-msgstr "¡Nueva organización en Dr. Scratch!"
+msgid "New organization in Dr. Snap!"
+msgstr "¡Nueva organización en Dr. Snap!"
 
 #: app/templates/organization/email-sign-up.html:7
 #: app/templates/sign/email.html:7
@@ -5340,31 +5339,31 @@ msgstr "¿Quieres analizar muchos proyectos?"
 
 #: app/templates/organization/organization.html:129
 #: app/templates/organization/organization.html:188
-msgid "Dr. Scratch for organizations"
-msgstr "Dr. Scratch para organizaciones"
+msgid "Dr. Snap for organizations"
+msgstr "Dr. Snap para organizaciones"
 
 #: app/templates/organization/organization.html:130
 #: app/templates/sign/organization.html:129
-msgid "Welcome to the organizations version of Dr. Scratch"
-msgstr "Bienvenido a la versión de Dr. Scratch para organizaciones"
+msgid "Welcome to the organizations version of Dr. Snap"
+msgstr "Bienvenido a la versión de Dr. Snap para organizaciones"
 
 #: app/templates/organization/organization.html:131
 #: app/templates/sign/organization.html:130
 msgid ""
-"Dr. Scratch for organizations is an analytical tool that can help you "
+"Dr. Snap for organizations is an analytical tool that can help you "
 "evaluate the Scratch projects of the students participating in your "
 "initiatives to asses their progression in terms of coding and computational "
 "thinking skills. "
 msgstr ""
-"Dr. Scratch para organizaciones es una herramienta analítica que te ayuda a "
+"Dr. Snap para organizaciones es una herramienta analítica que te ayuda a "
 "evaluar los proyectos Scratch de los estudiantes que participan en tus "
 "iniciativas y te permite controlar su progresión en relación a sus "
 "habilidades de programación y pensamiento computacional."
 
 #: app/templates/organization/organization.html:190
 #: app/templates/sign/organization.html:189
-msgid "to join Dr. Scratch for organizations?"
-msgstr "disfrutar Dr. Scratch para organizaciones."
+msgid "to join Dr. Snap for organizations?"
+msgstr "disfrutar Dr. Snap para organizaciones."
 
 #: app/templates/organization/organization.html:193
 #: app/templates/sign/organization.html:192
@@ -5372,7 +5371,7 @@ msgid ""
 "Would you like to be one of the 10 first organizations testing this new "
 "feature? Just drop us a line at "
 msgstr ""
-"Si quieres ser una de las 10 primeras organizaciones que prueban Dr. Scratch "
+"Si quieres ser una de las 10 primeras organizaciones que prueban Dr. Snap "
 "envíanos un email a "
 
 #: app/templates/organization/organization.html:193
@@ -5410,7 +5409,7 @@ msgstr "Clave"
 #: app/templates/sign/createUser.html:204
 #: app/templates/sign/organization.html:233
 #: app/templates/sign/registerOrganization.html:204
-#, fuzzy
+
 #| msgid ""
 #| "<input type='password' class='form-control'  name='password' "
 #| "placeholder='Password'>"
@@ -5438,7 +5437,7 @@ msgstr "Reestablecer contraseña"
 #: app/templates/sign-password/email-reset-pwd.html:6
 msgid ""
 "You're receiving this email because you requested a password reset for your "
-"user account at Dr. Scratch."
+"user account at Dr. Snap."
 msgstr ""
 "Estas recibiendo este email porque has pedido restaurar tu cuenta en Dr. "
 "Scratch."
@@ -5502,19 +5501,19 @@ msgid ""
 msgstr ""
 
 #: app/templates/sign/createOrganization.html:170
-#, fuzzy
+
 #| msgid ""
 #| "Would you like to be one of the 10 first organizations testing this new "
 #| "feature? Just drop us a line at "
 msgid ""
-"If you want to be one of the ten first organizations which prove Dr. Scratch "
+"If you want to be one of the ten first organizations which prove Dr. Snap "
 "send us an email to "
 msgstr ""
-"Si quieres ser una de las 10 primeras organizaciones que prueban Dr. Scratch "
+"Si quieres ser una de las 10 primeras organizaciones que prueban Dr. Snap "
 "envíanos un email a "
 
 #: app/templates/sign/createOrganization.html:170
-#, fuzzy
+
 #| msgid ""
 #| " and we'll send you a hash key that will allow you to sign up in the web"
 msgid " and we'll give you your hash to can sign up in the web"
@@ -5524,7 +5523,7 @@ msgstr " y te daremos una clave para poder registrarte en la web"
 #: app/templates/sign/createUser.html:197
 #: app/templates/sign/organization.html:224
 #: app/templates/sign/registerOrganization.html:197
-#, fuzzy
+
 #| msgid ""
 #| "<input type='password' class='form-control'  name='password' "
 #| "placeholder='Password'>"
@@ -5540,7 +5539,7 @@ msgid "You can download your results. You do click in the following button:"
 msgstr ""
 
 #: app/templates/upload/dashboard-organization.html:125
-#, fuzzy
+
 #| msgid "Download my CSV files."
 msgid "Download .csv file"
 msgstr "Descargar el fichero .csv "
@@ -5554,19 +5553,19 @@ msgid "Analyze again!"
 msgstr ""
 
 #: app/templates/upload/dashboard-organization.html:163
-#, fuzzy
+
 #| msgid "Error! Please choose a .sb or .sb2 file or input an url"
 msgid "Error! Please choose a .csv file"
 msgstr "¡Error! Por favor elige un fichero .sb o .sb2 o pon una url"
 
 #: app/templates/upload/dashboard-organization.html:245
-#, fuzzy
+
 #| msgid "<img class='framed' src='../static/app/images/url-en.png' />"
 msgid "<img class='framed' src='../../static/app/images/url-en.png' />"
 msgstr "<img class='framed' src='../static/app/images/url-es.png' />"
 
 #: app/templates/upload/dashboard-organization.html:270
-#, fuzzy
+
 #| msgid "<img class='framed' src='../static/app/images/project-en.png' />"
 msgid "<img class='framed' src='../../static/app/images/project-en.png' />"
 msgstr "<img class='framed' src='../static/app/images/project-es.png' />"
@@ -5587,7 +5586,7 @@ msgstr ""
 #: app/templates/upload/dashboard-unregistered-basic.html:74
 #: app/templates/upload/dashboard-unregistered-developing.html:74
 #: app/templates/upload/dashboard-unregistered-master.html:93
-#, fuzzy
+
 #| msgid ""
 #| "Here we show the score in each programming skill as well as links to "
 #| "sites that can help you to level up."
@@ -5597,7 +5596,7 @@ msgstr ""
 "que pueden ayudarte a mejorarla."
 
 #: app/templates/upload/dashboard-unregistered-basic.html:122
-#, fuzzy
+
 #| msgid ""
 #| "<h3 class='text-left dark-text'>The level of your project is... "
 #| "<strong>BASIC! </strong></h3>"
@@ -5637,19 +5636,17 @@ msgstr ""
 #: app/templates/upload/dashboard-unregistered-master.html:290
 #: app/templates/upload/dashboard-unregistered.html:114
 msgid "Concept"
-msgstr ""
+msgstr "Concepto"
 
 #: app/templates/upload/dashboard-unregistered-basic.html:190
 #: app/templates/upload/dashboard-unregistered-developing.html:230
 #: app/templates/upload/dashboard-unregistered-master.html:291
 #: app/templates/upload/dashboard-unregistered.html:115
-#, fuzzy
-#| msgid " points"
 msgid "Points"
-msgstr " puntos"
+msgstr "Puntos"
 
 #: app/templates/upload/dashboard-unregistered-developing.html:131
-#, fuzzy
+
 #| msgid ""
 #| "<h3 class='text-left dark-text'>The level of your project is... "
 #| "<strong>DEVELOPING! </strong></h3>"
@@ -5661,7 +5658,7 @@ msgstr ""
 "<strong>¡MEDIO! </strong></h3>"
 
 #: app/templates/upload/dashboard-unregistered-developing.html:132
-#, fuzzy
+
 #| msgid "You're doing a great job. Keep it up!!!"
 msgid "You're doing a great job.<br> Keep it up!!!"
 msgstr "Estás haciendo un gran trabajo. ¡Sigue así!"
@@ -5672,7 +5669,7 @@ msgid "Details to fix:"
 msgstr ""
 
 #: app/templates/upload/dashboard-unregistered-master.html:170
-#, fuzzy
+
 #| msgid ""
 #| "<h3 class='text-left dark-text'>The level of your project is...  <strong> "
 #| "MASTER! </strong></h3>"
@@ -5684,7 +5681,7 @@ msgstr ""
 "</strong></h3>"
 
 #: app/templates/upload/dashboard-unregistered-master.html:252
-#, fuzzy
+
 #| msgid " dead code."
 msgid "You have dead code in "
 msgstr " código muerto."
@@ -5704,13 +5701,13 @@ msgid "Overview"
 msgstr ""
 
 #: app/templates/upload/dashboard-unregistered.html:63
-#, fuzzy
+
 #| msgid "Come back to your Scratch project."
 msgid "Welcome to Doctor Scratch. Project results."
 msgstr "Vuelve a tu proyecto Scratch"
 
 #: app/templates/upload/dashboard-unregistered.html:79
-#, fuzzy
+
 #| msgid "Score:"
 msgid "CT Score:"
 msgstr "Puntuación:"
@@ -5720,25 +5717,24 @@ msgid "Your level:"
 msgstr ""
 
 #: app/templates/upload/dashboard-unregistered.html:90
-#, fuzzy
+
 #| msgid "Development"
 msgid "Developing"
 msgstr "Medio"
 
 #: app/templates/upload/dashboard-unregistered.html:101
-#, fuzzy, python-format
 #| msgid ""
 #| " I have just obtained %(points)s points analyzing my project in Dr. "
 #| "Scratch! Beat it! @DrScratchTool "
 msgid ""
-"I have just obtained %(points)s points analyzing my project in Dr. Scratch! "
+"I have just obtained %(points)s points analyzing my project in Dr. Snap! "
 "Beat it! @DrScratchTool "
 msgstr ""
-"He conseguido %(points)s puntos analizando mi proyecto en Dr. Scratch!¡A ver "
+"He conseguido %(points)s puntos analizando mi proyecto en Dr. Snap!¡A ver "
 "si lo superas! @DrScratchTool"
 
 #: app/templates/upload/dashboard-unregistered.html:109
-#, fuzzy
+
 #| msgid "Score in detail"
 msgid "CT Score in detail:"
 msgstr "Puntuación en detalle:"
@@ -5746,7 +5742,7 @@ msgstr "Puntuación en detalle:"
 #: app/templates/upload/dashboard-unregistered.html:127
 #: app/templates/upload/dashboard-unregistered.html:131
 #: app/templates/upload/dashboard-unregistered.html:135
-#, fuzzy
+
 #| msgid "Learn more"
 msgid "Learn more!!!"
 msgstr "Aprende más"
@@ -5756,13 +5752,13 @@ msgid "Well done!!!"
 msgstr ""
 
 #: app/templates/upload/dashboard-unregistered.html:181
-#, fuzzy
+
 #| msgid "Sprite naming"
 msgid "Sprites naming"
 msgstr "Nombres de objetos"
 
 #: app/templates/upload/dashboard-unregistered.html:190
-#, fuzzy
+
 #| msgid "Incorrect names"
 msgid "Incorrect name:"
 msgstr "Nombres inadecuados"
@@ -5772,7 +5768,7 @@ msgid "blocks"
 msgstr ""
 
 #: app/templates/upload/dashboard-unregistered.html:242
-#, fuzzy
+
 #| msgid "Attribute initialization"
 msgid "Sprite attributes initialization"
 msgstr "Atributos no inicializados correctamente"
@@ -5801,8 +5797,8 @@ msgstr ""
 msgid "Russian"
 msgstr ""
 
-#~ msgid "Dr. Scratch Team"
-#~ msgstr "Equipo de Dr. Scratch"
+#~ msgid "Dr. Snap Team"
+#~ msgstr "Equipo de Dr. Snap"
 
 #~ msgid ""
 #~ "Pau Nin works as Elementary School teacher and Masters degree in "
@@ -5818,12 +5814,12 @@ msgstr ""
 #~ "docentes las posibilidades de ambas como recursos motivadores para el "
 #~ "aprendizaje."
 
-#, fuzzy
+
 #~| msgid " "
 #~ msgid "A "
 #~ msgstr " "
 
-#, fuzzy
+
 #~| msgid "A powerful tool to analyze your Scratch projects"
 #~ msgid "tool to analyze your Scratch projects"
 #~ msgstr "Una potente herramienta para analizar tus proyectos de Scratch"
@@ -5853,3 +5849,7 @@ msgstr ""
 #~ msgstr ""
 #~ "<input type='password' class='form-control' name='hashkey' "
 #~ "id='searchhashkey' placeholder='Contraseña'>"
+
+#: app/templates/main/main.html:268
+msgid "This is a Final Degree project version"
+msgstr "Esta es una versión de Trabajo de Fin de Grado"
