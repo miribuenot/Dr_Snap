@@ -444,31 +444,26 @@
     <br></br>
 
     <section id="section_batch" class="services" style="padding-left: 7%;">
-        <div class="container">            
-            <div class="row">
-                <div class="col-md-4 align-self-center" style="margin-top: 80px;">
-                    <h3><strong>{% trans "Batch Analysis Mode" %}</strong></h3>
-                    <p class="h4">
-                        {% trans "Analyze multiple projects at once! Upload a .txt file with URLs or a .zip file with project files, and get a CSV report." %}
-                    </p>
-                    
-                    <form action="/batch_analyze/" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <input type="file" name="batchFile" class="form-control" accept=".txt,.zip" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary standard-button">
-                            {% trans "Analyze Batch" %}
-                        </button>
-                    </form>
-                </div>
-                <div class="col-md-8 text-center">
-                    <img src="/static/app/images/csv.png" class="img-fluid mx-auto d-block" style="max-width: 60%; max-height: 60%; margin-top: 20px;" alt=""> 
-                </div>
-            </div> 
-        </div>
-    </section>
-    <br>
+            <div class="container">            
+                <div class="row">
+                    <div class="col-md-4 align-self-center" style="margin-top: 80px;">
+                        <h3><strong>{% trans "Batch Analysis Mode" %}</strong></h3>
+                        <p class="h4">
+                            {% trans "Analyze multiple projects at once! Upload a .txt file with URLs or a .zip file with project files, and get a CSV report." %}
+                        </p>
+                        
+                        <a href="/batch_mode/" class="btn btn-primary standard-button" style="margin-top: 20px;">
+                            {% trans "Go to Batch Analysis" %}
+                        </a>
+
+                    </div>
+                    <div class="col-md-8 text-center">
+                        <img src="/static/app/images/csv.png" class="img-fluid mx-auto d-block" style="max-width: 60%; max-height: 60%; margin-top: 20px;" alt=""> 
+                    </div>
+                </div> 
+            </div>
+        </section>
+        <br>
 
 
     

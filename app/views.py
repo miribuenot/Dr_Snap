@@ -93,6 +93,25 @@ def main(request):
     else:
         return render(request, 'main/main.html', {'username': None})
 
+def batch_mode_view(request):
+    """
+    Renderiza la página dedicada para el modo Batch.
+    """
+    user = None
+    username = None
+    flag_user = False
+    
+    if request.user.is_authenticated:
+        username = request.user.username
+        user = identify_user_type(request)
+        flag_user = True
+    
+    return render(request, 'main/batch_mode.html', {
+        'username': username,
+        'user': user,
+        'flagUser': flag_user
+    })
+
 def contest(request):
     return render(request, 'contest.html', {})
 
@@ -112,70 +131,61 @@ def compare_uploader(request):
     return render(request, user + '/compare-uploader.html')
 
 # ==============================================================================
-# BATCH MODE (LÓGICA CORREGIDA PARA LIMPIEZA DE DATOS)
+# BATCH MODE (LÓGICA CON SELECTOR VANILLA/EXTENDED)
 # ==============================================================================
 
-def process_analysis_result(name, analysis_dict):
+def process_analysis_result(name, analysis_dict, mode='extended'):
     """
-    Procesa el resultado, extrayendo el número limpio (sin corchetes)
-    y los Bad Smells.
+    Procesa el resultado dependiendo del modo seleccionado (Vanilla o Extended).
     """
-    # 1. Comprobar errores generales
     if isinstance(analysis_dict, dict) and analysis_dict.get('Error') and analysis_dict.get('Error') != 'None':
         return {'filename': name, 'error': str(analysis_dict.get('Error'))}
 
-    # 2. Localizar datos
+    # 1. Localizar datos
     data = analysis_dict
     if isinstance(data, dict):
         if 0 in data: data = data[0]
         elif '0' in data: data = data['0']
         
-    mastery_data = data.get('mastery_vanilla') or data.get('mastery') or data.get('vanilla') or {}
-
-    # 3. Extraer Puntos LIMPIOS (Corrección para [3,3] -> 3)
-    scores = {}
-    
-    for key, val in mastery_data.items():
-        # CASO A: Estructura traducida: [[3, 3], 'Logic']
-        if isinstance(val, list) and len(val) >= 2 and isinstance(val[1], str):
-            metric_name = val[1]  # 'Logic'
-            raw_data = val[0]     # [3, 3]
-            
-            # Pelar la lista interna
-            if isinstance(raw_data, list) and len(raw_data) > 0:
-                score = raw_data[0] # Sacamos el 3
-            else:
-                score = raw_data
-                
-            scores[metric_name] = score
-        
-        # CASO B: Estructura simple: [3, 3] (con clave en inglés)
-        elif isinstance(val, list) and len(val) > 0 and isinstance(val[0], (int, float)):
-            scores[key] = val[0] # Sacamos el 3
-
-    # 4. Extraer Puntuación Total
-    total_score_val = mastery_data.get('total_points') or mastery_data.get('points') or 0
-    if isinstance(total_score_val, list) and len(total_score_val) > 0:
-        total_score = total_score_val[0]
+    # Selección de fuente según modo
+    mastery_data = {}
+    if mode == 'vanilla':
+        mastery_data = data.get('mastery_vanilla') or data.get('vanilla') or {}
     else:
-        total_score = total_score_val
+        mastery_data = data.get('mastery') or data.get('extended') or {}
+    
+    # Fallback si está vacío
+    if not mastery_data and 'total_points' in data:
+        mastery_data = data
 
+    # 2. Extraer Puntos
+    scores = {}
+    for key, val in mastery_data.items():
+        if isinstance(val, list) and len(val) >= 2 and isinstance(val[1], str):
+            metric_name = val[1]
+            raw_data = val[0]
+            score = raw_data[0] if isinstance(raw_data, list) and len(raw_data) > 0 else raw_data
+            scores[metric_name] = score
+        elif isinstance(val, list) and len(val) > 0 and isinstance(val[0], (int, float)):
+            scores[key] = val[0]
+
+    # 3. Puntuación Total
+    total_score_val = mastery_data.get('total_points') or mastery_data.get('points') or 0
+    total_score = total_score_val[0] if isinstance(total_score_val, list) else total_score_val
     competence = mastery_data.get('competence') or mastery_data.get('mastery', 'Unknown')
 
-    # 5. Extraer Bad Smells (Están en la raíz 'data')
+    # 4. Bad Smells
     def get_smell(key):
         smell = data.get(key)
         if isinstance(smell, dict):
             return smell.get('number', 0)
         return 0
 
-    # 6. Construir fila final
-    return {
+    result = {
         'filename': name,
         'total_score': total_score,
         'mastery': competence,
-        
-        # Dimensiones (Limpias)
+        # Skills Comunes
         'Logic': scores.get('Logic', 0),
         'Parallelization': scores.get('Parallelization') or scores.get('Parallelism', 0),
         'DataRepresentation': scores.get('DataRepresentation', 0),
@@ -183,15 +193,19 @@ def process_analysis_result(name, analysis_dict):
         'FlowControl': scores.get('FlowControl', 0),
         'UserInteractivity': scores.get('UserInteractivity', 0),
         'Abstraction': scores.get('Abstraction', 0),
-        'MathOperators': scores.get('MathOperators', 0),
-        'MotionOperators': scores.get('MotionOperators', 0),
-        
         # Bad Smells
         'DeadCode': get_smell('deadCode'),
         'DuplicateScripts': get_smell('duplicateScript'),
         'SpriteNaming': get_smell('spriteNaming'),
         'BackdropNaming': get_smell('backdropNaming')
     }
+
+    # Skills Extra (Solo Extended)
+    if mode == 'extended':
+        result['MathOperators'] = scores.get('MathOperators', 0)
+        result['MotionOperators'] = scores.get('MotionOperators', 0)
+
+    return result
 
 def batch_analyze(request):
     """
@@ -200,6 +214,10 @@ def batch_analyze(request):
     if request.method == 'POST' and request.FILES.get('batchFile'):
         uploaded_file = request.FILES['batchFile']
         filename = uploaded_file.name.lower()
+        
+        # OBTENER MODO (Vanilla o Extended) del formulario
+        analysis_mode = request.POST.get('analysis_mode', 'extended')
+        
         skill_rubric = generate_rubric('') 
         results = []
 
@@ -213,7 +231,7 @@ def batch_analyze(request):
                                 file_content = z.read(name)
                                 temp_file = SimpleUploadedFile(name, file_content)
                                 analysis = analysis_by_upload(request, skill_rubric, temp_file)
-                                processed = process_analysis_result(name, analysis)
+                                processed = process_analysis_result(name, analysis, mode=analysis_mode)
                                 results.append(processed)
                             except Exception as e:
                                 results.append({'filename': name, 'error': str(e)})
@@ -230,7 +248,7 @@ def batch_analyze(request):
                     if url:
                         try:
                             analysis = analysis_by_url(request, url, skill_rubric)
-                            processed = process_analysis_result(url, analysis)
+                            processed = process_analysis_result(url, analysis, mode=analysis_mode)
                             results.append(processed)
                         except Exception as e:
                             results.append({'filename': url, 'error': str(e)})
@@ -245,23 +263,28 @@ def batch_analyze(request):
              return HttpResponse("No se encontraron proyectos válidos.", status=400)
 
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="DrSnap_Batch_Report.csv"'
+        response['Content-Disposition'] = f'attachment; filename="DrSnap_Batch_{analysis_mode}.csv"'
         
         writer = csv.writer(response)
         
-        # CABECERAS
+        # CABECERAS (Dinámicas según modo)
         headers = [
             'Project', 'Total Score', 'Mastery', 
-            'Logic', 'Parallelization', 'Data Rep.', 'Synch.', 'Flow Control', 'User Inter.', 'Abstraction', 'Math Ops', 'Motion Ops',
-            'Dead Code', 'Duplicates', 'Bad Sprite Names', 'Bad Backdrop Names'
+            'Logic', 'Parallelization', 'Data Rep.', 'Synch.', 'Flow Control', 'User Inter.', 'Abstraction'
         ]
+        
+        if analysis_mode == 'extended':
+            headers.extend(['Math Ops', 'Motion Ops'])
+            
+        headers.extend(['Dead Code', 'Duplicates', 'Bad Sprite Names', 'Bad Backdrop Names'])
+        
         writer.writerow(headers)
 
         for res in results:
             if 'error' in res:
                 writer.writerow([res['filename'], 'Error: ' + str(res['error'])])
             else:
-                writer.writerow([
+                row = [
                     res.get('filename', 'Unknown'),
                     res.get('total_score', 0),
                     res.get('mastery', 'N/A'),
@@ -271,21 +294,30 @@ def batch_analyze(request):
                     res.get('Synchronization', 0),
                     res.get('FlowControl', 0),
                     res.get('UserInteractivity', 0),
-                    res.get('Abstraction', 0),
-                    res.get('MathOperators', 0),
-                    res.get('MotionOperators', 0),
+                    res.get('Abstraction', 0)
+                ]
+                
+                if analysis_mode == 'extended':
+                    row.extend([
+                        res.get('MathOperators', 0),
+                        res.get('MotionOperators', 0)
+                    ])
+                    
+                row.extend([
                     res.get('DeadCode', 0),
                     res.get('DuplicateScripts', 0),
                     res.get('SpriteNaming', 0),
                     res.get('BackdropNaming', 0)
                 ])
+                
+                writer.writerow(row)
         
         return response
 
     return HttpResponseRedirect('/')
 
 # ==============================================================================
-# DASHBOARD Y FUNCIONES AUXILIARES
+# RESTO DE FUNCIONES (Sin cambios, mantener igual)
 # ==============================================================================
 
 def base32_to_str(base32_str: str) -> str:
@@ -322,7 +354,6 @@ def show_dashboard(request, skill_points=None):
         d = build_dictionary_with_automatic_analysis(request, skill_rubric)
         d = d[0]
         
-        # GUARDAR EN SESIÓN PARA EVITAR PÉRDIDA DE DATOS AL RECARGAR
         request.session['last_analysis_data'] = d
         request.session['last_dashboard_mode'] = d.get("dashboard_mode")
         
@@ -331,7 +362,7 @@ def show_dashboard(request, skill_points=None):
             return render(request, user + '/dashboard-bulk-landing.html', context)
         
         error_type = d.get('Error')
-        if error_type:
+        if error_type and error_type != 'None':
             if error_type == 'analyzing': return render(request, 'error/analyzing.html')
             elif error_type == 'MultiValueDict': return render(request, user + '/main.html', {'error': True})
             elif error_type == 'id_error': return render(request, user + '/main.html', {'id_error': True})
@@ -344,7 +375,6 @@ def show_dashboard(request, skill_points=None):
         
         return render(request, user + '/dashboard-default.html', d)
     
-    # MÉTODO GET: RECUPERAR DE SESIÓN
     else:
         user = str(identify_user_type(request))
         d = request.session.get('last_analysis_data')
