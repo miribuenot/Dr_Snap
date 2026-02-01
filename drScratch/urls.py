@@ -40,6 +40,9 @@ urlpatterns = [
     # BATCH)
     url(r'^batch/(?P<csv_identifier>.*)$',app_views.batch, name='batch'),
     
+    # NUEVO: BATCH ANALYZE VIEW
+    url(r'^batch_analyze/$', app_views.batch_analyze, name='batch_analyze'),
+
     # Statistics
     url(r'^statistics$', app_views.statistics, name='statistics'),
 
