@@ -17,8 +17,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     # Statics
-    # url(r'^/v3/static/(?P<path>.*)$' , serve,
-    #                              {'document_root': settings.MEDIA_ROOT}),
     url(r'^(.*)/static/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     
     # API ANALYSIS
@@ -27,19 +25,21 @@ urlpatterns = [
     # API RECOMMENDER
     url(r'^get_recommender/.*$', app_views.get_recommender, name='get_recommender'),
     
-    
     # CONTACT FORM
     url(r'^process_contact_form/$', app_views.process_contact_form, name='contact_form'),
-
 
     # CSVS (BATCH)
     url(r'^(.*)/csvs/(?P<path>.*)$',serve, {'document_root': settings.BASE_DIR + '/csvs'}),
 
-    # BATCH RAW html -> str
-    #url(r'^batch/raw/(?P<csv_identifier>[-\w]+)$', app_views.batch_email, name='batch_raw'),
-    # BATCH)
+    # BATCH
     url(r'^batch/(?P<csv_identifier>.*)$',app_views.batch, name='batch'),
     
+    # NUEVA URL: BATCH MODE PAGE
+    url(r'^batch_mode/$', app_views.batch_mode_view, name='batch_mode_view'),
+    
+    # BATCH ANALYZE ACTION
+    url(r'^batch_analyze/$', app_views.batch_analyze, name='batch_analyze'),
+
     # Statistics
     url(r'^statistics$', app_views.statistics, name='statistics'),
 
@@ -116,6 +116,5 @@ urlpatterns = [
     # Learn
     url(r'^learn/(\w+)', app_views.learn, name='learn'),
     url(r'^$', app_views.main, name='main'),
-    #url(r'^.*', app_views.redirect_main, name='redirect_main'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

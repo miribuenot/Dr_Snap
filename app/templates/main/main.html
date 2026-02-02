@@ -6,48 +6,35 @@
 
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Analyze your Scratch projects to assess your Computational Thinking skills">
+    <meta name="description" content="Analyze your Snap projects to assess your Computational Thinking skills">
     <meta name="keywords" content="Stamp, Startup, Multipurpose, Bootstrap, Landing page, Template, Registration, Landing">
     <meta name="author" content="Programamos URJC Libresoft FECyT">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!-- SITE TITLE -->
     <title>Dr. Snap</title>
 
 
     <link rel="stylesheet" href="/static/app/content/style.css">
-    <!-- =========================
-     FAV AND TOUCH ICONS AND FONT
-    ============================== -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" href="/static/app/images/favicon.ico">
     <link rel="stylesheet" href="/static/app/icons/icons.css">
     <link type="text/css" rel="stylesheet" href="/static/app/content/css_002.css">
     <link type="text/css" rel="stylesheet" href="/static/app/content/css.css">
-    <!-- =========================
-     STYLESHEETS
-    ============================== -->
-    <!-- BOOTSTRAP AND ANIMATION -->
     <link rel="stylesheet" href="/static/app/content/bootstrap-main.css">
     <link rel="stylesheet" href="/static/app/content/animate.css">
 
-    <!-- CAROUSEL AND LIGHTBOX -->
     <link rel="stylesheet" href="/static/app/content/owl_002.css">
     <link rel="stylesheet" href="/static/app/content/owl.css">
     <link rel="stylesheet" href="/static/app/content/nivo-lightbox.css">
     <link rel="stylesheet" href="/static/app/content/default.css">
 
-    <!-- CUSTOM STYLESHEETS -->
     <link rel="stylesheet" href="/static/app/content/styles.css">
 
 
-    <!-- RESPONSIVE FIXES -->
     <link rel="stylesheet" href="/static/app/content/responsive.css">
 
-    <!-- DEFAULT COLOR/ CURRENTLY USING -->
     <link rel="stylesheet" href="/static/app/content/red.css">
 
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EF8MXDGMRC"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
@@ -77,133 +64,145 @@
         document.addEventListener("DOMContentLoaded", function () {
             var personalizedOptions = document.getElementById("personalized-options");
     
-            document.querySelector("[name='dashboard_mode']").addEventListener("change", function () {
-                var selectedOption = this.value;
-                if (selectedOption === "Personalized") {
-                    personalizedOptions.style.display = "block";
-                } else {
-                    personalizedOptions.style.display = "none";
-                }
-            });
+            if (personalizedOptions) {
+                document.querySelector("[name='dashboard_mode']").addEventListener("change", function () {
+                    var selectedOption = this.value;
+                    if (selectedOption === "Personalized") {
+                        personalizedOptions.style.display = "block";
+                    } else {
+                        personalizedOptions.style.display = "none";
+                    }
+                });
+            }
         });
     </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var form = document.forms["form"];
-            var select = form.elements["dashboard_mode"];
-    
-            var personalizedInputs = form.querySelectorAll('.form-range');
-            personalizedInputs.forEach(function(input) {
-                input.addEventListener('input', function() {
-                    if (select.value === "Personalized") {
-                        updateUrl();
-                    }
-                });
-            });
-    
-            // Update of the URL for the Sliders
-            function updateUrl() {
-                var personalizedValues = '';
-                // Collection of the Customized Input Fields
+            if (form) {
+                var select = form.elements["dashboard_mode"];
+        
                 var personalizedInputs = form.querySelectorAll('.form-range');
                 personalizedInputs.forEach(function(input) {
-                    personalizedValues += input.value;
+                    input.addEventListener('input', function() {
+                        if (select.value === "Personalized") {
+                            updateUrl();
+                        }
+                    });
                 });
-                // Modification of the Action's URL
-                form.action = "/show_dashboard/" + personalizedValues;
+        
+                // Update of the URL for the Sliders
+                function updateUrl() {
+                    var personalizedValues = '';
+                    // Collection of the Customized Input Fields
+                    var personalizedInputs = form.querySelectorAll('.form-range');
+                    personalizedInputs.forEach(function(input) {
+                        personalizedValues += input.value;
+                    });
+                    // Modification of the Action's URL
+                    form.action = "/show_dashboard/" + personalizedValues;
+                }
             }
         });
     </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('#batch-form').addEventListener('submit', function(event) {
-                var emailInput = document.querySelector('input[name="batch-email"]');
-                var fileInput = document.querySelector('input[name="urlsFile"]');
-                var emailWarning = document.getElementById('email-warning');
-                var txtWarning = document.getElementById('txt-warning');
-                var emailInput = document.querySelector('input[name="batch-email"]');
-                var valid = true;
-            
-                if (!emailInput.value.trim()) {
-                    emailWarning.style.display = 'block'; 
-                    valid = false; 
-                } else {
-                    emailWarning.style.display = 'none'; 
-                }
-            
-                if (!fileInput.files.length) {
-                    txtWarning.style.display = 'block'; 
-                    valid = false; 
-                } else {
-                    txtWarning.style.display = 'none'; 
-                }
-            
-                if (!valid) {
-                    event.preventDefault();
-                }
-            });    
+            var batchForm = document.querySelector('#batch-form');
+            if (batchForm) {
+                batchForm.addEventListener('submit', function(event) {
+                    var emailInput = document.querySelector('input[name="batch-email"]');
+                    var fileInput = document.querySelector('input[name="urlsFile"]');
+                    var emailWarning = document.getElementById('email-warning');
+                    var txtWarning = document.getElementById('txt-warning');
+                    var valid = true;
+                
+                    if (!emailInput.value.trim()) {
+                        emailWarning.style.display = 'block'; 
+                        valid = false; 
+                    } else {
+                        emailWarning.style.display = 'none'; 
+                    }
+                
+                    if (!fileInput.files.length) {
+                        txtWarning.style.display = 'block'; 
+                        valid = false; 
+                    } else {
+                        txtWarning.style.display = 'none'; 
+                    }
+                
+                    if (!valid) {
+                        event.preventDefault();
+                    }
+                });    
+            }
         });
     </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('#recommender-form').addEventListener('submit', function(event) {
-                var recommenderInput = document.getElementById('input-recom');
-                var projectWarning = document.getElementById('project-warning');
-                var valid = true;
+            var recForm = document.querySelector('#recommender-form');
+            if (recForm) {
+                recForm.addEventListener('submit', function(event) {
+                    var recommenderInput = document.getElementById('input-recom');
+                    var projectWarning = document.getElementById('project-warning');
+                    var valid = true;
 
-                if (!recommenderInput.value.trim()) {
-                    projectWarning.style.display = 'block'; 
-                    valid = false; 
-                } else {
-                    projectWarning.style.display = 'none'; 
-                }
+                    if (!recommenderInput.value.trim()) {
+                        projectWarning.style.display = 'block'; 
+                        valid = false; 
+                    } else {
+                        projectWarning.style.display = 'none'; 
+                    }
+                    
                 
-            
-                if (!valid) {
-                    event.preventDefault();
-                }
-            });
+                    if (!valid) {
+                        event.preventDefault();
+                    }
+                });
+            }
         });
     </script>
 
   
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('main-form').addEventListener('submit', function(event) {
-                var urlProject = document.getElementById('cf-name').value.trim();
-                var zipFile = document.getElementById('cf-upload').value.trim();
+            var mainForm = document.getElementById('main-form');
+            if (mainForm) {
+                mainForm.addEventListener('submit', function(event) {
+                    var urlProject = document.getElementById('cf-name').value.trim();
+                    var zipFile = document.getElementById('cf-upload').value.trim();
 
-                var urlWarning = document.getElementById('url-warning');
-                var uploadWarning = document.getElementById('upload-warning');
+                    var urlWarning = document.getElementById('url-warning');
+                    var uploadWarning = document.getElementById('upload-warning');
 
-                var valid = true;
+                    var valid = true;
 
-                if (!urlProject && !zipFile) {
-                    if (!urlProject) {
-                        urlWarning.style.display = 'block';
+                    if (!urlProject && !zipFile) {
+                        if (!urlProject) {
+                            urlWarning.style.display = 'block';
+                        } else {
+                            urlWarning.style.display = 'none';
+                        }
+
+                        if (!zipFile) {
+                            uploadWarning.style.display = 'block';
+                        } else {
+                            uploadWarning.style.display = 'none';
+                        }
+
+                        valid = false;
                     } else {
                         urlWarning.style.display = 'none';
-                    }
-
-                    if (!zipFile) {
-                        uploadWarning.style.display = 'block';
-                    } else {
                         uploadWarning.style.display = 'none';
                     }
 
-                    valid = false;
-                } else {
-                    urlWarning.style.display = 'none';
-                    uploadWarning.style.display = 'none';
-                }
-
-                if (!valid) {
-                    event.preventDefault();
-                }
-            });
+                    if (!valid) {
+                        event.preventDefault();
+                    }
+                });
+            }
         });
     </script>
 
@@ -213,37 +212,25 @@
 
 <body>
     <div id="mywrapper">
-    <!-- =========================
-     PRE LOADER
-    ============================== -->
     <div style="display: none;" class="preloader">
         <div style="display: none;" class="status">
             &nbsp;
         </div>
     </div>
-    <!-- =========================
-     SECTION: HOME / HEADER
-    ============================== -->
     <header id="home" style="background-position: 50% 40.5px;" class="header" data-stellar-background-ratio="0.3">
         <video autoplay muted loop id="video-background">
             <source src="/static/app/videos/Scratch!.mp4" type="video/mp4">
             {% trans 'Your browser does not support the video tag.' %}
         </video>
-        <!-- COLOR OVER IMAGE -->
         <div class="overlay-layer">
            
-             <!-- STICKY NAVIGATION -->
              <div class="navbar navbar-inverse bs-docs-nav navbar-fixed-top  sticky-navigation" role="navigation">
                 <div class="container">
-                    <!-- TOP BAR -->
                     <div class="navbar-collapse collapse" height="200px" id="stamp-navigation">
                    
                       <a class="text-center" href="/">
                         <img class="d-block img-fluid ::before" height="100px" src="/static/app/images/final.jpg" alt="">
                       </a>
-                        <!-- LANGUAGUES -->
-                        
-     
                         
                         <ul class="nav navbar-nav navbar-right login-register small-text">
                             <li style="display: block;" class="login dropdown">
@@ -273,92 +260,50 @@
                             </li>
                         </ul>
      
-
-
-                    {% if flagUser %}
-                         <!-- NAVIGATION LINK -->
-                         <ul class="nav navbar-nav navbar-left main-navigation ">
-                             <li class="navbar-brand"><a class="navbar-brand pull-left" href="/{{page}}/{{username}}"><span class="icon-basic-home colored-text"></span><em>{{ username }}</em></a></li>
-                        </ul>
-
-                    {% else %}
-                        <!-- LOGIN REGISTER 
-
-
-                    
-
-                        <li style="display: block;" class="login js-login dropdown">
-                            <a aria-expanded="false" role="button" class="dropdown-toggle" data-toggle='modal' href='#modalSignUp'>{% trans "Sign up" %}</a>
-
-                            </a>
-                            <ul role="menu" class="dropdown-menu">
-                            <li>
-                            <div style="padding: 15px; padding-bottom: 10px;">
-                                <form accept-charset="UTF-8" action="/sign_up_coder" method="post">
-                                {% csrf_token %}
-                                {% trans "<input type='text' name='username' id='username' placeholder='Username' style='margin-bottom: 15px;'>" %}
-                                {% trans "<input type='text' name='email' id='email' placeholder='Email' style='margin-bottom: 15px;'>" %}
-                                {% trans "<input type='password' name='password' id='password' placeholder='Password' style='margin-bottom: 15px;'>" %}
-                                {% trans "<input class='form-control' type='password' name='hashkey' id='hashkey' placeholder='Hashkey' style='margin-bottom: 15px;'>" %}
-                                {% trans "<input type='submit' value='Sign up' id='sign-up' class='btn-group btn-group-justified colored-text'>" %}
-                                </form>
-                            </div>
-                            </li>
+                        {% if flagUser %}
+                             <ul class="nav navbar-nav navbar-left main-navigation ">
+                                 <li class="navbar-brand"><a class="navbar-brand pull-left" href="/{{page}}/{{username}}"><span class="icon-basic-home colored-text"></span><em>{{ username }}</em></a></li>
                             </ul>
-                            </li>
 
+                        {% else %}
+                            <ul class="nav navbar-nav navbar-right login-register small-text">
+                                <li style="display: block;" class="login js-login dropdown">
+                                    <a aria-expanded="false" role="button" class="dropdown-toggle" data-toggle='modal' href='#modalSignUp'>{% trans "Sign up" %}</a>
+                                </li>
 
-
-                        <li style="display: block;" class="login js-login dropdown">
-                            <a aria-expanded="false" role="button" href="#" data-toggle="dropdown" class="dropdown-toggle">{% trans "Sign in" %}
-                            <span class="caret"></span>
-                            </a>
-                            <ul role="menu" class="dropdown-menu">
-                            <li>
-                            <div style="padding: 15px; padding-bottom: 10px;">
-                                <form accept-charset="UTF-8" action="/login_coder" method="post">
+                                <li style="display: block;" class="login js-login dropdown">
+                                    <a aria-expanded="false" role="button" href="#" data-toggle="dropdown" class="dropdown-toggle">{% trans "Sign in" %}
+                                    <span class="caret"></span>
+                                    </a>
+                                    <ul role="menu" class="dropdown-menu">
+                                    <li>
+                                    <div style="padding: 15px; padding-bottom: 10px;">
+                                        <form accept-charset="UTF-8" action="/login_coder" method="post">
                                             {% csrf_token %}
-                                {% trans "<input type='text' name='username' id='username' placeholder='Username' style='margin-bottom: 15px;'>" %}
-                                {% trans "<input type='password' name='password' id='password' placeholder='Password' style='margin-bottom: 15px;'>" %}
-                                <div>
-                                    <a class="message" style="size: 5px;" href="/change_pwd">{% trans "I forgot my password" %}</a>
-                                </div>
-                                {% trans "<input type='submit' value='Sign in' id='sign-in' class='btn-group btn-group-justified colored-text'>" %}
-                                </form>
-                            </div>
-                            </li>
+                                            {% trans "<input type='text' name='username' id='username' placeholder='Username' style='margin-bottom: 15px;'>" %}
+                                            {% trans "<input type='password' name='password' id='password' placeholder='Password' style='margin-bottom: 15px;'>" %}
+                                            <div>
+                                                <a class="message" style="size: 5px;" href="/change_pwd">{% trans "I forgot my password" %}</a>
+                                            </div>
+                                            {% trans "<input type='submit' value='Sign in' id='sign-in' class='btn-group btn-group-justified colored-text'>" %}
+                                        </form>
+                                    </div>
+                                    </li>
+                                    </ul>
+                                </li>
                             </ul>
-                            </li>
-
-                            {% endif %}
-
-                            <li style="display: none;" class="register-button js-register inpage-scroll">
-                                <a href="#home" class="navbar-register-button">{% trans "Get Started" %}</a>
-                            </li>
-                        </ul>
-                        -->
-                    </div>
-                  
-                  <!-- /END TOP BAR -->
-                </div>
-              <!-- /END CONTAINER -->
-            </div>
-            <!-- /END STICKY NAVIGATION -->
-
-
-            <!-- CONTAINER -->
+                        {% endif %} </div>
+                  </div>
+              </div>
             <div class="container">
 
-        <!-- ONLY LOGO ON HEADER -->
-                <div class="row">
+        <div class="row">
                     
                       
                     <div class="col-md-6 text-left">
 
-                        <!-- HEADING AND BUTTONS -->
                         <div class="intro-section">
                             
-                            <!-- WELCOM MESSAGE -->
                             <h1 class="intro white-text">{% trans "This is a Final Degree project version" %}</h1>
 
     
@@ -378,8 +323,6 @@
                         <br></br>
                     
                     <div class="col-md-5">
-
-                            <!-- VERTICAL PROJECT FORM -->
 
                             <div class="vertical-project-form">
 
@@ -417,7 +360,6 @@
                                     </form>
                                     
 
-                                <!-- FORM SUBMIT SUCCESS / ERROR MESSAGES -->
                                 <p class="file-error dark-text small-text">
                                 {% trans "Error! Please choose a .sb or .sb2 file or input an url" %}</p>
 
@@ -450,9 +392,6 @@
     </header>
     
 
-    <!-- =========================
-     SECTION: PERSONALIZED
-    ============================== -->
     <section id="section1" class="services" style="padding-left: 7%;">
 
         <div class="container">            
@@ -478,9 +417,6 @@
     </section>
 
     <br>
-    <!-- =========================
-     SECTION: RECOMMENDER ASSISTANT
-    ============================== -->
     <section id="section1" class="services">
 
         <div class="container">            
@@ -507,23 +443,34 @@
     
     <br></br>
 
+    <section id="section_batch" class="services" style="padding-left: 7%;">
+            <div class="container">            
+                <div class="row">
+                    <div class="col-md-4 align-self-center" style="margin-top: 80px;">
+                        <h3><strong>{% trans "Batch Analysis Mode" %}</strong></h3>
+                        <p class="h4">
+                            {% trans "Analyze multiple projects at once! Upload a .txt file with URLs or a .zip file with project files, and get a CSV report." %}
+                        </p>
+                        
+                        <a href="/batch_mode/" class="btn btn-primary standard-button" style="margin-top: 20px;">
+                            {% trans "Go to Batch Analysis" %}
+                        </a>
 
+                    </div>
+                    <div class="col-md-8 text-center">
+                        <img src="/static/app/images/csv.png" class="img-fluid mx-auto d-block" style="max-width: 60%; max-height: 60%; margin-top: 20px;" alt=""> 
+                    </div>
+                </div> 
+            </div>
+        </section>
+        <br>
 
 
     
 
-
-    
-
-    <!-- =========================
-            MODALS
-    ============================== -->
-
-     <!-- Modal Url -->
     <div id="modalUrl" class="modal fade" role="dialog">
       <div class="modal-dialog">
 
-        <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
@@ -544,11 +491,9 @@
     </div>
 
 
-    <!-- Modal Project -->
     <div id="modalProject" class="modal fade" role="dialog">
       <div class="modal-dialog">
 
-        <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
@@ -568,10 +513,8 @@
       </div>
     </div>
 
-    <!-- Modal Txt -->
     <div id="modalTxt" class="modal fade" role="dialog">
         <div class="modal-dialog">
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
@@ -591,11 +534,9 @@
         </div>
     </div>
 
-   <!-- Modal Ask -->
-    <div id="modalAsk" class="modal fade" role="dialog">
+   <div id="modalAsk" class="modal fade" role="dialog">
       <div class="modal-dialog">
 
-        <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
@@ -615,11 +556,9 @@
       </div>
     </div>
 
-    <!-- Modal SignUp -->
-   <div id="modalSignUp" class="modal fade" role="dialog">
+    <div id="modalSignUp" class="modal fade" role="dialog">
      <div class="modal-dialog">
 
-       <!-- Modal content-->
        <div class="modal-content">
          <div class="modal-header">
            <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
@@ -734,11 +673,7 @@
 {{ form.as_p }}
                            <input name="gender" value="female" type="radio">{% trans "Female" %}
 {{ form.as_p }}
-                          <!-- <input class="gender_other_radio" id="gender_other_radio" name="gender_other" value="" type="radio">
-{{ form.as_p }}
-                           <input class="gender_other_text" id="gender_other_text" name="gender_other" value=" " maxlength="20" type="text">
-{{ form.as_p }}-->
-                           <span data-control="error" data-content="gender-error" class="hovertext"><span class="arrow"></span><span class="text"></span></span>
+                          <span data-control="error" data-content="gender-error" class="hovertext"><span class="arrow"></span><span class="text"></span></span>
 
                       </div>
                       <div class="row" href="#" onMouseOver="hidden_information()">
@@ -1275,12 +1210,6 @@
 
 
 
-    <!-- =========================
-              PROGRESS BAR
-    ============================== -->
-
-
-
     <div id="pb" class="jumbotron">
     <div class="container">
             <p>
@@ -1317,9 +1246,6 @@
 
         </div>
 
-    <!-- =========================
-     SCRIPTS
-    ============================== -->
     <script src="/static/app/scripts/jquery.min.js"></script>
     <script>
         /* PRE LOADER */
@@ -1330,8 +1256,7 @@
         })
     </script>
     <script type="text/javascript" src="/static/app/scripts/bootstrap-filestyle.js"> </script>
-   <!-- <script src="/static/app/scripts/smoothscroll.js"></script>-->
-    <script src="/static/app/scripts/bootstrap.min.js"></script>
+   <script src="/static/app/scripts/bootstrap.min.js"></script>
     <script src="/static/app/scripts/jquery.nav.js"></script>
     <script src="/static/app/scripts/ie-emulation-modes-warning.js"></script>
     <script src="/static/app/scripts/wow.js"></script>
@@ -1346,11 +1271,5 @@
         $('.carousel').carousel();
     </script>
 
-    <!-- GOGLE MAP -->
-    <!--
-    <script src="https:/maps.googleapis.com/maps/api/js"></script><script src="https:/maps.gstatic.com/maps-api-v3/api/js/19/5/intl/es_ALL/main.js"></script>
--->
-
-    <!-- CUSTOM JS  -->
     <script src="/static/app/scripts/custom.js"></script>
 </body></html>
