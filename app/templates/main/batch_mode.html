@@ -29,7 +29,7 @@
         
         .language-content { cursor: pointer; }
 
-        /* --- CONTENEDOR PRINCIPAL (Estilo tarjeta blanca limpia) --- */
+        /* --- CONTENEDOR PRINCIPAL --- */
         .main-card {
             background: white;
             border-radius: 15px;
@@ -38,28 +38,15 @@
             margin-bottom: 50px;
         }
 
-        /* --- BOTONES DE SELECCIÓN (Estilo Dr. Snap) --- */
-        .mode-selector {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0.6; /* Apagado por defecto */
-            transform: scale(0.98);
+        /* --- TARJETAS INFORMATIVAS (Antes selectores) --- */
+        .info-card {
             border-radius: 15px;
             overflow: hidden;
-            border: 2px solid transparent;
-        }
-
-        .mode-selector:hover {
-            opacity: 0.8;
-            transform: scale(0.99);
-        }
-
-        /* ESTADO SELECCIONADO */
-        .mode-selector.selected {
-            opacity: 1;
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 2px solid #E74C3C; /* Borde rojo al seleccionar */
+            /* Ya no hay opacidad reducida ni cursor pointer */
+            opacity: 1; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            background: #fff;
         }
 
         /* CABECERAS DE MODO */
@@ -73,24 +60,14 @@
             letter-spacing: 1px;
         }
 
-        /* Colores específicos imitando la captura */
-        .header-vanilla {
-            background-color: #E6B0AA; /* Rosa palo / Rojo claro */
-        }
-        
-        .header-extended {
-            background-color: #E74C3C; /* Rojo Dr. Snap */
-        }
+        .header-vanilla { background-color: #E74C3C; }
+        .header-extended { background-color: #E74C3C; }
 
-        /* CAJA DE HABILIDADES (El estilo "Dotted" de la captura) */
+        /* CAJA DE HABILIDADES */
         .skills-box {
             background-color: white;
-            border: 4px dotted #E0B4E8; /* Borde punteado morado/rosa */
-            border-radius: 15px;
             padding: 20px;
-            margin-top: -10px; /* Para que solape un poco o quede pegado */
             position: relative;
-            z-index: 2;
         }
 
         /* TABLAS DE PUNTOS */
@@ -137,32 +114,32 @@
             text-align: center;
             cursor: pointer;
             margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+        
+        .custom-file-input:hover {
+            background: #ffebeb;
+            border-color: #c0392b;
         }
 
-        /* Ocultar radios */
-        input[type="radio"] { display: none; }
-        
         h2.main-title {
             color: #E74C3C;
             font-weight: 800;
             text-transform: uppercase;
             margin-bottom: 10px;
         }
+        
+        .divider-icon {
+            font-size: 2em;
+            color: #ccc;
+            padding-top: 150px;
+        }
     </style>
 
     <script src="/static/app/scripts/jquery.min.js"></script>
     <script>
-        function selectMode(mode) {
-            $('.mode-selector').removeClass('selected');
-            $('#selector-' + mode).addClass('selected');
-            $('#radio-' + mode).prop('checked', true);
-        }
-
         $(document).ready(function(){
-            // Inicializar Extended como seleccionado por defecto
-            selectMode('extended');
-
-            // Mostrar nombre de archivo
+            // Mostrar nombre de archivo al seleccionar
             $('input[type="file"]').change(function(e){
                 var fileName = e.target.files[0].name;
                 $('#filename-placeholder').html('<strong>' + fileName + '</strong>');
@@ -216,16 +193,16 @@
                     
                     <h2 class="main-title">Batch Analysis</h2>
                     <p class="text-muted" style="font-size: 1.1em; margin-bottom: 40px;">
-                        {% trans "Choose your mode and upload your files." %}
+                        {% trans "The generated CSV report will include metrics for both evaluation modes:" %}
                     </p>
 
                     <form action="/batch_analyze/" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         
-                        <div class="row">
+                        <div class="row display-flex">
                             
                             <div class="col-md-6">
-                                <div class="mode-selector" id="selector-vanilla" onclick="selectMode('vanilla')">
+                                <div class="info-card">
                                     <div class="mode-header header-vanilla">
                                         Vanilla Mode
                                     </div>
@@ -241,28 +218,23 @@
                                             <tr><td>Abstraction</td><td class="points">3</td></tr>
                                         </table>
                                     </div>
-                                    <input type="radio" id="radio-vanilla" name="analysis_mode" value="vanilla">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <div class="mode-selector" id="selector-extended" onclick="selectMode('extended')">
+                                <div class="info-card">
                                     <div class="mode-header header-extended">
                                         Extended Mode
                                     </div>
                                     <div class="skills-box">
-                                        <div class="total-score">{% trans "Max Score:" %} 27</div>
+                                        <div class="total-score">{% trans "Max Score:" %} 36</div>
                                         <table class="skills-table">
-                                            <tr><td><strong>{% trans "All Vanilla Skills" %}</strong></td><td class="points">21</td></tr>
+                                            <tr><td><strong>{% trans "All Vanilla Skills" %}</strong></td><td class="points">28</td></tr>
                                             <tr><td colspan="2" style="border:none; height:10px;"></td></tr>
-                                            <tr style="background-color: #fff0f0;"><td><i class="glyphicon glyphicon-plus-sign"></i> Math Operators</td><td class="points">3</td></tr>
-                                            <tr style="background-color: #fff0f0;"><td><i class="glyphicon glyphicon-plus-sign"></i> Motion Operators</td><td class="points">3</td></tr>
+                                            <tr><td><i class="glyphicon glyphicon-plus-sign"></i> Math Operators</td><td class="points">4</td></tr>
+                                            <tr><td><i class="glyphicon glyphicon-plus-sign"></i> Motion Operators</td><td class="points">4</td></tr>
                                         </table>
-                                        <p style="margin-top: 15px; font-size: 0.85em; color: #E74C3C;">
-                                            <em>{% trans "*Includes Dr. Snap extensions" %}</em>
-                                        </p>
                                     </div>
-                                    <input type="radio" id="radio-extended" name="analysis_mode" value="extended">
                                 </div>
                             </div>
 

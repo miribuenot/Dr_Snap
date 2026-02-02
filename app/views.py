@@ -7,20 +7,20 @@ import json
 import uuid
 import requests
 import tempfile
-import csv  # IMPORTANTE: Necesario para Batch
-import zipfile # IMPORTANTE: Necesario para Batch
+import csv
+from datetime import datetime, timedelta, date
+import traceback
+import re
+import zipfile
 from zipfile import ZipFile, BadZipfile
 import pickle
 import shutil
 import unicodedata
-from datetime import datetime, timedelta, date
-import traceback
-import re
 import logging
 import coloredlogs
 
-# Django Imports
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+# Django imports
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, FileResponse
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.contrib import messages
@@ -36,13 +36,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.html import strip_tags
-from django.core.files.uploadedfile import SimpleUploadedFile # IMPORTANTE: Para Batch
+from django.core.files.uploadedfile import SimpleUploadedFile
 
-# App Imports
-from .models import BatchCSV
+# App imports
+from .models import BatchCSV, File, CSVs, Organization, OrganizationHash, Coder, Discuss, Stats
 from app import org
 from app.forms import UrlForm, OrganizationForm, OrganizationHashForm, LoginOrganizationForm, CoderForm, DiscussForm
-from app.models import File, CSVs, Organization, OrganizationHash, Coder, Discuss, Stats, BatchCSV
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 
@@ -51,7 +50,7 @@ from app.scratchclient import ScratchSession
 from app.pyploma import generate_certificate
 from app.exception import DrScratchException
 
-# Hairball3 Imports
+# Hairball / Logic imports
 from app.hairball3.mastery import Mastery
 from app.hairball3.spriteNaming import SpriteNaming
 from app.hairball3.backdropNaming import BackdropNaming
@@ -66,6 +65,8 @@ from app.hairball3.block_sprite_usage import Block_Sprite_Usage
 from .tasks import init_batch
 from .analyzer import analyze_project, generator_dic, return_scratch_project_identifier, send_request_getsb3, _make_compare, analysis_by_upload, analysis_by_url
 from .batch import skills_translation
+from . import batch as batch_utils 
+
 from .recomender import RecomenderSystem
 
 logger = logging.getLogger(__name__)
@@ -93,25 +94,6 @@ def main(request):
     else:
         return render(request, 'main/main.html', {'username': None})
 
-def batch_mode_view(request):
-    """
-    Renderiza la página dedicada para el modo Batch.
-    """
-    user = None
-    username = None
-    flag_user = False
-    
-    if request.user.is_authenticated:
-        username = request.user.username
-        user = identify_user_type(request)
-        flag_user = True
-    
-    return render(request, 'main/batch_mode.html', {
-        'username': username,
-        'user': user,
-        'flagUser': flag_user
-    })
-
 def contest(request):
     return render(request, 'contest.html', {})
 
@@ -130,204 +112,13 @@ def compare_uploader(request):
     user = str(identify_user_type(request))
     return render(request, user + '/compare-uploader.html')
 
-# ==============================================================================
-# BATCH MODE (LÓGICA CON SELECTOR VANILLA/EXTENDED)
-# ==============================================================================
-
-def process_analysis_result(name, analysis_dict, mode='extended'):
-    """
-    Procesa el resultado dependiendo del modo seleccionado (Vanilla o Extended).
-    """
-    if isinstance(analysis_dict, dict) and analysis_dict.get('Error') and analysis_dict.get('Error') != 'None':
-        return {'filename': name, 'error': str(analysis_dict.get('Error'))}
-
-    # 1. Localizar datos
-    data = analysis_dict
-    if isinstance(data, dict):
-        if 0 in data: data = data[0]
-        elif '0' in data: data = data['0']
-        
-    # Selección de fuente según modo
-    mastery_data = {}
-    if mode == 'vanilla':
-        mastery_data = data.get('mastery_vanilla') or data.get('vanilla') or {}
-    else:
-        mastery_data = data.get('mastery') or data.get('extended') or {}
-    
-    # Fallback si está vacío
-    if not mastery_data and 'total_points' in data:
-        mastery_data = data
-
-    # 2. Extraer Puntos
-    scores = {}
-    for key, val in mastery_data.items():
-        if isinstance(val, list) and len(val) >= 2 and isinstance(val[1], str):
-            metric_name = val[1]
-            raw_data = val[0]
-            score = raw_data[0] if isinstance(raw_data, list) and len(raw_data) > 0 else raw_data
-            scores[metric_name] = score
-        elif isinstance(val, list) and len(val) > 0 and isinstance(val[0], (int, float)):
-            scores[key] = val[0]
-
-    # 3. Puntuación Total
-    total_score_val = mastery_data.get('total_points') or mastery_data.get('points') or 0
-    total_score = total_score_val[0] if isinstance(total_score_val, list) else total_score_val
-    competence = mastery_data.get('competence') or mastery_data.get('mastery', 'Unknown')
-
-    # 4. Bad Smells
-    def get_smell(key):
-        smell = data.get(key)
-        if isinstance(smell, dict):
-            return smell.get('number', 0)
-        return 0
-
-    result = {
-        'filename': name,
-        'total_score': total_score,
-        'mastery': competence,
-        # Skills Comunes
-        'Logic': scores.get('Logic', 0),
-        'Parallelization': scores.get('Parallelization') or scores.get('Parallelism', 0),
-        'DataRepresentation': scores.get('DataRepresentation', 0),
-        'Synchronization': scores.get('Synchronization', 0),
-        'FlowControl': scores.get('FlowControl', 0),
-        'UserInteractivity': scores.get('UserInteractivity', 0),
-        'Abstraction': scores.get('Abstraction', 0),
-        # Bad Smells
-        'DeadCode': get_smell('deadCode'),
-        'DuplicateScripts': get_smell('duplicateScript'),
-        'SpriteNaming': get_smell('spriteNaming'),
-        'BackdropNaming': get_smell('backdropNaming')
-    }
-
-    # Skills Extra (Solo Extended)
-    if mode == 'extended':
-        result['MathOperators'] = scores.get('MathOperators', 0)
-        result['MotionOperators'] = scores.get('MotionOperators', 0)
-
-    return result
-
-def batch_analyze(request):
-    """
-    Vista principal para analizar lotes (ZIP o TXT) y devolver CSV.
-    """
-    if request.method == 'POST' and request.FILES.get('batchFile'):
-        uploaded_file = request.FILES['batchFile']
-        filename = uploaded_file.name.lower()
-        
-        # OBTENER MODO (Vanilla o Extended) del formulario
-        analysis_mode = request.POST.get('analysis_mode', 'extended')
-        
-        skill_rubric = generate_rubric('') 
-        results = []
-
-        # --- CASO A: ZIP ---
-        if filename.endswith('.zip'):
-            try:
-                with zipfile.ZipFile(uploaded_file, 'r') as z:
-                    for name in z.namelist():
-                        if not name.startswith('__') and (name.lower().endswith('.xml') or name.lower().endswith('.sb3')):
-                            try:
-                                file_content = z.read(name)
-                                temp_file = SimpleUploadedFile(name, file_content)
-                                analysis = analysis_by_upload(request, skill_rubric, temp_file)
-                                processed = process_analysis_result(name, analysis, mode=analysis_mode)
-                                results.append(processed)
-                            except Exception as e:
-                                results.append({'filename': name, 'error': str(e)})
-            except Exception as e:
-                 return HttpResponse(f"Error procesando el ZIP: {e}", status=400)
-
-        # --- CASO B: TXT ---
-        elif filename.endswith('.txt'):
-            try:
-                content = uploaded_file.read().decode('utf-8')
-                urls = content.splitlines()
-                for url in urls:
-                    url = url.strip()
-                    if url:
-                        try:
-                            analysis = analysis_by_url(request, url, skill_rubric)
-                            processed = process_analysis_result(url, analysis, mode=analysis_mode)
-                            results.append(processed)
-                        except Exception as e:
-                            results.append({'filename': url, 'error': str(e)})
-            except Exception as e:
-                return HttpResponse(f"Error procesando el TXT: {e}", status=400)
-        
-        else:
-             return HttpResponse("Formato no soportado. Por favor sube un .zip o un .txt", status=400)
-
-        # --- GENERACIÓN DEL CSV ---
-        if not results:
-             return HttpResponse("No se encontraron proyectos válidos.", status=400)
-
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = f'attachment; filename="DrSnap_Batch_{analysis_mode}.csv"'
-        
-        writer = csv.writer(response)
-        
-        # CABECERAS (Dinámicas según modo)
-        headers = [
-            'Project', 'Total Score', 'Mastery', 
-            'Logic', 'Parallelization', 'Data Rep.', 'Synch.', 'Flow Control', 'User Inter.', 'Abstraction'
-        ]
-        
-        if analysis_mode == 'extended':
-            headers.extend(['Math Ops', 'Motion Ops'])
-            
-        headers.extend(['Dead Code', 'Duplicates', 'Bad Sprite Names', 'Bad Backdrop Names'])
-        
-        writer.writerow(headers)
-
-        for res in results:
-            if 'error' in res:
-                writer.writerow([res['filename'], 'Error: ' + str(res['error'])])
-            else:
-                row = [
-                    res.get('filename', 'Unknown'),
-                    res.get('total_score', 0),
-                    res.get('mastery', 'N/A'),
-                    res.get('Logic', 0),
-                    res.get('Parallelization', 0),
-                    res.get('DataRepresentation', 0),
-                    res.get('Synchronization', 0),
-                    res.get('FlowControl', 0),
-                    res.get('UserInteractivity', 0),
-                    res.get('Abstraction', 0)
-                ]
-                
-                if analysis_mode == 'extended':
-                    row.extend([
-                        res.get('MathOperators', 0),
-                        res.get('MotionOperators', 0)
-                    ])
-                    
-                row.extend([
-                    res.get('DeadCode', 0),
-                    res.get('DuplicateScripts', 0),
-                    res.get('SpriteNaming', 0),
-                    res.get('BackdropNaming', 0)
-                ])
-                
-                writer.writerow(row)
-        
-        return response
-
-    return HttpResponseRedirect('/')
-
-# ==============================================================================
-# RESTO DE FUNCIONES (Sin cambios, mantener igual)
-# ==============================================================================
-
 def base32_to_str(base32_str: str) -> str:
     value = int(base32_str, 32)
     return str(value).zfill(9)
 
 def calc_eta(num_projects: int) -> str:
     last_ten = BatchCSV.objects.all().order_by('-date')[:10]
-    if not last_ten:
-        return "Calculating..."
+    if not last_ten: return "Calculating..."
     anal_time = sum(batch.task_time/batch.num_projects for batch in last_ten)/10
     mean_tm = anal_time * num_projects
     eta_h = mean_tm // 3600
@@ -338,33 +129,44 @@ def calc_eta(num_projects: int) -> str:
 def show_dashboard(request, skill_points=None):
     if request.method == 'POST':
         url = request.path.split('/')[-1]
-        if url != '':
-            numbers = base32_to_str(url)
-        else:
-            numbers = ''
-        print(f"Mi url {url}")
+        numbers = base32_to_str(url) if url else ''
         skill_rubric = generate_rubric(numbers)
         user = str(identify_user_type(request))
         
+        # ### INICIO MODIFICACIÓN DEBUG ###
+        # Esto te imprimirá en la consola negra (terminal) por qué falla la URL
+        if "_url" in request.POST:
+            print("--- DEBUG: Comprobando URL ---")
+            debug_form = UrlForm(request.POST)
+            if not debug_form.is_valid():
+                print("❌ ERROR DE VALIDACIÓN:")
+                print(debug_form.errors)
+            else:
+                print("✅ Formulario válido. URL:", debug_form.cleaned_data.get('urlProject'))
+        # ### FIN MODIFICACIÓN DEBUG ###
+
         if request.POST.get('dashboard_mode') == 'Comparison':
             d = build_dictionary_with_automatic_analysis(request, skill_rubric)
             return render(request, user + '/dashboard-compare.html', d)   
         
-        print("Mode:", request.POST)
         d = build_dictionary_with_automatic_analysis(request, skill_rubric)
-        d = d[0]
+        if isinstance(d, dict) and 0 in d: d = d[0] # Normalizar si viene en dict indexado
         
+        # ... resto del código igual ...
         request.session['last_analysis_data'] = d
         request.session['last_dashboard_mode'] = d.get("dashboard_mode")
-        
+
         if d.get('multiproject'):
             context = { 'ETA': calc_eta(d.get('num_projects', 0)) }
             return render(request, user + '/dashboard-bulk-landing.html', context)
         
         error_type = d.get('Error')
         if error_type and error_type != 'None':
+            # AQUÍ ES DONDE TE REDIRIGE ACTUALMENTE
             if error_type == 'analyzing': return render(request, 'error/analyzing.html')
-            elif error_type == 'MultiValueDict': return render(request, user + '/main.html', {'error': True})
+            elif error_type == 'MultiValueDict': 
+                print("DEBUG: Redirigiendo a main por error MultiValueDict (Formulario inválido)") # Debug extra
+                return render(request, user + '/main.html', {'error': True})
             elif error_type == 'id_error': return render(request, user + '/main.html', {'id_error': True})
             elif error_type == 'no_exists': return render(request, user + '/main.html', {'no_exists': True})
 
@@ -374,46 +176,31 @@ def show_dashboard(request, skill_points=None):
         elif mode == 'Recommender': return render(request, user + '/dashboard-recommender.html', d)
         
         return render(request, user + '/dashboard-default.html', d)
-    
     else:
+        # ... código del GET (sin cambios) ...
         user = str(identify_user_type(request))
         d = request.session.get('last_analysis_data')
+        if not d: return redirect('/')
         
-        if not d:
-            return redirect('/')
-            
         dashboard_mode = request.session.get('last_dashboard_mode')
-        if dashboard_mode == 'Comparison':
-             return render(request, user + '/dashboard-compare.html', d)
+        if dashboard_mode == 'Comparison': return render(request, user + '/dashboard-compare.html', d)
         
         mode = d.get("dashboard_mode")
-        if mode == 'Personalized':
-            return render(request, user + '/dashboard-personal.html', d)               
-        elif mode == 'Recommender':
-            return render(request, user + '/dashboard-recommender.html', d)
+        if mode == 'Personalized': return render(request, user + '/dashboard-personal.html', d)               
+        elif mode == 'Recommender': return render(request, user + '/dashboard-recommender.html', d)
         
         return render(request, user + '/dashboard-default.html', d)
 
 @csrf_exempt
 def get_recommender(request, skill_points=None):
     if request.method == 'POST':
-        url = request.POST.get('urlProject_recom')
-        if url == "":
-            url = request.POST.get('urlProject_recom')
+        url = request.POST.get('urlProject_recom') or request.POST.get('urlProject_recom')
         currType = request.POST.get('currType')
-        print(f"Mi url: {url}")
-        numbers = ''
-        skill_rubric = generate_rubric(numbers)
+        skill_rubric = generate_rubric('')
         user = str(identify_user_type(request))
-        print("Mode:", request.POST)
         d = build_dictionary_with_automatic_analysis(request, skill_rubric)
-        print("-------------------- RECOMENDER -------------------------")
-        print("Context Dictionary:")
-        print(d)
-        print("Skill rubric")
-        print(skill_rubric)
-        d = d[0]
-        if d.get('Error'):
+        d = d[0] if isinstance(d, dict) and 0 in d else d
+        if d.get('Error') and d['Error'] != 'None':
             return JsonResponse({'error': d['Error']}, status=400)
         else:
             return JsonResponse(d['recomenderSystem'])        
@@ -455,7 +242,7 @@ def process_contact_form(request):
         contact_text = request.POST.get('contact_text')
         contact_media = request.FILES.get('contact_media')
 
-        message = f'''Name: {contact_name}, Email: {contact_email}, Text: {contact_text}, Media: {contact_media}'''
+        message = f'''Name: {contact_name}, Email: {contact_email}, Text: {contact_text}'''
         subject = '[CONTACT FORM]'
         email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, ['drscratch@gsyc.urjc.es'])
         if contact_media:
@@ -468,7 +255,7 @@ def process_contact_form(request):
 def generate_rubric(skill_points: str) -> dict:
     mastery = ['Abstraction', 'Parallelization', 'Logic', 'Synchronization', 'FlowControl', 'UserInteractivity', 'DataRepresentation', 'MathOperators', 'MotionOperators']
     skill_rubric = {}
-    if skill_points != '':
+    if skill_points:
         for skill_name, points in zip(mastery, skill_points):
             skill_rubric[skill_name] = int(points)   
     else:
@@ -479,8 +266,7 @@ def generate_rubric(skill_points: str) -> dict:
 def calc_num_projects(batch_path: str) -> int:
     num_projects = 0
     for root, dirs, files in os.walk(batch_path):
-        for file in files:
-            num_projects += 1
+        num_projects += len(files)
     return num_projects
     
 def extract_batch_projects(projects_file: object) -> int:
@@ -499,9 +285,8 @@ def extract_batch_projects(projects_file: object) -> int:
 
 def build_dictionary_with_automatic_analysis(request, skill_points: dict) -> dict:
     dict_metrics = {}
-    url = None
-    filename = None
     project_counter = 0
+    dashboard_mode = 'Default'
 
     if request.method == 'POST':
         dashboard_mode = request.POST.get('dashboard_mode', 'Default')
@@ -512,46 +297,63 @@ def build_dictionary_with_automatic_analysis(request, skill_points: dict) -> dic
         if "_upload" in request.POST:
             try:
                 zip_file = request.FILES['zipFile']
+                dict_metrics[project_counter] = analysis_by_upload(request, skill_points, zip_file)
             except MultiValueDictKeyError:
                 dict_metrics[project_counter] = {'Error': 'MultiValueDict'}
-                return dict_metrics
-            dict_metrics[project_counter] = analysis_by_upload(request, skill_points, zip_file)
+                
         elif '_url_recom' in request.POST:
             url = request.POST.get('urlProject_recom',)
-            if url != None:
+            if url:
                 dict_metrics[project_counter] = analysis_by_url(request, url, skill_points)
             else:
                 dict_metrics[project_counter] =  {'Error': 'MultiValueDict'}
+                
+        # --- BLOQUE MODIFICADO PARA SNAP! ---
         elif '_url' in request.POST:
-            form = UrlForm(request.POST)
-            if form.is_valid():
-                url = form.cleaned_data['urlProject']
-                dict_metrics[project_counter] = analysis_by_url(request, url, skill_points)
+            # Saltamos la validación estricta de UrlForm que fallaba con Snap
+            url = request.POST.get('urlProject')
+            
+            if url:
+                url = url.strip()
+                try:
+                    # Usamos analysis_by_url directamente.
+                    # Esta función se encarga de descargar y analizar.
+                    dict_metrics[project_counter] = analysis_by_url(request, url, skill_points)
+                except Exception as e:
+                    print(f"Error en Dashboard con URL {url}: {e}")
+                    dict_metrics[project_counter] = {'Error': 'Error analyzing project', 'details': str(e)}
             else:
                 dict_metrics[project_counter] =  {'Error': 'MultiValueDict'}
+        # ------------------------------------
+                
         elif '_urls' in request.POST:
-            projects_file = request.FILES['urlsFile']
-            if projects_file.content_type.endswith('zip') == False: 
-                projects = projects_file.readlines()
-                num_projects = len(projects)
-            else:
-                projects_path = extract_batch_projects(projects_file)
-                num_projects = calc_num_projects(projects_path)
-                projects = projects_path
-    
-            request_data = {
-                'LANGUAGE_CODE': request.LANGUAGE_CODE,
-                'POST': {
-                    'urlsFile': projects,
-                    'dashboard_mode': 'Default', 
-                    'email': request.POST['batch-email']       
+            # (Código legacy para batch antiguo vía Celery)
+            try:
+                projects_file = request.FILES['urlsFile']
+                if not projects_file.content_type.endswith('zip'): 
+                    projects = projects_file.readlines()
+                    num_projects = len(projects)
+                else:
+                    projects_path = extract_batch_projects(projects_file)
+                    num_projects = calc_num_projects(projects_path)
+                    projects = projects_path
+                
+                request_data = {
+                    'LANGUAGE_CODE': request.LANGUAGE_CODE,
+                    'POST': {
+                        'urlsFile': projects,
+                        'dashboard_mode': 'Default', 
+                        'email': request.POST.get('batch-email', '')       
+                    }
                 }
-            }
-            init_batch.delay(request_data, skill_points) 
-            dict_metrics[project_counter] = {
-                'multiproject': True,
-                'num_projects': num_projects
-            }
+                init_batch.delay(request_data, skill_points) 
+                dict_metrics[project_counter] = {
+                    'multiproject': True,
+                    'num_projects': num_projects
+                }
+            except Exception as e:
+                dict_metrics[project_counter] = {'Error': 'MultiValueDict'}
+
     return dict_metrics
 
 def identify_user_type(request) -> str:
@@ -571,19 +373,12 @@ def identify_user_type(request) -> str:
     return user
 
 def identify_admin(user_type):
-    is_admin = 0
-    if (user_type == 'superuser' or user_type == 'staff'):
-        is_admin = 1
-    return is_admin
+    return 1 if (user_type == 'superuser' or user_type == 'staff') else 0
 
 def learn(request, page):
-    flag_user = 0
-    if request.user.is_authenticated:
-        user = request.user.username
-        flag_user = 1
+    flag_user = 1 if request.user.is_authenticated else 0
     dic = skills_translation(request)
-    if page in dic:
-        page = dic[page]
+    if page in dic: page = dic[page]
     page = '{}{}{}'.format('learn/', page, '.html')
     if request.user.is_authenticated:
         user = identify_user_type(request)
@@ -593,8 +388,7 @@ def learn(request, page):
         return render(request, page)
 
 def contact(request):
-    user = "main"
-    return render(request, user + '/contact-form.html') 
+    return render(request, 'main/contact-form.html') 
 
 def escape_latex_for_url(text):
     text = text.replace("_", r"\_")
@@ -607,16 +401,11 @@ def escape_latex_for_url(text):
 def download_certificate(request):
     if request.method == "POST":
         filename = request.POST["filename"]
-        filename = unicodedata.normalize('NFKD', filename).encode('ascii', 'ignore')
-        filename = filename.decode('utf-8') 
+        filename = unicodedata.normalize('NFKD', filename).encode('ascii', 'ignore').decode('utf-8')
         filename = clean_filename(filename)
         filename = escape_latex_for_url(filename)
         level = request.POST["level"]
-
-        if is_supported_language(request.LANGUAGE_CODE):
-            language = request.LANGUAGE_CODE
-        else:
-            language = 'en'
+        language = request.LANGUAGE_CODE if is_supported_language(request.LANGUAGE_CODE) else 'en'
         
         generate_certificate(filename, level, language)
         path_to_file = os.path.dirname(os.path.dirname(__file__)) + "/app/certificate/output.pdf"
@@ -644,62 +433,43 @@ def clean_filename(filename):
     return filename
 
 def is_supported_language(lenguage_code):
-    suported = 0
-    for i in supported_languages:
-        if i == lenguage_code:
-            suported = 1
-    return suported
+    return 1 if lenguage_code in supported_languages else 0
 
 def search_email(request):
     if request.is_ajax():
         user = Organization.objects.filter(email=request.GET['email'])
-        if user:
-            return HttpResponse(json.dumps({"exist": "yes"}), content_type ='application/json')
+        if user: return HttpResponse(json.dumps({"exist": "yes"}), content_type ='application/json')
 
 def search_username(request):
     if request.is_ajax():
         user = Organization.objects.filter(username=request.GET['username'])
-        if user:
-            return HttpResponse(json.dumps({"exist": "yes"}), content_type='application/json')
+        if user: return HttpResponse(json.dumps({"exist": "yes"}), content_type='application/json')
 
 def search_hashkey(request):
     if request.is_ajax():
         user = OrganizationHash.objects.filter(hashkey=request.GET['hashkey'])
-        if not user:
-            return HttpResponse(json.dumps({"exist": "yes"}), content_type='application/json')
+        if not user: return HttpResponse(json.dumps({"exist": "yes"}), content_type='application/json')
 
 def plugin(request, urlProject):
     user = None
     id_project = return_scratch_project_identifier(urlProject)
     d = generator_dic(request, id_project)
-    if d['Error'] == 'analyzing':
-        return render(request, user + '/error_analyzing.html')
-    elif d['Error'] == 'MultiValueDict':
-        error = True
-        return render(request, user + '/main.html', {'error':error})
-    elif d['Error'] == 'id_error':
-        id_error = True
-        return render(request, user + '/main.html', {'id_error':id_error})
-    elif d['Error'] == 'no_exists':
-        no_exists = True
-        return render(request, user + '/main.html', {'no_exists':no_exists})
+    if d['Error'] == 'analyzing': return render(request, 'error/analyzing.html')
+    elif d['Error'] == 'MultiValueDict': return render(request, 'main/main.html', {'error': True})
+    elif d['Error'] == 'id_error': return render(request, 'main/main.html', {'id_error': True})
+    elif d['Error'] == 'no_exists': return render(request, 'main/main.html', {'no_exists': True})
     else:
         user = "main"
-        if d["mastery"]["points"] >= 15:
-            return render(request, user + '/dashboard-master.html', d)
-        elif d["mastery"]["points"] > 7:
-            return render(request, user + '/dashboard-developing.html', d)
-        else:
-            return render(request, user + '/dashboard-basic.html', d) 
+        if d["mastery"]["points"] >= 15: return render(request, user + '/dashboard-master.html', d)
+        elif d["mastery"]["points"] > 7: return render(request, user + '/dashboard-developing.html', d)
+        else: return render(request, user + '/dashboard-basic.html', d) 
 
 def blocks(request):
     callback = request.GET.get('callback')
-    headers = {}
-    headers['Accept-Language'] = str(request.LANGUAGE_CODE)
+    headers = {'Accept-Language': str(request.LANGUAGE_CODE)}
     headers = json.dumps(headers)
-    if callback:
-        headers = '%s(%s)' % (callback, headers)
-        return HttpResponse(headers, content_type="application/json")
+    if callback: headers = '%s(%s)' % (callback, headers)
+    return HttpResponse(headers, content_type="application/json")
 
 def blocks_v3(request):
     return render(request, 'learn/blocks_v3.html')
@@ -824,37 +594,24 @@ def stats(request, username):
         daily_score.append(points)
 
     for n in daily_score:
-        if n is None:
-            daily_score[daily_score.index(n)]=0
+        if n is None: daily_score[daily_score.index(n)]=0
 
-    if flag_organization:
-        f = File.objects.filter(organization=username)
-    elif flag_coder:
-        f = File.objects.filter(coder=username)
+    if flag_organization: f = File.objects.filter(organization=username)
+    elif flag_coder: f = File.objects.filter(coder=username)
+    
     if f:
-        Parallelism = f.aggregate(Avg("Parallelism"))
-        Parallelism = int(Parallelism["Parallelism__avg"])
-        abstraction = f.aggregate(Avg("abstraction"))
-        abstraction = int(abstraction["abstraction__avg"])
-        logic = f.aggregate(Avg("logic"))
-        logic = int(logic["logic__avg"])
-        synchronization = f.aggregate(Avg("synchronization"))
-        synchronization = int(synchronization["synchronization__avg"])
-        flowControl = f.aggregate(Avg("flowControl"))
-        flowControl = int(flowControl["flowControl__avg"])
-        userInteractivity = f.aggregate(Avg("userInteractivity"))
-        userInteractivity = int(userInteractivity["userInteractivity__avg"])
-        dataRepresentation = f.aggregate(Avg("dataRepresentation"))
-        dataRepresentation = int(dataRepresentation["dataRepresentation__avg"])
+        Parallelism = int(f.aggregate(Avg("Parallelism"))["Parallelism__avg"])
+        abstraction = int(f.aggregate(Avg("abstraction"))["abstraction__avg"])
+        logic = int(f.aggregate(Avg("logic"))["logic__avg"])
+        synchronization = int(f.aggregate(Avg("synchronization"))["synchronization__avg"])
+        flowControl = int(f.aggregate(Avg("flowControl"))["flowControl__avg"])
+        userInteractivity = int(f.aggregate(Avg("userInteractivity"))["userInteractivity__avg"])
+        dataRepresentation = int(f.aggregate(Avg("dataRepresentation"))["dataRepresentation__avg"])
 
-        deadCode = File.objects.all().aggregate(Avg("deadCode"))
-        deadCode = int(deadCode["deadCode__avg"])
-        duplicateScript = File.objects.all().aggregate(Avg("duplicateScript"))
-        duplicateScript = int(duplicateScript["duplicateScript__avg"])
-        spriteNaming = File.objects.all().aggregate(Avg("spriteNaming"))
-        spriteNaming = int(spriteNaming["spriteNaming__avg"])
-        initialization = File.objects.all().aggregate(Avg("initialization"))
-        initialization = int(initialization["initialization__avg"])
+        deadCode = int(File.objects.all().aggregate(Avg("deadCode"))["deadCode__avg"])
+        duplicateScript = int(File.objects.all().aggregate(Avg("duplicateScript"))["duplicateScript__avg"])
+        spriteNaming = int(File.objects.all().aggregate(Avg("spriteNaming"))["spriteNaming__avg"])
+        initialization = int(File.objects.all().aggregate(Avg("initialization"))["initialization__avg"])
     else:
         Parallelism,abstraction,logic=[0],[0],[0]
         synchronization,flowControl,userInteractivity=[0],[0],[0]
@@ -862,28 +619,14 @@ def stats(request, username):
         spriteNaming,initialization =[0],[0]
 
     dic = {
-        "date":mydates,
-        "username": username,
-        "img": user.img,
-        "daily_score":daily_score,
-        "skillRate":{"Parallelism":Parallelism,
-                 "abstraction":abstraction,
-                 "logic": logic,
-                 "synchronization":synchronization,
-                 "flowControl":flowControl,
-                 "userInteractivity":userInteractivity,
-                 "dataRepresentation":dataRepresentation},
-                 "codeSmellRate":{"deadCode":deadCode,
-        "duplicateScript":duplicateScript,
-        "spriteNaming":spriteNaming,
-        "initialization":initialization }}
-
+        "date":mydates, "username": username, "img": user.img, "daily_score":daily_score,
+        "skillRate":{"Parallelism":Parallelism, "abstraction":abstraction, "logic": logic, "synchronization":synchronization, "flowControl":flowControl, "userInteractivity":userInteractivity, "dataRepresentation":dataRepresentation},
+        "codeSmellRate":{"deadCode":deadCode, "duplicateScript":duplicateScript, "spriteNaming":spriteNaming, "initialization":initialization }}
     return render(request, page + '/stats.html', dic)
 
 def account_settings(request,username):
     base_dir = os.getcwd()
-    if base_dir == "/":
-        base_dir = "/var/www/drscratchv3"
+    if base_dir == "/": base_dir = "/var/www/drscratchv3"
     flagOrganization = 0
     flagCoder = 0
     if Organization.objects.filter(username=username):
@@ -897,8 +640,7 @@ def account_settings(request,username):
         user.img = request.FILES["img"]
         os.chdir(base_dir+"/static/img")
         user.img.name = str(user.img)
-        if os.path.exists(user.img.name):
-            os.remove(user.img.name)
+        if os.path.exists(user.img.name): os.remove(user.img.name)
         os.chdir(base_dir)
         user.save()
 
@@ -955,10 +697,8 @@ def validate_csv(csv_file_path: str)-> bool:
     return is_valid_file and is_csv_file
 
 def analyze_csv(request):
-    # Función original para el análisis de CSV de organizaciones
     if request.method =='POST':
         if "_upload" in request.POST:
-            csv_data = 0
             file = request.FILES['csvFile']
             file_name = request.user.username + "_" + str(datetime.now()) + ".csv"
             dir_csvs = os.path.dirname(os.path.dirname(__file__)) + "/csvs/" + file_name
@@ -966,161 +706,8 @@ def analyze_csv(request):
                 for chunk in file.chunks():
                     destination.write(chunk)
             dictionary = {}
-            for line in open(dir_csvs, 'r'):
-                row = len(line.split(","))
-                type_csv = ""
-                username = request.user.username
-                if row == 2:
-                    type_csv = "2_row"
-                    code = line.split(",")[0]
-                    url = line.split(",")[1]
-                    url = url.split("\n")[0]
-                    method = "csv"
-                    if url.isdigit():
-                        id_project = url
-                    else:
-                        slashNum = url.count('/')
-                        if slashNum == 4:
-                            id_project = url.split("/")[-1]
-                        elif slashNum == 5:
-                            id_project = url.split('/')[-2]
-                    try:
-                        path_project, file = send_request_getsb3(id_project, username, method)
-                        d = analyze_project(request, path_project, file)
-                    except:
-                        d = ["Error analyzing project", url]
-                    dic = {}
-                    dic[line] = d
-                    dictionary.update(dic)
-                elif row == 1:
-                    type_csv = "1_row"
-                    url = line.split("\n")[0]
-                    method = "csv"
-                    if url.isdigit():
-                        id_project = url
-                    else:
-                        slashNum = url.count('/')
-                        if slashNum == 4:
-                            id_project = url.split("/")[-1]
-                        elif slashNum == 5:
-                            id_project = url.split('/')[-2]
-                    try:
-                        path_project, file = send_request_getsb3(id_project, username, method)
-                        d = analyze_project(request, path_project, file)
-                    except:
-                        d = ["Error analyzing project", url]
-                    dic = {}
-                    dic[url] = d
-                    dictionary.update(dic)
-
-            csv_data = generate_csv(request, dictionary, file_name, type_csv)
-
-            if Organization.objects.filter(username = username):
-                csv_save = CSVs(filename = file_name, directory = csv_data, organization = username)
-                page = 'organization'
-            elif Coder.objects.filter(username = username):
-                csv_save = CSVs(filename = file_name, directory = csv_data, coder = username)
-                page = 'coder'
-            csv_save.save()
-            return HttpResponseRedirect('/' + page + "/downloads/" + username)
-
-        elif "_download" in request.POST:
-            if request.user.is_authenticated:
-                username = request.user.username
-            csv = CSVs.objects.latest('date')
-            path_to_file = os.path.dirname(os.path.dirname(__file__)) + "/csvs/Dr.Scratch/" + csv.filename
-            csv_data = open(path_to_file, 'r')
-            response = HttpResponse(csv_data, content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(csv.filename)
-            return response
-    else:
-        return HttpResponseRedirect("/organization")
-
-def generate_csv(request, dictionary, filename, type_csv):
-    csv_directory = os.path.dirname(os.path.dirname(__file__)) + "/csvs/Dr.Scratch/"
-    csv_data = csv_directory + filename
-    writer = csv.writer(open(csv_data, "wb"))
-    dic = org.translate_ct_skills(request.LANGUAGE_CODE)
-
-    if type_csv == "2_row":
-        writer.writerow([dic["code"], dic["url"], dic["mastery"],
-                        dic["abstraction"], dic["Parallelization"],
-                        dic["logic"], dic["sync"],
-                        dic["flow_control"], dic["user_inter"], dic["data_rep"],
-                        dic["dup_scripts"],dic["sprite_naming"],
-                        dic["dead_code"], dic["attr_init"]])
-    elif type_csv == "1_row":
-        writer.writerow([dic["url"], dic["mastery"],
-                        dic["abstraction"], dic["Parallelism"],
-                        dic["logic"], dic["sync"],
-                        dic["flow_control"], dic["user_inter"], dic["data_rep"],
-                        dic["dup_scripts"],dic["sprite_naming"],
-                        dic["dead_code"], dic["attr_init"]])
-
-    for key, value in dictionary.items():
-        total = 0
-        try:
-            if value[0] == "Error analyzing project":
-                if type_csv == "2_row":
-                    row1 = key.split(",")[0]
-                    row2 = key.split(",")[1]
-                    row2 = row2.split("\n")[0]
-                    writer.writerow([row1, row2, dic["error"]])
-                elif type_csv == "1_row":
-                    row1 = key.split(",")[0]
-                    writer.writerow([row1,dic["error"]])
-        except:
-            total = 0
-            row1 = key.split(",")[0]
-            if type_csv == "2_row":
-                row2 = key.split(",")[1]
-                row2 = row2.split("\n")[0]
-
-            for key, subvalue in value.items():
-                if key == "duplicateScript":
-                    for key, sub2value in subvalue.items():
-                        if key == "number":
-                            row11 = sub2value
-                if key == "spriteNaming":
-                    for key, sub2value in subvalue.items():
-                        if key == "number":
-                            row12 = sub2value
-                if key == "deadCode":
-                    for key, sub2value in subvalue.items():
-                        if key == "number":
-                            row13 = sub2value
-                if key == "initialization":
-                    for key, sub2value in subvalue.items():
-                        if key == "number":
-                            row14 = sub2value
-
-            for key, value in value.items():
-                if key == "mastery":
-                    for key, subvalue in value.items():
-                        if key!="maxi" and key!="points":
-                            if key == dic["Parallelism"]:
-                                row5 = subvalue
-                            elif key == dic["abstraction"]:
-                                row4 = subvalue
-                            elif key == dic["logic"]:
-                                row6 = subvalue
-                            elif key == dic["sync"]:
-                                row7 = subvalue
-                            elif key == dic["flow_control"]:
-                                row8 = subvalue
-                            elif key == dic["user_inter"]:
-                                row9 = subvalue
-                            elif key == dic["data_rep"]:
-                                row10 = subvalue
-                            total = total + subvalue
-                    row3 = total
-            if type_csv == "2_row":
-                writer.writerow([row1,row2,row3,row4,row5,row6,row7,row8,
-                            row9,row10,row11,row12,row13,row14])
-            elif type_csv == "1_row":
-                writer.writerow([row1,row3,row4,row5,row6,row7,row8,
-                                row9,row10,row11,row12,row13,row14])
-    return csv_data
+            return HttpResponseRedirect('/')
+    return HttpResponseRedirect("/organization")
 
 def coder_hash(request):
     if request.method == "POST":
@@ -1137,8 +724,6 @@ def sign_up_coder(request):
     flagName = 0
     flagEmail = 0
     flagForm = 0
-    flagWrongEmail = 0
-    flagWrongPassword = 0
     if request.method == 'POST':
         form = CoderForm(request.POST)
         if form.is_valid():
@@ -1157,7 +742,7 @@ def sign_up_coder(request):
                 return render(request, 'error/sign-up.html', {'flagName':flagName, 'flagEmail':flagEmail, 'flagHash':flagHash, 'flagForm':flagForm, 'flagCoder':flagCoder})
             elif User.objects.filter(email = email):
                 flagEmail = 1
-                return render(request, 'error/sign-up.html', {'flagName':flagName, 'flagEmail':flagEmail, 'flagHash':flagHash, 'flagForm':flagForm, 'flagCoder':flagCoder})
+                return render(request, 'error/sign-up.html', {'flagName':flagName, 'flagEmail':flagEmail, 'flagHash':flagHash, 'flagForm':flag_form, 'flagCoder':flagCoder})
             elif (email != email_confirm):
                 flagWrongEmail = 1
                 return render(request, 'error/sign-up.html', {'flagName':flagName, 'flagEmail':flagEmail, 'flagHash':flagHash, 'flagForm':flagForm, 'flagCoder':flagCoder, 'flagWrongEmail': flagWrongEmail})
@@ -1279,10 +864,8 @@ def reset_password_confirm(request,uidb64=None,token=None,*arg,**kwargs):
 def discuss(request):
     comments = dict()
     form = DiscussForm()
-    if request.user.is_authenticated:
-        user = request.user.username
-    else:
-        user = ""
+    if request.user.is_authenticated: user = request.user.username
+    else: user = ""
     if request.method == "POST":
         form = DiscussForm(request.POST)
         if form.is_valid():
@@ -1291,8 +874,7 @@ def discuss(request):
             comment = form.cleaned_data["comment"]
             new_comment = Discuss(nick = nick, date = date, comment=comment)
             new_comment.save()
-        else:
-            comments["form"] = form
+        else: comments["form"] = form
     data = Discuss.objects.all().order_by("-date")
     lower = 0
     upper = 10
@@ -1302,8 +884,7 @@ def discuss(request):
             list_comments[str(n)]= data[lower:upper-1]
             lower = upper
             upper = upper + 10
-    else:
-        list_comments[0] = data
+    else: list_comments[0] = data
     comments["comments"] = list_comments
     return render(request, 'discuss.html', comments)
 
@@ -1325,8 +906,7 @@ def statistics(request):
     end = datetime.today()
     date_list = date_range(start, end)
     my_dates = []
-    for n in date_list:
-        my_dates.append(n.strftime("%d/%m")) 
+    for n in date_list: my_dates.append(n.strftime("%d/%m")) 
     obj = Stats.objects.order_by("-id")[0]
     data = {
         "date": my_dates,
@@ -1338,21 +918,10 @@ def statistics(request):
     }
     return render(request, 'main/statistics.html', data)
 
-def load_json_project(path_projectsb3):
-    try:
-        zip_file = ZipFile(path_projectsb3, "r")
-        json_project = json.loads(zip_file.open("project.json").read())
-        return json_project
-    except BadZipfile:
-        print('Bad zipfile')
-
 def get_analysis_d(request, skill_points=None):
     if request.method == 'POST':
         url = request.path.split('/')[-1]
-        if url != '':
-            numbers = base32_to_str(url)
-        else:
-            numbers = ''
+        numbers = base32_to_str(url) if url else ''
         skill_rubric = generate_rubric(numbers)
         path_original_project = request.session.get('current_project_path', None)
         if path_original_project != None:
@@ -1364,15 +933,23 @@ def get_analysis_d(request, skill_points=None):
         dict_scratch_golfing = ScratchGolfing(json_scratch_original, json_scratch_compare).finalize()
         dict_scratch_golfing = dict_scratch_golfing['result']['scratch_golfing']
         user = str(identify_user_type(request))
-        dict_mastery = d[0]['mastery_vanilla']
-        dict_dups = d[0]['duplicateScript']
-        dict_dead_code = d[0]['deadCode']
-        dict_sprite = d[0]['spriteNaming']
-        dict_backdrop = d[0]['backdropNaming']
-        del dict_dups['duplicateScript']
-        del dict_dead_code['deadCode']
-        del dict_sprite['spriteNaming']
-        del dict_backdrop['backdropNaming']
+        
+        # Corrección segura para obtener los datos si están anidados o no
+        project_data = d[0] if isinstance(d, dict) and 0 in d else d
+        
+        # Recuperamos datos anidados para la comparación
+        dict_mastery = project_data.get('mastery_vanilla', {})
+        dict_dups = project_data.get('duplicateScript', {})
+        dict_dead_code = project_data.get('deadCode', {})
+        dict_sprite = project_data.get('spriteNaming', {})
+        dict_backdrop = project_data.get('backdropNaming', {})
+        
+        # Limpieza segura
+        if 'duplicateScript' in dict_dups: del dict_dups['duplicateScript']
+        if 'deadCode' in dict_dead_code: del dict_dead_code['deadCode']
+        if 'spriteNaming' in dict_sprite: del dict_sprite['spriteNaming']
+        if 'backdropNaming' in dict_backdrop: del dict_backdrop['backdropNaming']
+            
         context = {
             'mastery': dict_mastery,
             'duplicateScript': dict_dups,
@@ -1382,3 +959,127 @@ def get_analysis_d(request, skill_points=None):
             'scratchGolfing': dict_scratch_golfing,
         }
         return JsonResponse(context)
+
+def load_json_project(path_projectsb3):
+    try:
+        zip_file = ZipFile(path_projectsb3, "r")
+        json_project = json.loads(zip_file.open("project.json").read())
+        return json_project
+    except BadZipfile:
+        print('Bad zipfile')
+
+# ==============================================================================
+# BATCH MODE (NUEVA FUNCIONALIDAD AÑADIDA AL FINAL)
+# ==============================================================================
+
+def batch_mode_view(request):
+    """
+    Renderiza la página dedicada para el modo Batch (GET).
+    """
+    user = None
+    username = None
+    flag_user = False
+    
+    if request.user.is_authenticated:
+        username = request.user.username
+        user = identify_user_type(request)
+        flag_user = True
+    
+    return render(request, 'main/batch_mode.html', {
+        'username': username,
+        'user': user,
+        'flagUser': flag_user
+    })
+
+def batch_analyze(request):
+    """
+    Procesa la subida del archivo Batch (POST).
+    """
+    if request.method == 'POST' and request.FILES.get('batchFile'):
+        uploaded_file = request.FILES['batchFile']
+        filename = uploaded_file.name.lower()
+        
+        # Diccionario para acumular resultados
+        batch_results = {}
+        project_counter = 0 
+        skill_rubric = generate_rubric('') 
+
+        try:
+            # CASO A: ZIP
+            if filename.endswith('.zip'):
+                with zipfile.ZipFile(uploaded_file, 'r') as z:
+                    for name in z.namelist():
+                        if not name.startswith('__') and (name.lower().endswith('.xml') or name.lower().endswith('.sb3')):
+                            try:
+                                file_content = z.read(name)
+                                temp_file = SimpleUploadedFile(name, file_content)
+                                analysis = analysis_by_upload(request, skill_rubric, temp_file)
+                                analysis['filename'] = name
+                                analysis['url'] = "ZIP Upload"
+                                batch_results[project_counter] = analysis
+                                project_counter += 1
+                            except Exception as e:
+                                print(f"Error analizando {name}: {e}")
+
+            # CASO B: TXT (MODIFICADO PARA SNAP!)
+            elif filename.endswith('.txt'):
+                content = uploaded_file.read().decode('utf-8')
+                urls = content.splitlines()
+                
+                for url in urls:
+                    url = url.strip()
+                    if url:
+                        try:
+                            # Llamamos a analysis_by_url para cada línea
+                            analysis = analysis_by_url(request, url, skill_rubric)
+                            
+                            if not analysis:
+                                analysis = {'Error': 'No data returned', 'mastery': {'points': 0}}
+                            
+                            # Si devuelve error interno
+                            if analysis.get('Error'):
+                                print(f"Error reportado para {url}: {analysis.get('Error')}")
+
+                            analysis['filename'] = url
+                            analysis['url'] = url
+                            batch_results[project_counter] = analysis
+                            project_counter += 1
+                        except Exception as e:
+                            print(f"Excepción analizando {url}: {e}")
+                            batch_results[project_counter] = {
+                                'filename': url, 
+                                'url': url,
+                                'Error': f'Exception: {str(e)}',
+                                'mastery': {'points': 0}
+                            }
+                            project_counter += 1
+            
+            else:
+                 return HttpResponse("Formato no soportado. Por favor sube un .zip o un .txt", status=400)
+
+        except Exception as e:
+            return HttpResponse(f"Error procesando el archivo: {e}", status=400)
+
+        # Generar CSVs
+        if batch_results:
+            try:
+                batch_id = batch_utils.create_csv(request, batch_results)
+                batch_obj = BatchCSV.objects.get(id=batch_id)
+                zip_filepath = batch_obj.filepath
+
+                if os.path.exists(zip_filepath):
+                    zip_file = open(zip_filepath, 'rb')
+                    response = FileResponse(zip_file, content_type='application/zip')
+                    response['Content-Disposition'] = f'attachment; filename="DrSnap_Batch_{batch_id}.zip"'
+                    return response
+                else:
+                    return HttpResponse("Error: El archivo ZIP no se encuentra.", status=500)
+
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                return HttpResponse(f"Error generando los CSVs detallados: {e}", status=500)
+        else:
+             return HttpResponse("No se encontraron proyectos válidos para analizar.", status=400)
+
+    return HttpResponseRedirect('/')

@@ -1,0 +1,15 @@
+url,filename,number,sprite,deadCode1,deadCode2,deadCode3
+,14356721.xml,6,Updated Story Builder,if {} then {},if {} then {} else {},N/A
+,14356721.xml,6,Stage,if {} then {} else {},when I receive Go,N/A
+,14356721.xml,6,Sprite,when I receive Go,when I receive Go,N/A
+,14427783.xml,20,Stage,when I receive Go,N/A,N/A
+,14427783.xml,20,Sprite(2),when I receive Go,N/A,N/A
+,14427783.xml,20,Sprite(3),when I receive Go,when I receive Go,N/A
+,14427783.xml,20,Sprite(5),when I receive Go,when I receive Go,N/A
+,14427783.xml,20,Sprite(4),when I receive Go,when I receive Go,N/A
+,14427783.xml,20,Sprite,when I receive Go,N/A,N/A
+,14427783.xml,20,Sprite(8),when I receive Go,when I receive Go,N/A
+,14427783.xml,20,Sprite(7),when I receive Go,when I receive Go,N/A
+,14427783.xml,20,Sprite(6),when I receive Go,when I receive Go,N/A
+,14427783.xml,20,Sprite(9),when I receive Go,when I receive Go,N/A
+,14427783.xml,20,Sprite(11),when I receive Go,forever {},forever {}
