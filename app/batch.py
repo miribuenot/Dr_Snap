@@ -30,7 +30,6 @@ def create_csv_main(request, d: dict, folder_path: str) -> str:
     csv_name = "main.csv"
     csv_filepath = os.path.join(folder_path, csv_name)
     
-    # Cabeceras
     headers = [
         'url', 'filename', 'points', 
         'Abstraction', 'Parallelism', 'Logic', 'Synchronization',
@@ -42,7 +41,6 @@ def create_csv_main(request, d: dict, folder_path: str) -> str:
     vanilla_headers = ['Van points','Van Abstraction','Van Parallelism', 'Van Logic', 'Van Synchronization', 'Van Flow control', 'Van User interactivity', 'Van Data representation']
     global_headers = headers + vanilla_headers + ['tot_blocks']
 
-    # Mapeo Clave CSV -> Clave Diccionario de Análisis (Interna)
     keys_map = {
         'Abstraction': 'Abstraction', 'Parallelism': 'Parallelization', 'Logic': 'Logic',
         'Synchronization': 'Synchronization', 'Flow control': 'FlowControl',
@@ -98,17 +96,17 @@ def create_csv_dups(d: dict, folder_path: str):
     csv_filepath = os.path.join(folder_path, csv_name)
     headers = ['url', 'filename', 'number']
 
-    # Calcular máximo de columnas necesarias
     max_dup_scripts = 0
     for project in d.values():
         dups = project.get('duplicateScript', {}).get('csv_format', [])
-        count = sum(len(x) for x in dups) if dups else 0
-        if count > max_dup_scripts: max_dup_scripts = count
+        count = len(dups) if dups else 0
+        if count > max_dup_scripts: 
+            max_dup_scripts = count
     
     for i in range(1, max_dup_scripts + 1):
         headers.append(f'duplicateScript_{i}')
 
-    with open(csv_filepath, 'w', newline='') as csv_file:
+    with open(csv_filepath, 'w', newline='', encoding='utf-8') as csv_file:
         writer_csv = csv.DictWriter(csv_file, fieldnames=headers)
         writer_csv.writeheader()
 
@@ -118,14 +116,12 @@ def create_csv_dups(d: dict, folder_path: str):
                 'filename': project.get('filename', ''),
                 'number': project.get('duplicateScript', {}).get('number', 0)
             }
-            # Rellenar scripts
             dups = project.get('duplicateScript', {}).get('csv_format', [])
             idx = 1
             if dups:
-                for group in dups:
-                    for script in group:
-                        row[f'duplicateScript_{idx}'] = script
-                        idx += 1
+                for script in dups:
+                    row[f'duplicateScript_{idx}'] = script
+                    idx += 1
             writer_csv.writerow(row)
 
 def create_csv_sprites(d: dict, folder_path: str):
@@ -133,7 +129,6 @@ def create_csv_sprites(d: dict, folder_path: str):
     csv_filepath = os.path.join(folder_path, csv_name)
     headers = ['url', 'filename', 'number']
 
-    # Calcular columnas maximas
     max_sprites = 0
     for p in d.values():
         sprites = p.get('spriteNaming', {}).get('sprite', [])
@@ -223,42 +218,34 @@ def create_csv_deadcode(d: dict, folder_path: str):
 
 def create_summary(request, d: dict) -> dict:
     summary = {}
-    # Claves internas en INGLÉS (para coincidir con modelo DB)
     skills = ['Abstraction', 'Parallelization', 'Logic', 'Synchronization', 'FlowControl', 
               'UserInteractivity', 'DataRepresentation', 'MathOperators', 'MotionOperators']
     
-    # Inicializar a 0
     for s in skills: summary[s] = 0
     summary['Points'] = 0
     summary['num_projects'] = len(d)
 
-    total_max = 21 # Por defecto
+    total_max = 21
     
-    # Sumar
     for p in d.values():
         m = p.get('extended') or p.get('mastery') or p
-        # Puntos
         pts = m.get('total_points') or m.get('points') or [0]
         val_points = pts[0] if isinstance(pts, list) else pts
         summary['Points'] += val_points
 
-        # Skills
         for s in skills:
             val = m.get(s, [0])
             score = val[0] if isinstance(val, list) else val
             summary[s] += score
             
-            # Intentar capturar maximos (si existen)
             if isinstance(val, list) and len(val) > 1:
                  pass 
 
-    # Medias
     n = len(d) if len(d) > 0 else 1
     summary['Points'] = [round(summary['Points']/n, 2), total_max]
     for s in skills:
-        summary[s] = [round(summary[s]/n, 2), 3] # Asumimos max 3
+        summary[s] = [round(summary[s]/n, 2), 3]
 
-    # Nivel global
     avg = summary['Points'][0]
     if avg >= 15: summary['Mastery'] = 'Master'
     elif avg > 7: summary['Mastery'] = 'Developing'
@@ -267,7 +254,6 @@ def create_summary(request, d: dict) -> dict:
     return summary
 
 def create_obj(data: dict, csv_filepath: str) -> uuid.UUID:
-    # Guarda en BD usando las claves en Inglés que generó create_summary
     cs_data = BatchCSV.objects.create(
         filepath= csv_filepath,
         num_projects=data['num_projects'],
@@ -317,17 +303,14 @@ def create_csv(request, d: dict) -> uuid.UUID:
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
     
-    # 1. Crear CSVs individuales
     create_csv_main(request, d, folder_path)
     create_csv_dups(d, folder_path)
     create_csv_sprites(d, folder_path)
     create_csv_backdrops(d, folder_path)
     create_csv_deadcode(d, folder_path)
     
-    # 2. Resumen y Base de Datos
     summary = create_summary(request, d) 
     
-    # 3. Empaquetar y Guardar
     csv_filepath = zip_folder(folder_path)
     id = create_obj(summary, csv_filepath)
     

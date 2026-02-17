@@ -1,149 +1,107 @@
 from app.hairball3.plugin import Plugin
-from app.hairball3.scriptObject import Script
 import logging
 import coloredlogs
 
 logger = logging.getLogger(__name__)
 coloredlogs.install(level='DEBUG', logger=logger)
 
-
 class DuplicateScripts(Plugin):
     """
-    Plugin that analyzes duplicate scripts in scratch projects version 3.0
+    Plugin that analyzes duplicate scripts in Snap! projects.
+    Adapted from Scratch 3.0 to process Snap! XML parsed dictionaries.
     """
 
     def __init__(self, filename, json_project, verbose=False):
         super().__init__(filename, json_project, verbose)
         self.total_duplicate = 0
-        self.sprite_dict = {}
         self.duplicates = {}
         self.list_duplicate = []
         self.list_csv = []
 
-    def get_blocks(self, dict_target):
+    def extract_scripts(self):
         """
-        Gets all the blocks in json format into a dictionary
+        Recorre el diccionario generado por analyzer.py y reconstruye 
+        las secuencias de bloques desde la raíz hasta el final.
         """
-        out = {}
-
-
-        for dict_key, dicc_value in dict_target.items():
-            if dict_key == "blocks":
-                print("dicc_value", dicc_value)
-                if dicc_value:
-                    for blocks in dicc_value:
-                        print("blocks", blocks)
-                        for block, blocks_value in blocks.items():
-                            if block == "block":
-                                print("block", blocks_value)
-                                out[blocks["id"]] = blocks_value
+        all_scripts = []
+        
+        for sprite_name, data in self.json_project.items():
+            if not isinstance(data, dict) or 'blocks' not in data:
+                continue
             
-        print("out", out)
-        return out
-    
-    def set_sprite_dict(self):
-        """
-        Sets a dictionary containing the scripts of each sprite in Script() format
-        """
-        print("DUPLICATED", self.json_project.items())
-        for key, list_dict_targets in self.json_project.items():
-            print("KEY", key)
-            print("list", list_dict_targets)
-            #if key == "targets":
-            #for dict_target in list_dict_targets:
-               
-            sprite_name = key
-            sprite_blocks = self.get_blocks(list_dict_targets)
-            print("sprite blocks", sprite_blocks)
-            sprite_scripts = []
+            blocks_list = data['blocks']
+            blocks_by_id = {b['id']: b for b in blocks_list}
             
-            #for key, block in sprite_blocks.items():
-            #    if block == "topLevel":
-            #       new_script = Script()
-            #        new_script.set_script_dict(block_dict=sprite_blocks, start=key)
-            #        sprite_scripts.append(new_script)
+            all_children = set()
+            for b in blocks_list:
+                for child_id in b.get('next', []):
+                    all_children.add(child_id)
             
-          
-            self.sprite_dict[sprite_name] = sprite_blocks
-           
+            root_blocks = [b for b in blocks_list if b['id'] not in all_children]
+            
+            for root in root_blocks:
+                script_sequence = self.traverse_script(root['id'], blocks_by_id)
+                
+                if len(script_sequence) >= 5:
+                    all_scripts.append((sprite_name, tuple(script_sequence)))
+        
+        return all_scripts
 
+    def traverse_script(self, block_id, blocks_by_id):
+        """
+        Función recursiva que extrae los nombres de los bloques encadenados en orden.
+        """
+        if block_id not in blocks_by_id:
+            return []
+        
+        block = blocks_by_id[block_id]
+        seq = [block.get('block', 'unknown_block')]
+        
+        for child_id in block.get('next', []):
+            seq.extend(self.traverse_script(child_id, blocks_by_id))
+        
+        return seq
 
     def analyze(self):
         """
-        Searches for intra duplicates of each sprite and outputs them
+        Busca scripts idénticos entre todos los objetos del proyecto.
         """
-        self.set_sprite_dict()
-        print("self.duplicates-------")
-        print(self.sprite_dict)
-        for sprite, scripts in self.sprite_dict.items():
-            seen = set()
-            sprite_duplicates = {}
-            print(scripts)
-            if not scripts:
-                print(f"El sprite '{sprite}' no tiene scripts.")
-                continue  # Si no hay scripts, pasa al siguiente sprite
-            
-            print("script",scripts)
-            for script in scripts.values():
-                
-                
-                print("script",script)
-                blocks = script
-                if blocks not in sprite_duplicates:
-                    if len(blocks) > 5:
-                        sprite_duplicates[blocks] = [(script, sprite)]
-                else:
-                    sprite_duplicates[blocks].append((script, sprite))
-                print("hola")
-                seen.add(blocks)
-
-            print("hola",blocks)
-            for key in seen:
-                if key in sprite_duplicates:
-                    if len(sprite_duplicates[key]) <= 1:
-                        sprite_duplicates.pop(key, None)
-
-            self.duplicates.update(sprite_duplicates)
-
-        print("self.duplicates2-------")
-        print(self.duplicates)
+        all_scripts = self.extract_scripts()
+        script_counts = {}
         
-        for key, value in self.duplicates.items():
-            duplicated_scripts = [pair[0] for pair in value]
-            print("duplicated_Scripts")
-            print(duplicated_scripts)
-            print("hola")
-            #csv_text = [script.get_blocks() for script in duplicated_scripts]
-            #script_text = "\n\n".join([script.convert_to_text() for script in duplicated_scripts])
-            print("hola")
-            self.total_duplicate += sum(1 for _ in duplicated_scripts)
-            #self.list_duplicate.append(script_text)
-            #self.list_csv.append(csv_text)
+        for sprite, script_tuple in all_scripts:
+            if script_tuple not in script_counts:
+                script_counts[script_tuple] = []
+            script_counts[script_tuple].append(sprite)
+        
+        for script_tuple, locations in script_counts.items():
+            if len(locations) > 1:
+                self.duplicates[script_tuple] = locations
+                self.total_duplicate += len(locations)
+                
+                script_text = " -> ".join(script_tuple)
+                sprites_info = ", ".join(locations)
+                
+                salida_legible = f"Encontrado en [{sprites_info}]: {script_text}"
+                
+                self.list_duplicate.append(salida_legible)
+                self.list_csv.append(script_text)
 
         return self.duplicates
 
     def finalize(self) -> dict:
-
+        
         self.analyze()
 
         result = ("%d duplicate scripts found" % self.total_duplicate)
-        result += "\n"
-        for duplicate in self.list_duplicate:
-            result += str(duplicate)
-            result += "\n"
-
+        
         self.dict_mastery['description'] = result
         self.dict_mastery['total_duplicate_scripts'] = self.total_duplicate
         self.dict_mastery['list_duplicate_scripts'] = self.list_duplicate
         self.dict_mastery['duplicates'] = self.duplicates
-       # self.dict_mastery['list_csv'] =  self.list_csv
+        self.dict_mastery['list_csv'] = self.list_csv
 
         if self.verbose:
             logger.info(self.dict_mastery['description'])
-            logger.info(self.dict_mastery['total_duplicate_scripts'])
-            logger.info(self.dict_mastery['list_duplicate_scripts'])
 
-        dict_result = {'plugin': 'duplicate_scripts', 'result': self.dict_mastery}
-        print("dict_result",dict_result)
-        return dict_result
-
+        return {'plugin': 'duplicate_scripts', 'result': self.dict_mastery}
