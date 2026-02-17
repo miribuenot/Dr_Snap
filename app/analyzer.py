@@ -493,37 +493,66 @@ def send_request_getsb3(id_project, username, method):
     write_activity_in_logfile(file_obj)
     return file_obj
 
-def get_blocks(block, scene_name, dict_datos, parent_id):
-    block_name = block.get('s')  
-    block_id = parent_id 
+def parse_snap_script(script_node, scene_name, dict_datos, id_counter):
+    """
+    NUEVA FUNCIÓN: Procesa un <script> de Snap! y enlaza los bloques secuenciales.
+    Sustituye a la antigua función get_blocks.
+    """
+    # Filtrar solo elementos que sean bloques o eventos (hat blocks)
+    elements = [child for child in script_node if child.tag == 'block' or child.tag.startswith('receive')]
+            
+    if not elements:
+        return id_counter
 
-    trigo_blocks = block.find(".//option")
-    if trigo_blocks is not None: 
-        trigo_value = trigo_blocks.text
-        block_data = {'block': block_name, 'id': block_id,  'option': trigo_value} 
-    else:
-        block_data = {'block': block_name, 'id': block_id} 
+    previous_block_id = None
     
-    child_blocks = block.findall('block[@s]')
-    script_blocks = block.findall('script')
-    for script in script_blocks:
-        child_blocks.extend(script.findall('./block[@s]'))
-    
-    if child_blocks:
-        block_data['next'] = []
-        for index, child_block in enumerate(child_blocks, start=1):
-            child_id = f"{block_id}.{index}"
-            child_data, _ = get_blocks(child_block, scene_name, dict_datos, child_id)
-            block_data['next'].append(child_id)
-    
-    dict_datos[scene_name]['blocks'].append(block_data)
-    return dict_datos, block_id
-    
+    for elem in elements:
+        # 1. Extraer nombre del bloque
+        if elem.tag.startswith('receive'):
+            block_name = elem.tag
+        else:
+            block_name = elem.get('s')
+            
+        block_id = str(id_counter)
+        id_counter += 1
+        
+        block_data = {'block': block_name, 'id': block_id, 'next': []}
+        
+        # 2. Extraer opciones del bloque (menús desplegables) si tiene
+        trigo_blocks = elem.find(".//option")
+        if trigo_blocks is not None:
+            block_data['option'] = trigo_blocks.text
+
+        # 3. Lo añadimos a la lista del objeto
+        dict_datos[scene_name]['blocks'].append(block_data)
+        
+        # 4. LA MAGIA: Enlazarlo secuencialmente con el bloque que tiene justo encima
+        if previous_block_id is not None:
+            for b in dict_datos[scene_name]['blocks']:
+                if b['id'] == previous_block_id:
+                    b['next'].append(block_id)
+                    break
+        
+        previous_block_id = block_id
+        
+        # 5. Si es un bloque con forma de C (bucle, if), procesar su interior
+        nested_scripts = elem.findall('script')
+        for n_script in nested_scripts:
+            # Si el script interno tiene bloques, los enlazamos como hijos
+            inner_elements = [c for c in n_script if c.tag == 'block' or c.tag.startswith('receive')]
+            if inner_elements:
+                block_data['next'].append(str(id_counter))
+            
+            # Llamada recursiva para procesar el interior
+            id_counter = parse_snap_script(n_script, scene_name, dict_datos, id_counter)
+            
+    return id_counter
+
 def split_xml(request, scratch_project_inf):
+    from lxml import etree
     dict_datos = {}
     try:
         if not scratch_project_inf: return {}
-        # --- LIMPIEZA DE XML ---
         if isinstance(scratch_project_inf, str):
             scratch_project_inf = scratch_project_inf.replace('<?xml version="1.0" encoding="UTF-8"?>', '')
             scratch_project_inf = scratch_project_inf.strip()
@@ -536,24 +565,35 @@ def split_xml(request, scratch_project_inf):
 
         if project is not None:
             id_counter = 0
-            # --- BÚSQUEDA ROBUSTA DE STAGES ---
             stages = []
-            stages.extend(project.findall('.//stage')) # Busca en profundidad (scenes o directo)
-            if not stages: stages.extend(project.findall('stage')) # Fallback
+            stages.extend(project.findall('.//stage')) 
+            if not stages: stages.extend(project.findall('stage')) 
             
             for stage in stages:
                 stage_name = stage.get('name') 
                 if stage_name:
                      if stage_name not in dict_datos: dict_datos[stage_name] = {'blocks': [], 'costumes': []}
+                     
+                     # Procesar todos los scripts del escenario
                      for scripts in stage.findall('scripts'):
                         for script in scripts.findall('script'):
-                            for block in script.findall('./block'):
-                                dict_datos, id_counter = get_blocks(block, stage_name, dict_datos, id_counter)          
-                                id_counter += 1 
+                            id_counter = parse_snap_script(script, stage_name, dict_datos, id_counter)          
+                            
+                     # Procesar disfraces
+                     for costumes in stage.findall('costumes'):
+                        for lis in costumes.findall('list'):
+                            for item in lis.findall('item'):
+                                costume = item.find('ref')
+                                if costume is not None:
+                                    c_name = costume.get('mediaID')
+                                    if c_name: dict_datos[stage_name]['costumes'].append(c_name)
+                     
+                     # Procesar los objetos (sprites)
                      for sprites in stage.findall('sprites'):
                         for sprite in sprites.findall('sprite'):
                             sprite_name = sprite.get('name') 
                             if sprite_name not in dict_datos: dict_datos[sprite_name] = {'blocks': [], 'costumes': []}
+                            
                             for costumes in sprite.findall('costumes'):
                                 for lis in costumes.findall('list'):
                                     for item in lis.findall('item'):
@@ -561,14 +601,15 @@ def split_xml(request, scratch_project_inf):
                                         if costume is not None:
                                             c_name = costume.get('mediaID')
                                             if c_name: dict_datos[sprite_name]['costumes'].append(c_name)
+                                            
+                            # Procesar todos los scripts del objeto
                             for scripts in sprite.findall('scripts'):
                                 for script in scripts.findall('script'):
-                                    for block in script.findall('./block'):
-                                        dict_datos, id_counter = get_blocks(block, sprite_name, dict_datos, id_counter)          
-                                        id_counter += 1 
+                                    id_counter = parse_snap_script(script, sprite_name, dict_datos, id_counter)          
 
     except Exception as e:
         logger.error(f"Error splitting XML: {e}")
+        
     return dict_datos
 
 # Funciones extra

@@ -1,90 +1,53 @@
 import logging
 import app.consts_drscratch as consts
 from app.hairball3.plugin import Plugin
-from app.hairball3.scriptObject import Script
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
 
 class DeadCode(Plugin):
     """
-    Plugin that indicates unreachable code in Scratch files
+    Plugin that identifies unreachable code in Snap! projects.
+    Unreachable code is defined as any script that does NOT start with a Hat block.
     """
-
-    def __init__(self, filename, json_project):
-        super().__init__(filename, json_project)
+    def __init__(self, filename, json_project, verbose=False):
+        super().__init__(filename, json_project, verbose)
         self.dead_code_instances = 0
         self.dict_deadcode = {}
-        self.opcode_argument_reporter = "argument_reporter"
-
-    def get_blocks(self, dict_target):
-        """
-        Gets all the blocks in json format into a dictionary
-        """
-        out = {}
-
-
-        for dict_key, dicc_value in dict_target.items():
-            if dict_key == "blocks":
-                for blocks, blocks_value in dicc_value.items():
-                    if type(blocks_value) is dict:
-                        out[blocks] = blocks_value
-        
-        return out
 
     def analyze(self):
-
         sprites = {}
-        #print("prueba",self.json_project.items())
-        for key, value in self.json_project.items():
-            blocks_list = []
-            if "blocks" in value:
-                #print("valor", value)
+        
+        for sprite_name, data in self.json_project.items():
+            if not isinstance(data, dict) or 'blocks' not in data:
+                continue
                 
+            blocks_list = data['blocks']
+            dead_scripts_in_sprite = []
+            
+            all_children = set()
+            for b in blocks_list:
+                for child_id in b.get('next', []):
+                    all_children.add(child_id)
+                    
+            root_blocks = [b for b in blocks_list if b['id'] not in all_children]
+            
+            for root in root_blocks:
+                block_name = root.get('block', '')
                 
-               
-                for blocks_dicc in value["blocks"]:
-                    #print(blocks_dicc)
-                    sprite = key
-                    if type(blocks_dicc) is dict:
-                        block_name = blocks_dicc["block"]
-                        next_blocks = blocks_dicc.get("next", [])
-                        #print("entras")
-                        event_var = any(blocks_dicc["block"] == event for event in consts.PLUGIN_DEADCODE_LIST_EVENT_VARS)
-                        loop_block = any(blocks_dicc["block"] == loop for loop in consts.PLUGIN_DEADCODE_LIST_LOOP_BLOCKS)
-
-                        if event_var or loop_block:
-                            #print("entras2")
-                            if not self.opcode_argument_reporter in blocks_dicc["block"]:
-                                
-                                #print("entras3")
-                                if not next_blocks:
-                                    #print("entras4.2")
-                                    #print(blocks_dicc)
-                                    script = Script()
-                                    block = script.convert_block_to_text(blocks_dicc)
-                                    blocks_list.append(str(block))
-                                    #blocks_list.append(str(blocks_dicc.get("block")))
-                                
-                                    # Check dead loop blocks
-                                    #print(loop_block)
-                                    #print(blocks_dicc)                 
-                                
-
-            if blocks_list:
-                scripts = []
-                for block in blocks_list:
-                    print( "bloque", block)
-                    sprites[sprite] = blocks_list
-                    self.dead_code_instances += 1
+                if not block_name.startswith('receive') and block_name not in consts.PLUGIN_DEADCODE_LIST_EVENT_VARS:
+                    dead_scripts_in_sprite.append(block_name)
+            
+            if dead_scripts_in_sprite:
+                sprites[sprite_name] = dead_scripts_in_sprite
+                self.dead_code_instances += len(dead_scripts_in_sprite)
 
         self.dict_deadcode = sprites
+        return self.dict_deadcode
 
-    def finalize(self):
-
+    def finalize(self) -> dict:
         self.analyze()
 
         result = "{}".format(self.filename)
-
         if self.dead_code_instances > 0:
             result += "\n"
             result += str(self.dict_deadcode)
@@ -94,8 +57,4 @@ class DeadCode(Plugin):
         self.dict_mastery['list_dead_code_scripts'] = [self.dict_deadcode]
 
         dict_result = {'plugin': 'dead_code', 'result': self.dict_mastery}
-        print("dict_result_dead",dict_result)
         return dict_result
-
-
-
