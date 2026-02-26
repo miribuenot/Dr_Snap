@@ -66,27 +66,27 @@ supported_languages = ['es', 'ca', 'gl', 'pt']
 # ==============================================================================
 
 def main(request):
-    if request.user.is_authenticated:
-        username = request.user.username
-        user_type = identify_user_type(request)
-        is_admin = identify_admin(user_type)
+    # if request.user.is_authenticated:
+    #     username = request.user.username
+    #     user_type = identify_user_type(request)
+    #     is_admin = identify_admin(user_type)
 
-        if is_admin:
-            return render(request, 'main/main.html', {'username': username})
+    #     if is_admin:
+    #         return render(request, 'main/main.html', {'username': username})
         
-        try:
-            if user_type == 'coder':
-                user_obj = Coder.objects.get(username=username)
-            elif user_type == 'organization':
-                user_obj = Organization.objects.get(username=username)
-            else:
-                return render(request, 'main/main.html', {'username': username})
+    #     try:
+    #         if user_type == 'coder':
+    #             user_obj = Coder.objects.get(username=username)
+    #         elif user_type == 'organization':
+    #             user_obj = Organization.objects.get(username=username)
+    #         else:
+    #             return render(request, 'main/main.html', {'username': username})
             
-            return render(request, user_type + '/main.html', {'username': username, "img": str(user_obj.img)})
-        except (Coder.DoesNotExist, Organization.DoesNotExist):
-            return render(request, 'main/main.html', {'username': username})
-    else:
-        return render(request, 'main/main.html', {'username': None})
+    #         return render(request, user_type + '/main.html', {'username': username, "img": str(user_obj.img)})
+    #     except (Coder.DoesNotExist, Organization.DoesNotExist):
+    #         return render(request, 'main/main.html', {'username': username})
+    # else:
+    return render(request, 'main/main.html', {'username': None})
 
 def contest(request):
     return render(request, 'contest.html', {})
@@ -205,11 +205,11 @@ def discuss(request):
 # ==============================================================================
 
 def rubric_creator(request):
-    user = str(identify_user_type(request))
+    user = "main"
     return render(request, user + '/rubric-creator.html')
 
 def upload_personalized(request, skill_points=None):
-    user = str(identify_user_type(request))
+    user = "main"
     return render(request, user + '/rubric-uploader.html')
 
 def compare_uploader(request):
@@ -217,7 +217,7 @@ def compare_uploader(request):
     return render(request, user + '/compare-uploader.html')
 
 def show_dashboard(request, skill_points=None):
-    user = str(identify_user_type(request))
+    user = "main"
     
     if request.method == 'POST':
         # 1. Decodificar rúbrica personalizada de la URL
@@ -646,7 +646,7 @@ def batch(request, csv_identifier):
     """
     Muestra el dashboard de resultados para un lote (Batch) específico guardado previamente.
     """
-    user = str(identify_user_type(request))
+    user = "main"
     csv_obj = get_object_or_404(BatchCSV, id=csv_identifier)
     
     # Construcción del resumen de estadísticas del lote
@@ -696,6 +696,7 @@ def analyze_csv(request):
 # 5. GESTIÓN DE USUARIOS
 # ==============================================================================
 
+'''
 def sign_up_organization(request):
     # Inicializamos flags para la plantilla (manteniendo compatibilidad con HTML antiguo)
     context = {
@@ -970,7 +971,7 @@ def reset_password_confirm(request, uidb64=None, token=None, *arg, **kwargs):
         return render(request, 'sign-password/new-password.html')
     else:
         return render(request, f'{page}/main.html')
-
+'''
 # ==============================================================================
 # 6. ESTADÍSTICAS Y DESCARGAS
 # ==============================================================================

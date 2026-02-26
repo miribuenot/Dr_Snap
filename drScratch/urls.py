@@ -31,7 +31,7 @@ urlpatterns = [
     # CSVS (BATCH)
     url(r'^(.*)/csvs/(?P<path>.*)$',serve, {'document_root': settings.BASE_DIR + '/csvs'}),
 
-    # BATCH
+    # BATCH (Antiguo y Nuevo)
     url(r'^batch/(?P<csv_identifier>.*)$',app_views.batch, name='batch'),
     
     # NUEVA URL: BATCH MODE PAGE
@@ -73,41 +73,45 @@ urlpatterns = [
     url(r'^blocks_v3/$', app_views.blocks_v3, name='blocks_v3'),
 
     # Organizations
-    url(r'^reset_password_confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', 
-        app_views.reset_password_confirm, name='reset_password_confirm'),
-    url(r'^change_pwd$', app_views.change_pwd, name='change_pwd'),
+    # url(r'^reset_password_confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', 
+    #     app_views.reset_password_confirm, name='reset_password_confirm'),
+    # url(r'^change_pwd$', app_views.change_pwd, name='change_pwd'),
     # url(r'^organization_hash', 'app.views.organization_hash',),
-    url(r'^sign_up_organization$', app_views.sign_up_organization, name='sign_up_organizations'),
-    url(r'^organization/stats/(\w+)', app_views.stats, name='organization_stats'),
-    url(r'^organization/downloads/(.*)', app_views.downloads, name='organization_downloads'),
-    #url(r'^organization/settings/(\w+)', app_views.account_settings, name='organization_settings'),
-    url(r'^organization/(.*)', app_views.organization, name='organization'),
-    url(r'^login_organization$', app_views.login_organization, name='organization_login'),
-    url(r'^logout_organization$', app_views.logout_organization, name='organization_logout'),
+    # url(r'^sign_up_organization$', app_views.sign_up_organization, name='sign_up_organizations'),
+    # url(r'^organization/stats/(\w+)', app_views.stats, name='organization_stats'),
+    # url(r'^organization/downloads/(.*)', app_views.downloads, name='organization_downloads'),
+    # url(r'^organization/settings/(\w+)', app_views.account_settings, name='organization_settings'),
+    # url(r'^organization/(.*)', app_views.organization, name='organization'),
+    # url(r'^login_organization$', app_views.login_organization, name='organization_login'),
+    # url(r'^logout_organization$', app_views.logout_organization, name='organization_logout'),
 
     # Coders
-    url(r'^coder_hash', app_views.coder_hash, name='coder_hash'),
-    url(r'^sign_up_coder$', app_views.sign_up_coder, name='sign_up_coder'),
-    url(r'^coder/stats/(\w+)', app_views.stats, name='coder_stats'),
-    url(r'^coder/downloads/(.*)', app_views.downloads, name='coder_downloads'),
-    #url(r'^coder/settings/(\w+)', app_views.account_settings, name='coder_settings'),
-    url(r'^coder/(.*)', app_views.coder, name='coder'),
-    url(r'^login_coder$', app_views.login_coder, name='coder_login'),
-    url(r'^logout_coder$', app_views.logout_coder, name='coder_logout'),
+    # url(r'^coder_hash', app_views.coder_hash, name='coder_hash'),
+    # url(r'^sign_up_coder$', app_views.sign_up_coder, name='sign_up_coder'),
+    # url(r'^coder/stats/(\w+)', app_views.stats, name='coder_stats'),
+    # url(r'^coder/downloads/(.*)', app_views.downloads, name='coder_downloads'),
+    # url(r'^coder/settings/(\w+)', app_views.account_settings, name='coder_settings'),
+    # url(r'^coder/(.*)', app_views.coder, name='coder'),
+    # url(r'^login_coder$', app_views.login_coder, name='coder_login'),
+    # url(r'^logout_coder$', app_views.logout_coder, name='coder_logout'),
     
-    # Upload a .CSV
-    url(r'^analyze_CSV$', app_views.analyze_csv, name='csv'),
+    # Upload a .CSV (Legacy organization feature)
+    # url(r'^analyze_CSV$', app_views.analyze_csv, name='csv'),
+
+    # Ajax Searches (Used for registration forms)
+    # url(r'search_email/$', app_views.search_email, name='search_email'),
+    # url(r'search_username/$', app_views.search_username, name='search_username'),
+    # url(r'search_hashkey/$', app_views.search_hashkey, name='search_hashkey'),
+
+    # ==========================================================================
+    # FIN SECCIÓN COMENTADA
+    # ==========================================================================
 
     # Plugins
     url(r'^plugin/(.*)', app_views.plugin, name='plugin'),
 
     # Discuss
     url(r'^discuss$', app_views.discuss, name='discuss'),
-
-    # Ajax
-    url(r'search_email/$', app_views.search_email, name='search_email'),
-    url(r'search_username/$', app_views.search_username, name='search_username'),
-    url(r'search_hashkey/$', app_views.search_hashkey, name='search_hashkey'),
 
     # Error pages
     #url(r'^500', 'app.views.error500',),
