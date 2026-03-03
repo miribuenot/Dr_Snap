@@ -770,7 +770,7 @@ strong,
 }
 
 .vertical-project-form .form-heading {
-	margin-bottom: 25px;
+	margin-bottom: 5px;
 }
 
 .vertical-project-form form button {
@@ -779,7 +779,7 @@ strong,
 }
 
 .container .col-md-5 .vertical-project-form{
-    margin-top: 70px;
+    margin-top: 10px;
 }
 
 @media (min-width: 1200px) {
