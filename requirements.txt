@@ -19,4 +19,5 @@ celery==5.4.0
 pika==1.3.2
 css-inline==0.14.1
 python-magic==0.4.27
-gunicorngunicorn
+gunicorn
+whitenoise
