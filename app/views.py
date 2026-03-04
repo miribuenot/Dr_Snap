@@ -12,6 +12,9 @@ import coloredlogs
 import re
 import csv
 import tempfile
+import magic
+import urllib.parse
+import ipaddress
 from datetime import datetime, timedelta, date
 from zipfile import ZipFile, BadZipfile
 
@@ -60,7 +63,98 @@ logger = logging.getLogger(__name__)
 coloredlogs.install(level='DEBUG', logger=logger)
 supported_languages = ['es', 'ca', 'gl', 'pt']
 
+# ==============================================================================
+# 0. PROTECCIÓN FRENTE A ARCHIVOS MALICIOSOS
+# ==============================================================================
 
+def is_safe_url(url: str) -> bool:
+    """
+    Valida que una URL sea segura para hacer fetch externo.
+    Bloquea esquemas peligrosos y direcciones internas (SSRF).
+    """
+    ALLOWED_SCHEMES = {'http', 'https'}
+    BLOCKED_HOSTNAMES = {'localhost', ''}
+
+    try:
+        parsed = urllib.parse.urlparse(url.strip())
+
+        if parsed.scheme not in ALLOWED_SCHEMES:
+            logger.warning(f"SECURITY: URL bloqueada por esquema: {url}")
+            return False
+
+        hostname = parsed.hostname or ''
+
+        if hostname in BLOCKED_HOSTNAMES:
+            logger.warning(f"SECURITY: URL bloqueada por hostname: {url}")
+            return False
+
+        # Bloquear IPs privadas / loopback / link-local
+        try:
+            ip = ipaddress.ip_address(hostname)
+            if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved:
+                logger.warning(f"SECURITY: URL bloqueada por IP interna: {url}")
+                return False
+        except ValueError:
+            # No es una IP literal, es un nombre de dominio — lo dejamos pasar
+            pass
+
+        return True
+
+    except Exception as e:
+        logger.error(f"Error validando URL: {e}")
+        return False
+     
+def is_safe_file(uploaded_file, max_size_mb=50):
+    """
+    Analiza la firma interna del archivo para determinar su tipo real.
+    Incluye límite de tamaño, comprobación MIME y validación de estructura ZIP.
+    """
+    allowed_mimes = [
+        'application/zip',
+        'application/x-zip-compressed',
+        'multipart/x-zip',
+        'text/xml',
+        'application/xml',
+        'text/plain'
+    ]
+
+    MAX_UPLOAD_SIZE = max_size_mb * 1024 * 1024
+
+    try:
+        # 1. Límite de tamaño antes de leer nada
+        if uploaded_file.size > MAX_UPLOAD_SIZE:
+            logger.warning(
+                f"SECURITY: Archivo rechazado por tamaño: "
+                f"{uploaded_file.size} bytes (límite: {MAX_UPLOAD_SIZE} bytes)"
+            )
+            return False
+
+        # 2. Leer cabecera para detección MIME
+        file_header = uploaded_file.read(2048)
+        uploaded_file.seek(0)
+
+        mime_type = magic.from_buffer(file_header, mime=True)
+        print(f"[DEBUG SEGURIDAD] Archivo subido. MIME detectado: {mime_type}")
+
+        # 3. Lista blanca directa
+        if any(allowed in mime_type for allowed in allowed_mimes):
+            return True
+
+        # 4. Fallback para octet-stream con estructura ZIP válida
+        if 'application/octet-stream' in mime_type:
+            if zipfile.is_zipfile(uploaded_file):
+                print("[DEBUG SEGURIDAD] ¡Aprobado! Es un octet-stream pero la estructura ZIP es válida.")
+                uploaded_file.seek(0)
+                return True
+            else:
+                uploaded_file.seek(0)
+
+        logger.warning(f"SECURITY WARNING: Intento de subida bloqueado. Tipo detectado: {mime_type}")
+        return False
+
+    except Exception as e:
+        logger.error(f"Error comprobando el archivo: {e}")
+        return False
 # ==============================================================================
 # 1. VISTAS PRINCIPALES
 # ==============================================================================
@@ -101,42 +195,53 @@ def process_contact_form(request):
     if request.method != 'POST':
         return HttpResponse('METHOD NOT ALLOWED', status=405)
 
-    # 1. Validación manual de campos
     required_fields = {
         'contact_name': 'Please, fill your name.',
         'contact_email': 'Please, fill your email.',
         'contact_text': 'Please, fill the text area.'
     }
-    
+
     for field, error_message in required_fields.items():
         value = request.POST.get(field, '')
-        if not value or not value.strip(): # .strip() evita que pasen espacios en blanco
+        if not value or not value.strip():
             messages.error(request, error_message)
             request.session['form_data'] = request.POST
             return HttpResponseRedirect('/contact')
-    
-    # 2. Extracción de datos
+
     contact_name = request.POST.get('contact_name')
     contact_email = request.POST.get('contact_email')
     contact_text = request.POST.get('contact_text')
     contact_media = request.FILES.get('contact_media')
 
-    # 3. Construcción del Email
     subject = f'[CONTACT FORM] Message from {contact_name}'
     message = f"Name: {contact_name}\nEmail: {contact_email}\n\nMessage:\n{contact_text}"
-    
+
     email = EmailMessage(
-        subject, 
-        message, 
-        settings.EMAIL_HOST_USER, 
+        subject,
+        message,
+        settings.EMAIL_HOST_USER,
         ['drscratch@gsyc.urjc.es'],
-        headers={'Reply-To': contact_email} # Permite responder directamente al usuario
+        headers={'Reply-To': contact_email}
     )
-    
+
     if contact_media:
-        email.attach(contact_media.name, contact_media.read(), contact_media.content_type)
-    
-    # 4. Envío seguro
+        ALLOWED_CONTACT_MIMES = {'image/png', 'image/jpeg', 'image/gif', 'application/pdf'}
+        MAX_ATTACHMENT_SIZE = 5 * 1024 * 1024  # 5 MB
+
+        if contact_media.size > MAX_ATTACHMENT_SIZE:
+            messages.error(request, "El adjunto supera el tamaño máximo permitido (5 MB).")
+            return HttpResponseRedirect('/contact')
+
+        header = contact_media.read(2048)
+        contact_media.seek(0)
+        detected_mime = magic.from_buffer(header, mime=True)
+
+        if detected_mime not in ALLOWED_CONTACT_MIMES:
+            messages.error(request, "Tipo de archivo adjunto no permitido. Solo se aceptan imágenes y PDFs.")
+            return HttpResponseRedirect('/contact')
+
+        email.attach(contact_media.name, contact_media.read(), detected_mime)
+
     try:
         email.send()
         messages.success(request, "Message sent successfully!")
@@ -144,7 +249,7 @@ def process_contact_form(request):
         logger.error(f"Error sending contact email: {e}")
         messages.error(request, "Error sending message. Please try again later.")
 
-    return HttpResponseRedirect('/')    
+    return HttpResponseRedirect('/')
 
 def contact(request):
     return render(request, 'main/contact-form.html') 
@@ -297,6 +402,9 @@ def build_dictionary_with_automatic_analysis(request, skill_points: dict) -> dic
         if "_upload" in request.POST:
             try:
                 zip_file = request.FILES['zipFile']
+                if not is_safe_file(zip_file):
+                    dict_metrics[project_counter] = {'Error': 'invalid_file_type'}
+                    return dict_metrics
                 dict_metrics[project_counter] = analysis_by_upload(request, skill_points, zip_file)
             except MultiValueDictKeyError:
                 dict_metrics[project_counter] = {'Error': 'MultiValueDict'}
@@ -555,65 +663,103 @@ def batch_analyze(request):
     """
     if request.method == 'POST' and request.FILES.get('batchFile'):
         uploaded_file = request.FILES['batchFile']
+
+        if not is_safe_file(uploaded_file):
+            return HttpResponse(
+                "Error de seguridad: Tipo de archivo malicioso o no soportado.",
+                status=400
+            )
+
         filename = uploaded_file.name.lower()
-        
-        # Diccionario para acumular resultados
         batch_results = {}
-        project_counter = 0 
-        skill_rubric = generate_rubric('') 
+        project_counter = 0
+        skill_rubric = generate_rubric('')
 
         try:
             # CASO A: ZIP
             if filename.endswith('.zip'):
                 with zipfile.ZipFile(uploaded_file, 'r') as z:
-                    for name in z.namelist():
-                        if not name.startswith('__') and (name.lower().endswith('.xml') or name.lower().endswith('.sb3')):
-                            try:
-                                file_content = z.read(name)
-                                temp_file = SimpleUploadedFile(name, file_content)
-                                analysis = analysis_by_upload(request, skill_rubric, temp_file)
-                                analysis['filename'] = name
-                                analysis['url'] = "ZIP Upload"
-                                batch_results[project_counter] = analysis
-                                project_counter += 1
-                            except Exception as e:
-                                print(f"Error analizando {name}: {e}")
 
-            # CASO B: TXT (MODIFICADO PARA SNAP!)
-            elif filename.endswith('.txt'):
-                content = uploaded_file.read().decode('utf-8')
-                urls = content.splitlines()
-                
-                for url in urls:
-                    url = url.strip()
-                    if url:
+                    # Protección Zip Slip en batch inline
+                    for zip_info in z.infolist():
+                        name = zip_info.filename
+
+                        # Saltar directorios, archivos ocultos y del sistema
+                        if name.endswith('/') or name.startswith('__') or name.startswith('.'):
+                            continue
+
+                        # Solo procesar XML (proyectos Snap!)
+                        if not name.lower().endswith('.xml'):
+                            continue
+
+                        # Zip Slip: verificar que el nombre no escapa
+                        safe_name = os.path.basename(name)
+                        if not safe_name:
+                            logger.warning(f"SECURITY: Zip Slip bloqueado para '{name}'")
+                            continue
+
                         try:
-                            # Llamamos a analysis_by_url para cada línea
-                            analysis = analysis_by_url(request, url, skill_rubric)
-                            
-                            if not analysis:
-                                analysis = {'Error': 'No data returned', 'mastery': {'points': 0}}
-                            
-                            # Si devuelve error interno
-                            if analysis.get('Error'):
-                                print(f"Error reportado para {url}: {analysis.get('Error')}")
-
-                            analysis['filename'] = url
-                            analysis['url'] = url
+                            file_content = z.read(name)
+                            temp_file = SimpleUploadedFile(safe_name, file_content)
+                            analysis = analysis_by_upload(request, skill_rubric, temp_file)
+                            analysis['filename'] = safe_name
+                            analysis['url'] = "ZIP Upload"
                             batch_results[project_counter] = analysis
                             project_counter += 1
                         except Exception as e:
-                            print(f"Excepción analizando {url}: {e}")
-                            batch_results[project_counter] = {
-                                'filename': url, 
-                                'url': url,
-                                'Error': f'Exception: {str(e)}',
-                                'mastery': {'points': 0}
-                            }
-                            project_counter += 1
-            
+                            print(f"Error analizando {safe_name}: {e}")
+
+            # CASO B: TXT con URLs
+            elif filename.endswith('.txt'):
+                content = uploaded_file.read().decode('utf-8')
+                urls = content.splitlines()
+
+                for url in urls:
+                    url = url.strip()
+                    if not url:
+                        continue
+
+                    # Validación SSRF antes de hacer fetch
+                    if not is_safe_url(url):
+                        logger.warning(f"SECURITY: URL bloqueada en batch TXT: {url}")
+                        batch_results[project_counter] = {
+                            'filename': url,
+                            'url': url,
+                            'Error': 'URL bloqueada por política de seguridad',
+                            'mastery': {'points': 0}
+                        }
+                        project_counter += 1
+                        continue
+
+                    try:
+                        analysis = analysis_by_url(request, url, skill_rubric)
+
+                        if not analysis:
+                            analysis = {'Error': 'No data returned', 'mastery': {'points': 0}}
+
+                        if analysis.get('Error'):
+                            print(f"Error reportado para {url}: {analysis.get('Error')}")
+
+                        analysis['filename'] = url
+                        analysis['url'] = url
+                        batch_results[project_counter] = analysis
+                        project_counter += 1
+
+                    except Exception as e:
+                        print(f"Excepción analizando {url}: {e}")
+                        batch_results[project_counter] = {
+                            'filename': url,
+                            'url': url,
+                            'Error': f'Exception: {str(e)}',
+                            'mastery': {'points': 0}
+                        }
+                        project_counter += 1
+
             else:
-                 return HttpResponse("Formato no soportado. Por favor sube un .zip o un .txt", status=400)
+                return HttpResponse(
+                    "Formato no soportado. Por favor sube un .zip o un .txt",
+                    status=400
+                )
 
         except Exception as e:
             return HttpResponse(f"Error procesando el archivo: {e}", status=400)
@@ -638,7 +784,7 @@ def batch_analyze(request):
                 traceback.print_exc()
                 return HttpResponse(f"Error generando los CSVs detallados: {e}", status=500)
         else:
-             return HttpResponse("No se encontraron proyectos válidos para analizar.", status=400)
+            return HttpResponse("No se encontraron proyectos válidos para analizar.", status=400)
 
     return HttpResponseRedirect('/')
 
@@ -1194,38 +1340,73 @@ def calc_num_projects(batch_path: str) -> int:
     return num_projects
     
 def extract_batch_projects(projects_file: object) -> str:
-    """ 
+    """
     Extrae el ZIP subido a una carpeta temporal y devuelve la ruta.
+    Protección contra: Zip Bombs, Zip Slip, archivos corruptos y exceso de ficheros.
     """
     project_name = str(uuid.uuid4())
-    # Generamos un ID único con timestamp para evitar colisiones
     unique_id = '{}_{}'.format(
-        project_name, 
+        project_name,
         datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")
     )
-    
-    base_dir = os.getcwd()
-    extraction_path = os.path.join(base_dir, 'uploads', 'batch_mode', unique_id)
-    
-    # Usamos un directorio temporal del sistema para la extracción inicial
+
+    extraction_path = os.path.join(settings.MEDIA_ROOT, 'uploads', 'batch_mode', unique_id)
+
+    MAX_EXTRACT_SIZE = 100 * 1024 * 1024  # 100 MB descomprimido
+    MAX_FILES_IN_ZIP = 500
+
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_file_path = os.path.join(temp_dir, projects_file.name)
-        
-        # 1. Guardar el ZIP en disco temporalmente
+
         with open(temp_file_path, 'wb+') as temp_file:
             for chunk in projects_file.chunks():
                 temp_file.write(chunk)
-            
-            # 2. Descomprimir en la ruta final ('uploads/batch_mode/ID')
-            try:
-                with ZipFile(temp_file, 'r') as zip_ref:
-                    zip_ref.extractall(extraction_path)
-            except BadZipfile:
-                # Si el zip está corrupto, limpiamos y lanzamos error
-                if os.path.exists(extraction_path):
-                    shutil.rmtree(extraction_path)
-                raise
-                
+
+        try:
+            with ZipFile(temp_file_path, 'r') as zip_ref:
+
+                # Comprobación previa sin extraer
+                extracted_size = 0
+                file_count = 0
+                for zip_info in zip_ref.infolist():
+                    file_count += 1
+                    if file_count > MAX_FILES_IN_ZIP:
+                        raise Exception(
+                            f"SECURITY: ZIP rechazado — demasiados archivos "
+                            f"(más de {MAX_FILES_IN_ZIP})."
+                        )
+                    extracted_size += zip_info.file_size
+                    if extracted_size > MAX_EXTRACT_SIZE:
+                        raise Exception(
+                            "SECURITY: ZIP rechazado — supera el límite de "
+                            "tamaño al descomprimir (posible Zip Bomb)."
+                        )
+
+                # Extracción segura con protección Zip Slip
+                os.makedirs(extraction_path, exist_ok=True)
+                real_extraction_path = os.path.realpath(extraction_path)
+
+                for zip_info in zip_ref.infolist():
+                    dest_path = os.path.realpath(
+                        os.path.join(real_extraction_path, zip_info.filename)
+                    )
+                    if not dest_path.startswith(real_extraction_path + os.sep):
+                        raise Exception(
+                            f"SECURITY: Zip Slip detectado en '{zip_info.filename}'. "
+                            "Extracción abortada."
+                        )
+                    zip_ref.extract(zip_info, real_extraction_path)
+
+        except BadZipfile:
+            if os.path.exists(extraction_path):
+                shutil.rmtree(extraction_path)
+            raise Exception("El archivo subido no es un ZIP válido o está corrupto.")
+
+        except Exception as e:
+            if os.path.exists(extraction_path):
+                shutil.rmtree(extraction_path)
+            raise e
+
     return extraction_path
 
 def identify_user_type(request) -> str:
