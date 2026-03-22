@@ -43,7 +43,9 @@ Due to Docker volume mounting, some directories need write permissions for the a
 
 ```console
 sudo chmod -R 777 app/certificate/
+sudo chmod -R 777 app/migrations/
 sudo chmod -R 777 uploads/
+sudo chmod -R 777 csvs/
 ```
 
 ### 4. Build and start

@@ -37,7 +37,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 # App imports (Modelos y Formularios)
-from .models import BatchCSV, File, CSVs, Organization, OrganizationHash, Coder, Discuss, Stats
+from .models import BatchCSV, File, CSVs, Organization, OrganizationHash, Coder, Discuss, Stats, ContactMessage
 from app.forms import UrlForm, OrganizationForm, OrganizationHashForm, LoginOrganizationForm, CoderForm, DiscussForm
 from app.pyploma import generate_certificate
 from app.hairball3.scratchGolfing import ScratchGolfing
@@ -213,14 +213,21 @@ def process_contact_form(request):
     contact_text = request.POST.get('contact_text')
     contact_media = request.FILES.get('contact_media')
 
-    subject = f'[CONTACT FORM] Message from {contact_name}'
+    # Guardar en base de datos
+    ContactMessage.objects.create(
+        name=contact_name,
+        email=contact_email,
+        message=contact_text
+)
+
+    subject = f'[DR. SNAP! FEEDBACK] Message from {contact_name}'
     message = f"Name: {contact_name}\nEmail: {contact_email}\n\nMessage:\n{contact_text}"
 
     email = EmailMessage(
         subject,
         message,
         settings.EMAIL_HOST_USER,
-        ['drscratch@gsyc.urjc.es'],
+        [settings.EMAIL_HOST_USER],
         headers={'Reply-To': contact_email}
     )
 
@@ -249,7 +256,7 @@ def process_contact_form(request):
         logger.error(f"Error sending contact email: {e}")
         messages.error(request, "Error sending message. Please try again later.")
 
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/contact')
 
 def contact(request):
     return render(request, 'main/contact-form.html') 
