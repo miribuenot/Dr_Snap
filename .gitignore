@@ -82,3 +82,8 @@ static/img/
 .env_prod
 .env
 staticfiles/
+app/certificate/output.pdf
+app/certificate/output.tex
+app/certificate/output.aux
+app/certificate/output.log
+app/certificate/output.out
