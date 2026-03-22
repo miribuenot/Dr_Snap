@@ -87,3 +87,5 @@ app/certificate/output.tex
 app/certificate/output.aux
 app/certificate/output.log
 app/certificate/output.out
+csvs/Dr.Scratch/*.zip
+csvs/Dr.Scratch/*/
