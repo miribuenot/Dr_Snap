@@ -38,6 +38,8 @@ RUN mkdir -p /app/staticfiles && chown -R drsnap:drsnap /app/staticfiles
 
 # Permisos sobre el código
 RUN chown -R drsnap:drsnap /var/www
+RUN chown -R drsnap:drsnap /var/www/app/certificate
+RUN chown -R drsnap:drsnap /var/www/uploads
 
 USER drsnap
 
