@@ -355,8 +355,9 @@ def show_dashboard(request, skill_points=None):
         if error_type and error_type != 'None':
             if error_type == 'analyzing': 
                 return render(request, 'error/analyzing.html')
+            elif error_type == 'invalid_file_type':
+                return render(request, user + '/main.html', {'invalid_file_type': True})
             elif error_type in ['MultiValueDict', 'id_error', 'no_exists']:
-                # Muestra el error en la página principal
                 return render(request, user + '/main.html', {error_type: True})
 
         # 6. Renderizar Dashboard según modo
@@ -680,7 +681,26 @@ def batch_analyze(request):
             if filename.endswith('.zip'):
                 with zipfile.ZipFile(uploaded_file, 'r') as z:
 
-                    # Protección Zip Slip en batch inline
+                    # Anti-Zip Bomb y límite de ficheros — PRIMERA PASADA (solo leer índice, no extraer)
+                    MAX_EXTRACT_SIZE = 100 * 1024 * 1024  # 100 MB
+                    MAX_FILES_IN_ZIP = 500
+                    extracted_size = 0
+                    file_count = 0
+                    for zip_info in z.infolist():
+                        file_count += 1
+                        if file_count > MAX_FILES_IN_ZIP:
+                            return HttpResponse(
+                                "Error de seguridad: ZIP con demasiados archivos.",
+                                status=400
+                            )
+                        extracted_size += zip_info.file_size
+                        if extracted_size > MAX_EXTRACT_SIZE:
+                            return HttpResponse(
+                                "Error de seguridad: ZIP rechazado, supera el límite de tamaño descomprimido (posible Zip Bomb).",
+                                status=400
+                            )
+
+                    # SEGUNDA PASADA — ZIP es seguro, procesar ficheros
                     for zip_info in z.infolist():
                         name = zip_info.filename
 

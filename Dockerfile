@@ -29,5 +29,17 @@ RUN pip install lxml
 # Asignar permisos de ejecución
 RUN chmod +x /var/www/app/certificate
 
+
+# Crear usuario no-root
+RUN groupadd -r drsnap && useradd -r -g drsnap drsnap
+
+# Directorio de staticfiles fuera del volumen montado
+RUN mkdir -p /app/staticfiles && chown -R drsnap:drsnap /app/staticfiles
+
+# Permisos sobre el código
+RUN chown -R drsnap:drsnap /var/www
+
+USER drsnap
+
 # Exponer el puerto de la aplicación
 EXPOSE 8000
