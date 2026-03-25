@@ -40,6 +40,7 @@ log/logFile.txt
 *.egg-info/
 .installed.cfg
 *.egg
+csvs/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -79,3 +80,12 @@ app/certificate/
 static/img/
 
 .env_prod
+.env
+staticfiles/
+app/certificate/output.pdf
+app/certificate/output.tex
+app/certificate/output.aux
+app/certificate/output.log
+app/certificate/output.out
+csvs/Dr.Scratch/*.zip
+csvs/Dr.Scratch/*/

@@ -1,10 +1,9 @@
 version: '2.1'
+
 services:
   db:
     image: mysql:8.0
     container_name: drscratchv3_database
-    ports:
-      - "3306:3306"
     environment:
       - MYSQL_DATABASE=${DRSCRATCH_DATABASE_NAME}
       - MYSQL_USER=${DRSCRATCH_DATABASE_USER}
@@ -16,35 +15,44 @@ services:
       retries: 10
     volumes:
       - dbdata:/var/run/mysqld
+    networks:
+      - internal
+
   getsb3:
     build: ./scratchapi
-    ports:
-      - "3000:3000"
+    networks:
+      - internal
+
   tor_proxy:
     build: ./tor_proxy
     command: sh -c "tor"
     container_name: tor_proxy
-    ports:
-      - "9050:9050"
+    networks:
+      - internal
+
   rabbitmq:
     image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+    networks:
+      - internal
+
   celery:
     build: .
     command: celery -A drScratch worker --loglevel=info
+    env_file:
+      - ./.env
     volumes:
       - .:/var/www
     depends_on:
       - rabbitmq
+    networks:
+      - internal
+
   web:
     build: .
     volumes:
       - .:/var/www
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn drScratch.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 60 --worker-tmp-dir /tmp"
     container_name: drscratchv3_django
-    user: root
     ports:
       - "8000:8000"
     env_file:
@@ -57,6 +65,13 @@ services:
       tor_proxy:
         condition: service_started
       rabbitmq:
-        condition: service_started  
+        condition: service_started
+    networks:
+      - internal
+
 volumes:
   dbdata:
+
+networks:
+  internal:
+    driver: bridge

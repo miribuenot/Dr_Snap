@@ -10,16 +10,15 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+STATIC_ROOT = '/app/staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-STATIC_ROOT = '/static/'
+SECRET_KEY = os.environ.get('DRSCRATCH_SECRET_KEY')
 
-
-SECRET_KEY = os.environ.get('DRSCRATCH_SECRET_KEY', 'not-secret-key')
-
-DEBUG = os.environ.get('DRSCRATCH_DEBUG', False)
+DEBUG = os.environ.get('DRSCRATCH_DEBUG', 'False').lower() == 'true'
 PRODUCTION = os.environ.get('PRODUCTION_MODE', True)
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
     'DIRS': [os.path.join(BASE_DIR, 'app/templates')],
@@ -38,7 +37,7 @@ TEMPLATES = [{
     },
 }]
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS').split(',')
 
 INSTALLED_APPS = (
@@ -53,6 +52,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',

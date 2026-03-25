@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!-- SITE TITLE -->
-    <title>Dr. Scratch</title>
+    <title>Dr. Snap!</title>
 
 
     <link rel="stylesheet" href="../../static/app/content/style.css">
@@ -104,7 +104,7 @@
                         <!-- HEADING AND BUTTONS -->
                         <div class="intro-section">
                             <!-- WELCOM MESSAGE -->
-                            <h2 class="intro white-text">{% trans "Welcome to the Dr. Scratch website, " %}{{ username }} !!!</h2>
+                            <h2 class="intro white-text">{% trans "Welcome to the Dr. Snap! website, " %}{{ username }} !!!</h2>
                             <h4 align=justify class="transparent-text"><strong> </strong></h4>
                         </div>
                     </div>
@@ -147,10 +147,10 @@
 
                                 <div class="vertical-project-form">
             
-                                <h5 class="dark-text form-heading"><strong>{% trans "You can analyze at the same time all the Scratch proyects of your students!" %}</strong></h5>
+                                <h5 class="dark-text form-heading"><strong>{% trans "You can analyze at the same time all the Snap! proyects of your students!" %}</strong></h5>
                                 <form name="form" class="project-form" enctype="multipart/form-data" method="post" action="/analyzeCSV">
                                     {% csrf_token %}
-                                    {% trans "Only you have to put a " %}<span class='colored-text'><a data-toggle='modal' href='#modalCSV'>{% trans "file CSV " %}</a></span>{% trans " with the urls of the Scratch projects you want to analyze:" %}
+                                    {% trans "Only you have to put a " %}<span class='colored-text'><a data-toggle='modal' href='#modalCSV'>{% trans "file CSV " %}</a></span>{% trans " with the urls of the Snap! projects you want to analyze:" %}
                                     {% trans "<input  name='csvFile' type='file' class='filestyle' data-buttonText='Choose File .csv'>" %}
                                     <button id="upload" name='_upload' type="submit" class="btn btn-primary standard-button">{% trans "Analyze my projects" %}</button>
                                     {% csrf_token %}                                    
@@ -209,7 +209,7 @@
     
     <!-- FOOTER -->
     <footer class="footer grey-bg">
-       {% trans "©2019 Dr. Scratch" %}
+       {% trans "©2019 Dr. Snap!" %}
 
         <!-- SOCIAL ICONS -->
         <ul class="social-icons">
@@ -238,7 +238,7 @@
             <div class="small-text-medium uppercase colored-text">
                 {% trans "What is an url?" %}
             </div>
-            <h4 class="modal-title"><strong>{% trans "How I can know my Scratch project's url?" %}</strong></h4>
+            <h4 class="modal-title"><strong>{% trans "How I can know my Snap! project's url?" %}</strong></h4>
             <div class="colored-line"></div> 
           </div>
           <div class="modal-body">
@@ -261,9 +261,9 @@
           <div class="modal-header">
             <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
             <div class="small-text-medium uppercase colored-text">
-                {% trans "I want to download my project from Scratch!" %}
+                {% trans "I want to download my project from Snap!" %}
             </div>
-            <h4 class="modal-title"><strong>{% trans "How I can download my Scratch project to my computer?" %}</strong></h4>
+            <h4 class="modal-title"><strong>{% trans "How I can download my Snap! project to my computer?" %}</strong></h4>
             <div class="colored-line"></div> 
           </div>
           <div class="modal-body">

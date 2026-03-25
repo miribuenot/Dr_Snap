@@ -9,7 +9,7 @@ def generate_certificate(filename, level, language):
     Opcionalemente compila los ficheros LaTeX generados y los une en uno solo.
     Si la plantilla LaTeX da error de compilación, pulsar intro varias veces.
     """
-    print("-----------------GEnerate------------")
+    print("-----------------Generate------------")
     base_dir = os.path.dirname(os.path.dirname(__file__))
     os.chdir(base_dir + "/app/certificate")
 
