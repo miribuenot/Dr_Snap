@@ -120,4 +120,7 @@ urlpatterns = [
     url(r'^learn/(\w+)', app_views.learn, name='learn'),
     url(r'^$', app_views.main, name='main'),
 
+    # FEATURE SUGGESTIONS
+    url(r'^suggest_feature/$', app_views.submit_feature_suggestion, name='suggest_feature'),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

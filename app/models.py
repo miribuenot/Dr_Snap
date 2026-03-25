@@ -128,3 +128,23 @@ class Teacher(models.Model):
     email = models.TextField()
     hashkey = models.TextField()
     #classroom = models.ManyToManyField(Classroom)
+
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.EmailField()
+    message = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.email} ({self.date.strftime('%d/%m/%Y')})"
+
+    class Meta:
+        ordering = ['-date']
+
+class FeatureSuggestion(models.Model):
+    suggestion = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Sugerencia {self.id} - {self.date.strftime('%d/%m/%Y')}"
