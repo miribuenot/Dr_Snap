@@ -37,7 +37,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 # App imports (Modelos y Formularios)
-from .models import BatchCSV, File, CSVs, Organization, OrganizationHash, Coder, Discuss, Stats, ContactMessage
+from .models import BatchCSV, FeatureSuggestion, File, CSVs, Organization, OrganizationHash, Coder, Discuss, Stats, ContactMessage
 from app.forms import UrlForm, OrganizationForm, OrganizationHashForm, LoginOrganizationForm, CoderForm, DiscussForm
 from app.pyploma import generate_certificate
 from app.hairball3.scratchGolfing import ScratchGolfing
@@ -311,6 +311,41 @@ def discuss(request):
         "comments": paginated_comments, 
         "form": DiscussForm()
     })
+
+def submit_feature_suggestion(request):
+    if request.method == 'POST':
+        suggestion_text = request.POST.get('suggestion_text', '').strip()
+        
+        if suggestion_text:
+            # 1. Guardar en la base de datos
+            FeatureSuggestion.objects.create(suggestion=suggestion_text)
+            
+            # 2. Preparar el correo de aviso para el administrador
+            subject = f'[DR. SNAP! SUGGESTION] Nueva idea de funcionalidad'
+            message = (
+                f"Se ha recibido una nueva sugerencia a través del formulario de la web:\n\n"
+                f"Sugerencia: {suggestion_text}\n"
+                f"Fecha: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\n"
+            )
+            
+            email = EmailMessage(
+                subject,
+                message,
+                settings.EMAIL_HOST_USER,  # Remitente (tu config de Gmail/SMTP)
+                [settings.EMAIL_HOST_USER], # Destinatario (tú mismo o el admin)
+            )
+            
+            try:
+                email.send()
+                messages.success(request, "¡Gracias! Tu sugerencia ha sido enviada al equipo de desarrollo.")
+            except Exception as e:
+                # Si el email falla, al menos se ha guardado en la BD
+                logger.error(f"Error enviando email de sugerencia: {e}")
+                messages.success(request, "¡Gracias! Hemos registrado tu sugerencia en nuestra base de datos.")
+        else:
+            messages.error(request, "Por favor, escribe algo antes de enviar.")
+            
+    return redirect('main')
 
 # ==============================================================================
 # 2. DASHBOARD Y ANÁLISIS CORE

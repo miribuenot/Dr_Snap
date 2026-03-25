@@ -12,7 +12,7 @@
     <script src="../../static/app/scripts/bootstrap-tour.js"></script>
 
     <!-- SITE TITLE -->
-    <title>Dr. Scratch</title>
+    <title>Dr. Snap!</title>
 
 
     <link rel="stylesheet" href="../../static/app/content/style.css">
@@ -114,7 +114,7 @@
                         <div class="panel-heading" id="stepone">
                             <img src="static/app/images/ferret.png" class="img-responsive col-md-5">
                             <h2 id="score" class="panel-title dark-text"><strong>{% trans "Score:" %}</strong> {{ mastery.points }}/{{ mastery.maxi }}
-                            <a class="twitter-share-button" data-text="{% blocktrans with points=mastery.points %} I have just obtained {{ points }} points analyzing my project in Dr. Scratch! Beat it! @DrScratchTool {% endblocktrans %}"href="https://twitter.com/share">Tweet</a></h2>
+                            <a class="twitter-share-button" data-text="{% blocktrans with points=mastery.points %} I have just obtained {{ points }} points analyzing my project in Dr. Snap! Beat it! @DrSnapTool {% endblocktrans %}"href="https://twitter.com/share">Tweet</a></h2>
                         
                         </div>
                         <div class="panel-body">
@@ -132,7 +132,7 @@
                     <div class="panel-heading" id="steptwo">
                         <h2 id="score" class="panel-title dark-text">{% trans "Want to level up?"%}</h2>
                          {% if url != "" %}
-                        <a href="{{ url }}" target="_blank"><span class="glyphicon glyphicon-hand-right"></span>{% trans "Come back to your Scratch project." %}</a>
+                        <a href="{{ url }}" target="_blank"><span class="glyphicon glyphicon-hand-right"></span>{% trans "Come back to your Snap! project." %}</a>
                         {% endif %}
                     </div>
                     <div class="panel-body text-left">
@@ -252,7 +252,7 @@
 
     <footer class="footer grey-bg">
         <div class="container">
-           {% trans "©2019 Dr. Scratch" %}
+           {% trans "©2019 Dr. Snap!" %}
 
             <!-- SOCIAL ICONS -->
             <ul class="social-icons">
