@@ -231,17 +231,8 @@
             </div>
         </section>
 
-        <footer class="footer grey-bg text-center" style="min-width: 100%; padding: 30px 0;">
-            <div style="margin-bottom: 10px;">
-                <a href="https://www.urjc.es" target="_blank">
-                    <img src="/static/app/images/logoURJC.jpg" alt="URJC" style="height: 50px; margin: 0 15px;">
-                </a>
-                <a href="https://www.us.es" target="_blank">
-                    <img src="/static/app/images/logoUS.png" alt="Universidad de Sevilla" style="height: 50px; margin: 0 15px;">
-                </a>
-            </div>
-            <p>{% trans "©2026 Dr.Snap Made with " %} <span style="color: #e25555;">&#9829;</span> {% trans "by Dr. Snap Team" %}</p>
-        </footer>
+    {% include 'main/footer.html' %}
+
 
         <div id="modalUrl" class="modal fade" role="dialog">
             <div class="modal-dialog"><div class="modal-content"><div class="modal-header">
