@@ -31,7 +31,7 @@ RUN chmod +x /var/www/app/certificate
 
 
 # Crear usuario no-root
-RUN groupadd -r drsnap && useradd -r -g drsnap drsnap
+RUN groupadd -r drsnap && useradd -r -m -g drsnap drsnap
 
 # Directorio de staticfiles fuera del volumen montado
 RUN mkdir -p /app/staticfiles && chown -R drsnap:drsnap /app/staticfiles

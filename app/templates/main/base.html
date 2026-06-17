@@ -1,0 +1,192 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html class="nivo-lightbox-notouch" lang="{{ request.LANGUAGE_CODE|default:'en' }}">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Analyze your Snap projects to assess your Computational Thinking skills">
+    <meta name="keywords" content="Stamp, Startup, Multipurpose, Bootstrap, Landing page, Template, Registration, Landing">
+    <meta name="author" content="Programamos URJC Libresoft FECyT">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <title>{% block title %}Dr. Snap{% endblock %}</title>
+    <link rel="icon" href="{% static 'app/images/favicon.ico' %}">
+
+    <!-- 1. ESTILO BASE (Debe ir estrictamente antes de los CDNs y Bootstrap) -->
+    <link rel="stylesheet" href="{% static 'app/content/style.css' %}">
+
+    <!-- 2. CDNs OPCIONALES (El Dashboard inyecta aquí Bootstrap 5 si es Recommender) -->
+    {% block cdn_links %}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    {% endblock %}
+
+    <link rel="stylesheet" href="{% static 'app/icons/icons.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'app/content/css_002.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'app/content/css.css' %}">
+
+    <!-- 3. BOOTSTRAP PRINCIPAL LOCAL -->
+    {% block bootstrap_css %}
+        <link rel="stylesheet" href="{% static 'app/content/bootstrap-main.css' %}">
+    {% endblock %}
+
+    <!-- 4. ANIMACIONES Y PLUGINS GLOBALES -->
+    <link rel="stylesheet" href="{% static 'app/content/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'app/content/owl_002.css' %}">
+    <link rel="stylesheet" href="{% static 'app/content/owl.css' %}">
+    <link rel="stylesheet" href="{% static 'app/content/nivo-lightbox.css' %}">
+    <link rel="stylesheet" href="{% static 'app/content/default.css' %}">
+
+    <!-- 5. ESTILOS CUSTOM (Sobrescriben colores de Bootstrap) -->
+    <link rel="stylesheet" href="{% static 'app/content/styles.css' %}">
+
+    <!-- 6. BLOQUE PARA CSS ESPECÍFICO (ej. niveles de competencia) -->
+    {% block extra_css %}{% endblock %}
+
+    <!-- 7. RESPONSIVE Y TEMA ROJO (Siempre al final) -->
+    <link rel="stylesheet" href="{% static 'app/content/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'app/content/red.css' %}">
+
+    <!-- GOOGLE ANALYTICS -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EF8MXDGMRC"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-EF8MXDGMRC');
+    </script>
+
+    <!-- JQUERY -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- SCRIPTS EXTRAS DEL HEAD -->
+    {% block extra_head %}{% endblock %}
+
+    <style>
+        /* BLINDAJE DE LA BARRA DE NAVEGACIÓN */
+        #stamp-navigation .main-navigation > li > a {
+            font-weight: normal !important; /* Quita la negrita agresiva */
+            font-style: normal !important;  /* Quita la cursiva si no la quieres */
+            text-transform: uppercase !important;
+            font-family: 'Open Sans', sans-serif !important; /* Fuerza una fuente suave */
+            letter-spacing: 0.5px; /* Le da un toque más elegante */
+        }
+        
+        /* Estilo específico para el botón Learn */
+        #stamp-navigation .main-navigation > li > a.learn-link {
+            color: #f0cd08 !important;
+            font-weight: 600 !important; /* Un poco más de peso solo para este enlace */
+        }
+    </style>
+</head>
+
+<body>
+    {% block alerts %}{% endblock %}
+
+    <div id="{% block wrapper_id %}mywrapper{% endblock %}" {% block wrapper_style %}{% endblock %}>
+        
+        <div class="navbar navbar-inverse bs-docs-nav navbar-fixed-top sticky-navigation" role="navigation" style="min-height: 80px;">
+            <div class="container-fluid" style="position: relative; padding-left: 30px; padding-right: 30px;">
+                
+                <div class="navbar-header">
+                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#stamp-navigation" style="margin-top: 25px;">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand visible-xs" href="/">
+                        <img class="d-block img-fluid" style="height: 50px; margin-top: 5px;" src="{% static 'app/images/final.jpg' %}" alt="Dr. Snap">
+                    </a>
+                </div>
+
+                <a class="navbar-brand hidden-xs" href="/" style="position: absolute; left: 50%; transform: translateX(-50%); padding: 0; top: 5px;">
+                    <img class="d-block img-fluid" style="height: 80px; width: auto;" src="{% static 'app/images/final.jpg' %}" alt="Dr. Snap">
+                </a>
+               
+                <div class="navbar-collapse collapse" id="stamp-navigation">
+                    <ul class="nav navbar-nav navbar-left main-navigation small-text" style="margin-top: 15px;">
+                        <li><a href="/#section_personalized">{% trans "Personalized Mode" %}</a></li>
+                        <li><a href="/#section_assistant">{% trans "Recommender Assistant" %}</a></li>
+                        <li><a href="/#section_batch">{% blocktrans %}Batch Analysis Mode{% endblocktrans %}</a></li>
+                        <li><a href="/learn/duplicatedScripts/" class="learn-link">{% trans "Learn" %}</a></li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right login-register small-text" style="margin-top: 15px;">
+                        <li style="display: block;" class="login dropdown">
+                            <a aria-expanded="false" type="button" data-toggle="dropdown" class="dropdown-toggle language-content" data-hover="dropdown" style="padding-top: 15px; padding-bottom: 15px; cursor: pointer;">
+                                <span class="icon-basic-world" style="font-size: 20px;"></span>
+                            </a>
+                            <ul role="menu" class="dropdown-menu" style="padding: 20px;">
+                                <li style="padding-left: 20px;">
+                                    <form id="language-form" action="/i18n/setlang/" method="post">
+                                        {% csrf_token %}
+                                        <input name="next" type="hidden" value="{{ redirect_to }}" />
+                                        <select name="language" id="language-selector" onchange="submitGlobalLanguageForm()" class='btn-group btn-group-justified colored-text language-content'>
+                                            {% get_language_info_list for LANGUAGES as languages %}
+                                            {% for language in languages %}
+                                                <option value="{{ language.code }}" {% if language.code == request.LANGUAGE_CODE %}selected{% endif %}>{{ language.name }} ({{ language.code }})</option>
+                                            {% endfor %}
+                                        </select>
+                                    </form>
+                                    {% block language_extra_forms %}{% endblock %}
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        {% block preloader %}{% endblock %}
+
+        {% block content %}{% endblock %}
+
+        {% block footer %}
+            {% include 'main/footer.html' %}
+        {% endblock %}
+
+    </div>
+
+    <script src="{% static 'app/scripts/bootstrap.min.js' %}"></script>
+
+    <script>
+        $(window).on('load', function() {
+            $('.status').fadeOut();
+            $('.preloader').delay(1000).fadeOut('slow');
+        });
+    </script>
+
+    <script>
+        function submitGlobalLanguageForm() {
+            var langForm = document.getElementById('language-form');
+            var dashForm = document.getElementById('dashboard-form'); // Busca si la plantilla hija renderizó el formulario oculto del dashboard
+            
+            if (dashForm) {
+                var formData = new FormData(langForm);
+                fetch("/i18n/setlang/", {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin',
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+                }).then(response => {
+                    if (response.ok) {
+                        dashForm.submit();
+                    }
+                }).catch(error => console.error('Error:', error));
+            } else {
+                langForm.submit();
+            }
+        }
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+    
+    <!-- Animación de la Progress Bar (Preloader) -->
+    <script>
+        $(window).on('load', function() {
+            $('.status').fadeOut();
+            $('.preloader').delay(500).fadeOut('slow');
+        });
+    </script>
+    <script src="{% static 'app/scripts/custom.js' %}"></script>
+
+</body>
+</html>
