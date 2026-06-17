@@ -1,412 +1,82 @@
-{% load i18n %}
-<html>
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Analyze your Snap projects to assess your Computational Thinking skills">
-    <meta name="keywords" content="Stamp, Startup, Multipurpose, Bootstrap, Landing page, Template, Registration, Landing">
-    <meta name="author" content="Programamos URJC Libresoft FECyT">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
-    <link rel="stylesheet" href="../../static/app/content/scratchblocks2.css">
-    <!-- <script src="../../static/app/scripts/bootstrap-modal.js"></script> -->
-    <script src="../../static/app/scripts/translations.js"></script>
-    <!-- <script src="../../static/app/scripts/bootstrap.js"></script> -->
-    <link rel="stylesheet" href="../../static/app/content/bootstrap-tour.css">
-    <script src="../../static/app/scripts/bootstrap.min.js"></script>
-    <script src="../../static/app/scripts/bootstrap-tour.js"></script>
-    <script src="../../static/app/scripts/googleAnalytics.js"></script>
-    <script src="../../static/app/scripts/scratchblocks-v3.4-min.js"></script>
+{% extends 'main/base.html' %}
+{% load i18n static %}
 
+{% block title %}Dr. Snap - Rubric Creator{% endblock %}
 
-    <!-- SITE TITLE -->
-    <title>Dr. Snap</title>
-
-
-    <link rel="stylesheet" href="/static/app/content/style.css">
-    <!-- =========================
-     FAV AND TOUCH ICONS AND FONT
-    ============================== -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" href="/static/app/images/favicon.ico">
-    <link rel="stylesheet" href="static/app/icons/icons.css">
-    <link type="text/css" rel="stylesheet" href="/static/app/content/css_002.css">
-    <link type="text/css" rel="stylesheet" href="/static/app/content/css.css">
-    <!-- =========================
-     STYLESHEETS
-    ============================== -->
-    <!-- BOOTSTRAP AND ANIMATION -->
-    <link rel="stylesheet" href="/static/app/content/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/app/content/animate.css">
-
-    <!-- CAROUSEL AND LIGHTBOX -->
-    <link rel="stylesheet" href="../../static/app/content/owl_002.css">
-    <link rel="stylesheet" href="../../static/app/content/owl.css">
-    <link rel="stylesheet" href="../../static/app/content/nivo-lightbox.css">
-    <link rel="stylesheet" href="../../static/app/content/default.css">
-
-    <!-- CUSTOM STYLESHEETS -->
-    <link rel="stylesheet" href="../../static/app/content/styles.css">
-    <link rel="stylesheet" href="/static/app/content/master.css">
-    <!-- RESPONSIVE FIXES -->
-    <link rel="stylesheet" href="../../static/app/content/responsive.css">
-
-    <!-- DEFAULT COLOR/ CURRENTLY USING -->
-    <link rel="stylesheet" href="../../static/app/content/red.css">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-
-    
-    <script>
-        window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('.dropdown').popover();
-    });
-    </script>
-    <script>
-        $(document).ready(function() {
-            scratchblocks.renderMatching('pre.blocks', {
-            style:     'scratch3',   // Optional, defaults to 'scratch2'.
-            languages: ['en'], // Optional, defaults to ['en'].
-            scale: 0.5,                // Optional, defaults to 1
-            });
-        })
-    </script>
-    <script>
-        $(document).ready(function () {
-            if("{{ dupCode }}" == ""){
-                $("#dupCode").attr("data-content","{% trans 'Your project does not have duplicated scripts, good job!' %}");
-            }else{
-                str = "{{ dupCode }}".split(",");
-                for (n in str){
-
-                    if(n == 0){str[n] = str[n].slice(13,-11)}
-                    else if(n == str.length-1) { str[n] = str[n].slice(14,-12)}
-                    else{
-                    str[n] = str[n].slice(14,-11)};
-                };
-                $("#dupCode").attr("data-content",str.join("\n"));
-            }
-        });
-    </script>
-    <script>
-    $(document).ready(function(){
-
-    var filename = "{{ filename }}";
-    var level = "{{ mastery.points}}/{{ mastery.maxi }}";
-    var list =[filename,level];
-    $("#certificate").val(list.toString());
-    });
-
-    </script>
-
-    <script>
-        $(document).ready(function(){
-            var isMouseOverPopover = false;
-        
-            $('.dropdown').popover({
-                trigger: 'manual',
-                html: true,
-                animation: false
-            }).on('mouseenter', function () {
-                var contentId = $(this).attr('id');
-                if (contentId === 'dead-code') {
-                    var content = $(this).next('#dead-code-content').html();
-                    $(this).attr('data-content', content);
-                } else {
-                   var _this = this;
-                }
-                $(this).popover('show');
-                $('.popover').on('mouseenter', function () {
-                    isMouseOverPopover = true;
-                }).on('mouseleave', function () {
-                    isMouseOverPopover = false;
-                    $(_this).popover('hide');
-                });
-            }).on('mouseleave', function () {
-                var _this = this;
-                setTimeout(function () {
-                    if (!isMouseOverPopover) {
-                        $(_this).popover('hide');
-                    }
-                }, 100);
-            });
-        });
-        
-    </script>
-
-    <script>
-
-        
-
-        document.addEventListener("DOMContentLoaded", function() {
-            function hideDigits(digits) {
-                var base32 = digits.toString(32);
-                return base32;
-            }
-
-            document.getElementById("rubric-generator").addEventListener("submit", function(event) {
-                event.preventDefault(); 
-                
-
-
-                var abstractionInput = document.getElementById("Abstraction");
-                var parallelizationInput = document.getElementById("Parallelization");
-                var logicThinkingInput = document.getElementById("LogicThinking");
-                var synchronizationInput = document.getElementById("Synchronization");
-                var flowControlInput = document.getElementById("FlowControl");
-                var userInteractivityInput = document.getElementById("UserInteractivity");
-                var dataRepresentationInput = document.getElementById("DataRepresentation");
-                var mathOperators = document.getElementById("MathOperators");
-                var motionOperators = document.getElementById("MotionOperators");
-
-
-                var abstractionValue = abstractionInput.value;
-                var parallelizationValue = parallelizationInput.value;
-                var logicThinkingValue = logicThinkingInput.value;
-                var synchronizationValue = synchronizationInput.value;
-                var flowControlValue = flowControlInput.value;
-                var userInteractivityValue = userInteractivityInput.value;
-                var dataRepresentationValue = dataRepresentationInput.value;
-                var mathOperatorsValue = mathOperators.value;
-                var motionOperatorsValue = motionOperators.value;
-
-                var digits = abstractionValue +
-                        parallelizationValue +
-                        logicThinkingValue +
-                        synchronizationValue + 
-                        flowControlValue + 
-                        userInteractivityValue + 
-                        dataRepresentationValue +
-                        mathOperatorsValue +
-                        motionOperatorsValue;
-
-                
-                var digits = hideDigits(parseInt(digits))
-                var url = "http://0.0.0.0:8000/" + digits;
-                // document.getElementById("url-share").innerText = url;
-                var linkElement = document.createElement("a");
-                linkElement.setAttribute("href", url);
-                linkElement.textContent = url;
-
-                var urlShareElement = document.getElementById("url-share");
-                urlShareElement.innerHTML = ""; 
-                urlShareElement.appendChild(linkElement); 
-            });
-
-
-        });
-
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Obtener las barras deslizadoras
-            var sliders = document.querySelectorAll(".form-range");
-    
-            // Función para establecer los valores de las barras deslizadoras
-            function setSliderValues(abstraction, parallelization, logicThinking, synchronization, flowControl, userInteractivity, dataRepresentation) {
-                document.getElementById("Abstraction").value = abstraction;
-                document.getElementById("Parallelization").value = parallelization;
-                document.getElementById("LogicThinking").value = logicThinking;
-                document.getElementById("Synchronization").value = synchronization;
-                document.getElementById("FlowControl").value = flowControl;
-                document.getElementById("UserInteractivity").value = userInteractivity;
-                document.getElementById("DataRepresentation").value = dataRepresentation;
-            }
-
-            // Definir las traducciones
-            var translations = {
-                'games': "{% trans 'Games' %}",
-                'stories': "{% trans 'Stories' %}",
-                'animations': "{% trans 'Animations' %}",
-                'music': "{% trans 'Music' %}",
-                'arts': "{% trans 'Arts' %}"
-            };
-    
-            // Evento clic en los elementos de texto
-            var textElements = document.querySelectorAll(".text-success");
-            textElements.forEach(function(element) {
-                element.addEventListener("click", function() {
-                    switch (element.textContent.trim()) {
-                        case translations['games']:
-                            setSliderValues(3, 4, 3, 4, 4, 3, 3); // Games's Rubric
-                            break;
-                        case translations['stories']:
-                            setSliderValues(2, 3, 2, 3, 3, 2, 2); // Stories's Rubric
-                            break;
-                        case translations['animations']:
-                            setSliderValues(2, 3, 2, 2, 3, 2, 2); // Animation's Rubric
-                            break;
-                        case translations['music']:
-                            setSliderValues(2, 2, 0, 4, 4, 2, 2); // Music's Rubric
-                            break;
-                        case translations['arts']:
-                            setSliderValues(2, 2, 0, 2, 4, 4, 2); // Art's Rubric
-                            break;
-                        default:
-                            break;
-
-                    }
-                });
-            });
-        });
-    </script>
-
+{% block extra_css %}
+    {{ block.super }}
     <style>
-        .btn-primary {
-            background-color: #1792A4;
+        /* Convertimos el fondo gris del Jumbotron en blanco para las bombillas */
+        .jumbotron {
+            background-color: #ffffff !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Sombra suave para que no quede plano */
+            border-radius: 10px;
         }
-        .btn-primary:hover {
-            background-color: #4CA8A1;
-        }
-        .btn-primary:focus {
-            background-color: #4CA8A1;
-        }
-        .text-success {
-            cursor: pointer; /* Cambiar el cursor a pointer cuando se pasa sobre el texto */
-        }
+        
+        .btn-primary { background-color: #1792A4; }
+        .btn-primary:hover, .btn-primary:focus { background-color: #4CA8A1; }
+        .text-success { cursor: pointer; }
+        
         /* Cambiar el color azul por defecto a rojo en las barras deslizadoras en Firefox */
         input[type="range"]::-moz-range-progress {
-            background-color: red; /* Color de la parte seleccionada */
-            height: 8px; /* Ajustar el grosor de la barra de progreso */
+            background-color: red; 
+            height: 8px; 
         }
         /* Completar la parte no seleccionada con color gris */
         input[type="range"]::-moz-range-track {
-            background-color: lightgrey; /* Color de la parte no seleccionada */
-            height: 8px; /* Ajustar el grosor de la barra de progreso */
+            background-color: lightgrey; 
+            height: 8px; 
         }
         /* Cambiar el color del cursor cuando se manipula la barra deslizadora */
         input[type="range"]:active::-moz-range-thumb {
-            background-color: red; /* Color del cursor cuando se está manipulando */
+            background-color: red; 
         } 
         /* Cambiar el estilo del puntero a uno más redondo */
         input[type="range"]::-moz-range-thumb {
-            border-radius: 50%; /* Hacer el puntero redondo */
+            border-radius: 50%; 
         }
 
-        body p {
-            font-size: 10px;
-            color: #088CE3;
-        }
+        body p { font-size: 10px; color: #088CE3; }
+        body .phrase { font-size: 13px; display: none; }
 
-        body .phrase {
-            font-size: 13px;
-        }
-
-        
-        .phrase {
-            display: none; 
-        }
-
-        .lightbulb-color {
-            color: #FBE259;
-            
-        }
-
-        .label-pair {
-            display: inline-block;
-            vertical-align: middle;
-            
-        }
-
+        .lightbulb-color { color: #FBE259; }
+        .label-pair { display: inline-block; vertical-align: middle; }
 
         /* Lightbulb zoom hover */
-        .zoomable {
-            transition: transform 0.3s ease;
-        }
+        .zoomable { transition: transform 0.3s ease; cursor: pointer; }
+        .zoomable:hover { transform: scale(1.2); }
 
-        .zoomable:hover {
-            transform: scale(1.2); /* El valor 1.1 puede ajustarse según el nivel de zoom deseado */
-        }
-
-        .language-content {
-            cursor: pointer;
-        }
-        .img-fluid.zoomable {
-            cursor: pointer;
-        }
-        .form-label.text-primary.label-pair a:hover {
-            text-decoration: none;
-        }
-
-
+        .language-content { cursor: pointer; }
+        .form-label.text-primary.label-pair a:hover { text-decoration: none; }
     </style>
-    
-</head>
-<body>
-    <!-- TOP BAR -->
-    <div id="wrap">
-        <div class="navbar navbar-inverse bs-docs-nav navbar-fixed-top  sticky-navigation" role="navigation">
-            <div class="container">
-                <!-- NAVIGATION LINK -->
-                <a href="/" style="padding-left: 4%;">
-                    <img src="/static/app/images/final.jpg" alt="" width="220" height="70.1667">
-                </a>
-                <ul class="nav navbar-nav navbar-right login-register small-text">
-                    <li style="display: block;" class="login dropdown">
-                        <a aria-expanded="false" type="button" data-toggle="dropdown" class="dropdown-toggle language-content" data-hover="dropdown" style="padding-top: 60%;">
-                            <span class="icon-basic-world "></span>
-                        </a>
-                        <ul role="menu" class="dropdown-menu" style="padding: 20px;">
-                            <li style="padding-left: 20px;">
-                                <div>
-                                    <form action="/i18n/setlang/" method="post">
-                                        {% csrf_token %}
-                                        <input name="next" type="hidden" value="{{ redirect_to }}" />
-                                        <select name="language" onchange="this.form.submit()" class='btn-group btn-group-justified colored-text language-content'>
-                                            {% get_language_info_list for LANGUAGES as languages %}
-                                            {% for language in languages %}
-                                                {% if language.code == request.LANGUAGE_CODE %}
-                                                    <option value="{{ language.code }}" selected>{{ language.name }} ({{ language.code }})</option>
-                                                {% else %}
-                                                    <option value="{{ language.code }}">{{ language.name }} ({{ language.code }})</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </select>
-                                    </form>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-    
-            </div>
-        </div>
-    <!-- /END TOP BAR -->
+{% endblock %}
 
-<div class="container">
-    
-    <!-- BODY -->
-    
+{% block extra_head %}
+    {{ block.super }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+    <script src="{% static 'app/scripts/scratchblocks-v3.4-min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 50px;">
     <section id="blackboard" class="services">
         <div class="display-center">
-            <!-- Score in detail -->
-
-            
-
             
             <div class="col-md-7">
                 <section id="dashboard">
                     <div class="container-fluid" id="stepfour">
                         <div class="row marketing">
-                            
                             <div class="jumbotron">
                                 
                                 <h4>{% trans 'Build your rubric!' %}</h4>
-    
                                                          
                                 <div id="personalized-options">
                                     <form action="" id="rubric-generator">
                                         <div class="form-group">
                                             <label for="Abstraction" class="form-label text-primary label-pair">
                                                 <a href="/learn/Abstraction/" target="_blank" style="color: inherit;">{% trans 'Abstraction' %}</a> : <span id="Abstraction-value"></span> 
-                                                <img src="static/app/images/little_bulb.png" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                                                <img src="{% static 'app/images/little_bulb.png' %}" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
                                             </label>
-                                        
-
                                             
                                             <div class="card border-success">
                                                 <div id="collapse1" class="collapse card-body bg-light" aria-labelledby="headingOne" data-parent="#accordion">
@@ -416,21 +86,15 @@
                                                     <p id="Abstraction-phrase-3" class="phrase phrase-Abstraction card-body" >{% trans 'Abstraction is important. I value patterns in the code to facilitate its maintenance and extension.' %}</p>
                                                     <p id="Abstraction-phrase-4" class="phrase phrase-Abstraction card-body" >{% trans 'Abstraction is crucial. I value modular and reusable code, which abstracts concepts to improve clarity and efficiency.' %}</p>
                                                     <p id="Abstraction-phrase-5" class="phrase phrase-Abstraction card-body">{% trans 'Abstraction is absolutely vital. The code must be abstract and flexible to adapt to future changes and reuse.' %}</p>
-                                                    
                                                 </div>
                                             </div>
-                                            
-                                                                                    
                                             <input type="range" class="form-range" min="0" max="4" id="Abstraction" name="Abstraction">
                                         </div>
 
-                                        
-                                        
                                         <div class="form-group">
-
                                             <label for="Parallelization" class="form-label text-primary label-pair">
                                                 <a href="/learn/Parallelization/" target="_blank" style="color: inherit;">{% trans 'Parallelization' %}</a>: <span id="Parallelization-value"></span> 
-                                                <img src="static/app/images/little_bulb.png" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                                <img src="{% static 'app/images/little_bulb.png' %}" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
                                             </label>
 
                                             <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -441,13 +105,13 @@
                                                 <p id="Parallelization-phrase-4" class="phrase phrase-Parallelization" >{% trans 'Parallelization is crucial. Simultaneous execution of tasks is essential to optimize code performance and efficiency.' %}</p>
                                                 <p id="Parallelization-phrase-5" class="phrase phrase-Parallelization" >{% trans 'Parallelization is absolutely vital. The ability to perform parallel processing is fundamental for system performance.' %}</p>
                                             </div>                                            
-                                            <input type="range" class="form-range" min="0"s max="4" id="Parallelization" name="Parallelization">
+                                            <input type="range" class="form-range" min="0" max="4" id="Parallelization" name="Parallelization">
                                         </div>
                                     
                                         <div class="form-group">
                                             <label for="LogicThinking" class="form-label text-primary label-pair">
                                                 <a href="/learn/Logic/" target="_blank" style="color: inherit;">{% trans 'Logic Thinking' %}</a>: <span id="LogicThinking-value"></span> 
-                                                <img src="static/app/images/little_bulb.png" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                                                <img src="{% static 'app/images/little_bulb.png' %}" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
                                             </label>
 
                                             <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -458,13 +122,13 @@
                                                 <p id="LogicThinking-phrase-4" class="phrase phrase-LogicThinking" >{% trans 'Logical thinking is crucial. I rely on logic to analyze complex situations and find effective solutions.' %}</p>
                                                 <p id="LogicThinking-phrase-5" class="phrase phrase-LogicThinking" >{% trans 'Logical thinking is absolutely vital. All code must follow strict logic for problem-solving.' %}</p>
                                             </div>
-                                            <input type="range" class="form-range" min="0"s max="4" id="LogicThinking" name="LogicThinking">
+                                            <input type="range" class="form-range" min="0" max="4" id="LogicThinking" name="LogicThinking">
                                         </div>
                                     
                                         <div class="form-group">
                                             <label for="Synchronization" class="form-label text-primary label-pair">
                                                 <a href="/learn/Synchronization/" target="_blank" style="color: inherit;">{% trans 'Synchronization' %}</a>: <span id="Synchronization-value"></span> 
-                                                <img src="static/app/images/little_bulb.png" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                                                <img src="{% static 'app/images/little_bulb.png' %}" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
                                             </label>
 
                                             <div id="collapse4" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -475,14 +139,13 @@
                                                 <p id="Synchronization-phrase-4" class="phrase phrase-Synchronization" >{% trans 'Synchronization is crucial. It is essential to control concurrency to ensure data consistency and integrity in the code.' %}</p>
                                                 <p id="Synchronization-phrase-5" class="phrase phrase-Synchronization" >{% trans 'Synchronization is absolutely vital. Efficient concurrency is fundamental for system performance and reliability.' %}</p>
                                             </div>                                            
-                                            
-                                            <input type="range" class="form-range" min="0"s max="4" id="Synchronization" name="Synchronization">
+                                            <input type="range" class="form-range" min="0" max="4" id="Synchronization" name="Synchronization">
                                         </div>
                                     
                                         <div class="form-group">
                                             <label for="FlowControl" class="form-label text-primary label-pair">
                                                 <a href="/learn/FlowControl/" target="_blank" style="color: inherit;">{% trans 'Flow control' %}</a>: <span id="FlowControl-value"></span> 
-                                                <img src="static/app/images/little_bulb.png" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                                                <img src="{% static 'app/images/little_bulb.png' %}" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
                                             </label>
                                             
                                             <div id="collapse5" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -493,14 +156,13 @@
                                                 <p id="FlowControl-phrase-4" class="phrase phrase-FlowControl" >{% trans 'Flow control is crucial. Ensuring logic and coherence of program execution flow is necessary.' %}</p>
                                                 <p id="FlowControl-phrase-5" class="phrase phrase-FlowControl" >{% trans 'Flow control is absolutely vital. Proper flow control management determines the efficiency and effectiveness of the program.' %}</p>
                                             </div>
-                                        
-                                            <input type="range" class="form-range" min="0"s max="4" id="FlowControl" name="FlowControl">
+                                            <input type="range" class="form-range" min="0" max="4" id="FlowControl" name="FlowControl">
                                         </div>
                                         
                                         <div class="form-group">
                                             <label for="UserInteractivity" class="form-label text-primary label-pair">
                                                 <a href="/learn/UserInteractivity/" target="_blank" style="color: inherit;">{% trans 'User interactivity' %}</a>: <span id="UserInteractivity-value"></span> 
-                                                <img src="static/app/images/little_bulb.png" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                                                <img src="{% static 'app/images/little_bulb.png' %}" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
                                             </label>
 
                                             <div id="collapse6" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -511,14 +173,13 @@
                                                 <p id="UserInteractivity-phrase-4" class="phrase phrase-UserInteractivity" >{% trans 'User interactivity is crucial. The code must be highly interactive with quick response to user actions.' %}</p>
                                                 <p id="UserInteractivity-phrase-5" class="phrase phrase-UserInteractivity" >{% trans 'User interactivity is absolutely vital. The ability to interact effectively with the user is fundamental.' %}</p>
                                             </div>
-                                            
-                                            <input type="range" class="form-range" min="0"s max="4" id="UserInteractivity" name="UserInteractivity">
+                                            <input type="range" class="form-range" min="0" max="4" id="UserInteractivity" name="UserInteractivity">
                                         </div>
                                     
                                         <div class="form-group">
                                             <label for="DataRepresentation" class="form-label text-primary label-pair">
                                                 <a href="/learn/DataRepresentation/" target="_blank" style="color: inherit;">{% trans 'Data Representation' %}</a>: <span id="DataRepresentation-value"></span> 
-                                                <img src="static/app/images/little_bulb.png" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
+                                                <img src="{% static 'app/images/little_bulb.png' %}" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
                                             </label>
 
                                             <div id="collapse7" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -529,14 +190,13 @@
                                                 <p id="DataRepresentation-phrase-4" class="phrase phrase-DataRepresentation" >{% trans 'Data representation is crucial. It is essential for optimizing code performance and scalability.' %}</p>
                                                 <p id="DataRepresentation-phrase-5" class="phrase phrase-DataRepresentation" >{% trans 'Data representation is absolutely vital. Poor data representation can lead to critical errors.' %}</p>
                                             </div>
-                                            <input type="range" class="form-range" min="0"s max="4" id="DataRepresentation" name="DataRepresentation">
+                                            <input type="range" class="form-range" min="0" max="4" id="DataRepresentation" name="DataRepresentation">
                                         </div>
                                         
-
                                         <div class="form-group">
                                             <label for="MathOperators" class="form-label text-primary label-pair">
                                                 <a href="/learn/MathOperators/" target="_blank" style="color: inherit;">{% trans 'Math Operators' %}</a> <span id="MathOperators-value"></span> 
-                                                <img src="static/app/images/little_bulb.png" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
+                                                <img src="{% static 'app/images/little_bulb.png' %}" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
                                             </label>
 
                                             <div id="collapse8" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -547,13 +207,13 @@
                                                 <p id="MathOperators-phrase-4" class="phrase phrase-MathOperators" >{% trans 'Mathematical operators are crucial. Their correct usage is fundamental to ensure accuracy and consistency in calculations.' %}</p>
                                                 <p id="MathOperators-phrase-5" class="phrase phrase-MathOperators" >{% trans 'Mathematical operators are absolutely vital. They are indispensable for operations that determine the final result.' %}</p>
                                             </div>
-                                            <input type="range" class="form-range" min="0"s max="4" id="MathOperators" name="MathOperators">
+                                            <input type="range" class="form-range" min="0" max="4" id="MathOperators" name="MathOperators">
                                         </div>
 
                                         <div class="form-group">
                                             <label for="MotionOperators" class="form-label text-primary label-pair">
                                                 <a href="/learn/MotionOperators/" target="_blank" style="color: inherit;">{% trans 'Motion Operators' %}</a>: <span id="MotionOperators-value"></span> 
-                                                <img src="static/app/images/little_bulb.png" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
+                                                <img src="{% static 'app/images/little_bulb.png' %}" class="img-fluid zoomable" data-toggle="collapse" data-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
                                             </label>
 
                                             <div id="collapse9" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -564,111 +224,113 @@
                                                 <p id="MotionOperators-phrase-4" class="phrase phrase-MotionOperators" >{% trans 'Motion operators are crucial. Precise motion control is essential for the proper functioning of the code.' %}</p>
                                                 <p id="MotionOperators-phrase-5" class="phrase phrase-MotionOperators" >{% trans 'Motion operators are absolutely vital. The ability to manipulate movements effectively is fundamental.' %}</p>
                                             </div>
-                                            <input type="range" class="form-range" min="0"s max="4" id="MotionOperators" name="MotionOperators">
+                                            <input type="range" class="form-range" min="0" max="4" id="MotionOperators" name="MotionOperators">
                                         </div>
                                     
-                                        <button id="url" name='_url' type="submit" class="btn btn-primary standard-button">{% trans "Generate rubric" %}</button>
+                                        <button id="url" name='_url' type="submit" class="btn btn-primary standard-button" style="margin-top: 20px;">{% trans "Generate rubric" %}</button>
                                     </form>
-                                    
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                 </section>
             </div>
+            
             <div class="col-md-4">
                 <section id="dashboard">
-                        <div class="container-fluid" id="stepfour">
-                            <div class="row marketing">
-                                <div class="jumbotron">
-                                    <h4>{% trans 'You can share this url:' %}</h4>
-                                    <div id="personalized-options">
-                                        <h5 class="text-success" id="url-share">{% trans 'First fill the form' %}</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row marketing">
-                                <div class="jumbotron">
-                                    <h4>{% trans 'Here there are some rubrics examples:' %}</h4>
-                                    <div id="personalized-options">
-                                        <h5 class="text-success">{% trans 'Arts' %}</h5>
-                                        <h5 class="text-success">{% trans 'Music' %}</h5>
-                                        <h5 class="text-success">{% trans 'Animations' %}</h5>
-                                        <h5 class="text-success">{% trans 'Stories' %}</h5>
-                                        <h5 class="text-success">{% trans 'Games' %}</h5>
-                                    </div>
+                    <div class="container-fluid" id="stepfour">
+                        <div class="row marketing">
+                            <div class="jumbotron">
+                                <h4>{% trans 'You can share this url:' %}</h4>
+                                <div id="personalized-options">
+                                    <h5 class="text-success" id="url-share">{% trans 'First fill the form' %}</h5>
                                 </div>
                             </div>
                         </div>
+                        <div class="row marketing">
+                            <div class="jumbotron">
+                                <h4>{% trans 'Here there are some rubrics examples:' %}</h4>
+                                <div id="personalized-options">
+                                    <h5 class="text-success rubric-preset">{% trans 'Arts' %}</h5>
+                                    <h5 class="text-success rubric-preset">{% trans 'Music' %}</h5>
+                                    <h5 class="text-success rubric-preset">{% trans 'Animations' %}</h5>
+                                    <h5 class="text-success rubric-preset">{% trans 'Stories' %}</h5>
+                                    <h5 class="text-success rubric-preset">{% trans 'Games' %}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </section>
             </div>
             
         </div>
-
     </section>
-
-  
 </div>
+{% endblock %}
 
-    {% include 'main/footer.html' %}
+{% block extra_scripts %}
+    {{ block.super }}
 
-    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var sliders = document.querySelectorAll("input[type='range']");
-            
-            sliders.forEach(function(slider) {
-                var sliderValue = document.getElementById(slider.id + "-value");
-                var initialValue = slider.value; // Obtener el valor inicial del slider
-    
-                // Ocultar todas las frases al cargar la página
-                // Ocultar todas las frases
-                document.querySelectorAll(".phrase").forEach(function(element) {
-                    element.style.display = "none";
-                });
-    
-                var initialPhrases = document.querySelectorAll("#" + slider.id + "-phrase-" + initialValue);
+            function hideDigits(digits) {
+                var base32 = digits.toString(32);
+                return base32;
+            }
 
-                initialPhrases.forEach(function(phrase) {
-                    phrase.style.display = "block";
-                });
-    
-                slider.addEventListener("input", function() {
-                    updateSliderValue(slider, sliderValue);
-                });
+            document.getElementById("rubric-generator").addEventListener("submit", function(event) {
+                event.preventDefault(); 
+                
+                var abstractionValue = document.getElementById("Abstraction").value;
+                var parallelizationValue = document.getElementById("Parallelization").value;
+                var logicThinkingValue = document.getElementById("LogicThinking").value;
+                var synchronizationValue = document.getElementById("Synchronization").value;
+                var flowControlValue = document.getElementById("FlowControl").value;
+                var userInteractivityValue = document.getElementById("UserInteractivity").value;
+                var dataRepresentationValue = document.getElementById("DataRepresentation").value;
+                var mathOperatorsValue = document.getElementById("MathOperators").value;
+                var motionOperatorsValue = document.getElementById("MotionOperators").value;
+
+                var digitsStr = abstractionValue + parallelizationValue + logicThinkingValue +
+                             synchronizationValue + flowControlValue + userInteractivityValue + 
+                             dataRepresentationValue + mathOperatorsValue + motionOperatorsValue;
+
+                var digits = hideDigits(parseInt(digitsStr));
+                
+                // Utiliza location.origin para detectar automáticamente el dominio/puerto actual
+                var url = window.location.origin + "/" + digits;
+                
+                var linkElement = document.createElement("a");
+                linkElement.setAttribute("href", url);
+                linkElement.textContent = url;
+
+                var urlShareElement = document.getElementById("url-share");
+                urlShareElement.innerHTML = ""; 
+                urlShareElement.appendChild(linkElement); 
             });
         });
-        
+    </script>
+
+    <script>
         function updateSliderValue(slider, sliderValue) {
             sliderValue.textContent = slider.value;
 
-            type_phrases = document.querySelectorAll("." + "phrase-" + slider.id)
+            var type_phrases = document.querySelectorAll(".phrase-" + slider.id);
             type_phrases.forEach(function(type_phrase) {
                 type_phrase.style.display = "none";
             });
-
 
             var phrases = document.querySelectorAll("#" + slider.id + "-phrase-" + slider.value);
             phrases.forEach(function(phrase) {                
                 phrase.style.display = "block";
             });
-
-
-           
         }
-    </script>
-    
 
-
-
-    <script>
         document.addEventListener("DOMContentLoaded", function() {
             var sliders = document.querySelectorAll("input[type='range']");
             
             sliders.forEach(function(slider) {
                 var sliderValue = document.getElementById(slider.id + "-value");
-            
                 updateSliderValue(slider, sliderValue);
             
                 slider.addEventListener("input", function() {
@@ -676,14 +338,12 @@
                 });
             });
     
-            // Función para establecer los valores de los sliders y actualizar los span correspondientes
             function setSliderAndSpanValues(sliderId, value) {
                 var slider = document.getElementById(sliderId);
                 slider.value = value;
                 updateSliderValue(slider, document.getElementById(sliderId + "-value"));
             }
 
-            // Definir las traducciones
             var translations = {
                 'games': "{% trans 'Games' %}",
                 'stories': "{% trans 'Stories' %}",
@@ -692,8 +352,8 @@
                 'arts': "{% trans 'Arts' %}"
             };
     
-            // Evento clic en los elementos de texto para establecer los valores predefinidos
-            var textElements = document.querySelectorAll(".text-success");
+            // Evento clic en los botones de rúbricas predefinidas
+            var textElements = document.querySelectorAll(".rubric-preset");
             textElements.forEach(function(element) {
                 element.addEventListener("click", function() {
                     switch (element.textContent.trim()) {
@@ -759,7 +419,4 @@
             });
         });
     </script>
-    
-
-</body>
-</html>
+{% endblock %}
