@@ -32,7 +32,7 @@ urlpatterns = [
     url(r'^(.*)/csvs/(?P<path>.*)$',serve, {'document_root': settings.BASE_DIR + '/csvs'}),
 
     # BATCH (Antiguo y Nuevo)
-    url(r'^batch/(?P<csv_identifier>.*)$',app_views.batch, name='batch'),
+    #url(r'^batch/(?P<csv_identifier>.*)$',app_views.batch, name='batch'),
     
     # NUEVA URL: BATCH MODE PAGE
     url(r'^batch_mode/$', app_views.batch_mode_view, name='batch_mode_view'),

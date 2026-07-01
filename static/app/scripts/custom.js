@@ -1,5 +1,4 @@
-$(window).load(function() {
-
+$(window).on('load', function() {
     "use strict";
 
     /*---------------------------------------*/
@@ -319,7 +318,7 @@ jQuery(document).ready(function($) {
 /*---------------------------------------*/
 /*	TIMELINE SLIDER
 	/*---------------------------------------*/
-jQuery(window).load(function() {
+jQuery(window).on('load', function() {
 
     'use strict';
 

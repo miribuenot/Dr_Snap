@@ -387,11 +387,6 @@ def show_dashboard(request, skill_points=None):
         request.session['last_analysis_data'] = d
         request.session['last_dashboard_mode'] = d.get("dashboard_mode")
 
-        # 4. Manejo de casos especiales
-        if d.get('multiproject'):
-            context = { 'ETA': calc_eta(d.get('num_projects', 0)) }
-            return render(request, user + '/dashboard-bulk-landing.html', context)
-        
         # 5. Manejo de Errores
         error_type = d.get('Error')
         if error_type and error_type != 'None':
@@ -475,35 +470,6 @@ def build_dictionary_with_automatic_analysis(request, skill_points: dict) -> dic
                     dict_metrics[project_counter] = {'Error': 'Error analyzing project', 'details': str(e)}
             else:
                 dict_metrics[project_counter] =  {'Error': 'MultiValueDict'}
-        # ------------------------------------
-                
-        elif '_urls' in request.POST:
-            # (Código legacy para batch antiguo vía Celery)
-            try:
-                projects_file = request.FILES['urlsFile']
-                if not projects_file.content_type.endswith('zip'): 
-                    projects = projects_file.readlines()
-                    num_projects = len(projects)
-                else:
-                    projects_path = extract_batch_projects(projects_file)
-                    num_projects = calc_num_projects(projects_path)
-                    projects = projects_path
-                
-                request_data = {
-                    'LANGUAGE_CODE': request.LANGUAGE_CODE,
-                    'POST': {
-                        'urlsFile': projects,
-                        'dashboard_mode': 'Default', 
-                        'email': request.POST.get('batch-email', '')       
-                    }
-                }
-                init_batch.delay(request_data, skill_points) 
-                dict_metrics[project_counter] = {
-                    'multiproject': True,
-                    'num_projects': num_projects
-                }
-            except Exception as e:
-                dict_metrics[project_counter] = {'Error': 'MultiValueDict'}
 
     return dict_metrics
 
@@ -601,6 +567,16 @@ def get_analysis_d(request, skill_points=None):
         if 'deadCode' in dict_dead_code: del dict_dead_code['deadCode']
         if 'spriteNaming' in dict_sprite: del dict_sprite['spriteNaming']
         if 'backdropNaming' in dict_backdrop: del dict_backdrop['backdropNaming']
+
+        if 'number' not in dict_dead_code:
+            total_dead_code = 0
+            for key, value in dict_dead_code.items():
+                if key not in ['number', 'deadCode']:
+                    if isinstance(value, list):
+                        total_dead_code += len(value)
+                    else:
+                        total_dead_code += 1
+            dict_dead_code['number'] = total_dead_code
             
         context = {
             'mastery': dict_mastery,
@@ -850,6 +826,33 @@ def batch_analyze(request):
 
     return HttpResponseRedirect('/')
 
+def analyze_csv(request):
+    """
+    (Legacy) Sube un archivo CSV y lo guarda en el servidor.
+    Nota: La funcionalidad real de análisis ahora se hace en 'batch_analyze'.
+    """
+    if request.method == 'POST' and "_upload" in request.POST:
+        file = request.FILES.get('csvFile')
+        if file:
+            file_name = f"{request.user.username}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+            dir_csvs = os.path.join(settings.BASE_DIR, "csvs", file_name)
+            
+            # Asegurar que el directorio existe
+            os.makedirs(os.path.dirname(dir_csvs), exist_ok=True)
+            
+            with open(dir_csvs, 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+            
+            return HttpResponseRedirect('/')
+            
+    return HttpResponseRedirect("/organization")
+
+# ==============================================================================
+# 5. GESTIÓN DE USUARIOS
+# ==============================================================================
+
+'''
 def batch(request, csv_identifier):
     """
     Muestra el dashboard de resultados para un lote (Batch) específico guardado previamente.
@@ -878,33 +881,6 @@ def batch(request, csv_identifier):
     context = { 'summary': summary, 'csv_filepath': csv_obj.filepath }
     return render(request, user + '/dashboard-bulk.html', context)
 
-def analyze_csv(request):
-    """
-    (Legacy) Sube un archivo CSV y lo guarda en el servidor.
-    Nota: La funcionalidad real de análisis ahora se hace en 'batch_analyze'.
-    """
-    if request.method == 'POST' and "_upload" in request.POST:
-        file = request.FILES.get('csvFile')
-        if file:
-            file_name = f"{request.user.username}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
-            dir_csvs = os.path.join(settings.BASE_DIR, "csvs", file_name)
-            
-            # Asegurar que el directorio existe
-            os.makedirs(os.path.dirname(dir_csvs), exist_ok=True)
-            
-            with open(dir_csvs, 'wb+') as destination:
-                for chunk in file.chunks():
-                    destination.write(chunk)
-            
-            return HttpResponseRedirect('/')
-            
-    return HttpResponseRedirect("/organization")
-
-# ==============================================================================
-# 5. GESTIÓN DE USUARIOS
-# ==============================================================================
-
-'''
 def sign_up_organization(request):
     # Inicializamos flags para la plantilla (manteniendo compatibilidad con HTML antiguo)
     context = {
@@ -1179,6 +1155,106 @@ def reset_password_confirm(request, uidb64=None, token=None, *arg, **kwargs):
         return render(request, 'sign-password/new-password.html')
     else:
         return render(request, f'{page}/main.html')
+
+def calc_num_projects(batch_path: str) -> int:
+    """ Calcula recursivamente cuántos archivos hay en el directorio temporal """
+    num_projects = 0
+    for root, dirs, files in os.walk(batch_path):
+        # Filtramos archivos ocultos o del sistema (__MACOSX, .DS_Store)
+        valid_files = [f for f in files if not f.startswith('.') and not f.startswith('__')]
+        num_projects += len(valid_files)
+    return num_projects
+    
+def extract_batch_projects(projects_file: object) -> str:
+    """
+    Extrae el ZIP subido a una carpeta temporal y devuelve la ruta.
+    Protección contra: Zip Bombs, Zip Slip, archivos corruptos y exceso de ficheros.
+    """
+    project_name = str(uuid.uuid4())
+    unique_id = '{}_{}'.format(
+        project_name,
+        datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")
+    )
+
+    extraction_path = os.path.join(settings.MEDIA_ROOT, 'uploads', 'batch_mode', unique_id)
+
+    MAX_EXTRACT_SIZE = 100 * 1024 * 1024  # 100 MB descomprimido
+    MAX_FILES_IN_ZIP = 500
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_file_path = os.path.join(temp_dir, projects_file.name)
+
+        with open(temp_file_path, 'wb+') as temp_file:
+            for chunk in projects_file.chunks():
+                temp_file.write(chunk)
+
+        try:
+            with ZipFile(temp_file_path, 'r') as zip_ref:
+
+                # Comprobación previa sin extraer
+                extracted_size = 0
+                file_count = 0
+                for zip_info in zip_ref.infolist():
+                    file_count += 1
+                    if file_count > MAX_FILES_IN_ZIP:
+                        raise Exception(
+                            f"SECURITY: ZIP rechazado — demasiados archivos "
+                            f"(más de {MAX_FILES_IN_ZIP})."
+                        )
+                    extracted_size += zip_info.file_size
+                    if extracted_size > MAX_EXTRACT_SIZE:
+                        raise Exception(
+                            "SECURITY: ZIP rechazado — supera el límite de "
+                            "tamaño al descomprimir (posible Zip Bomb)."
+                        )
+
+                # Extracción segura con protección Zip Slip
+                os.makedirs(extraction_path, exist_ok=True)
+                real_extraction_path = os.path.realpath(extraction_path)
+
+                for zip_info in zip_ref.infolist():
+                    dest_path = os.path.realpath(
+                        os.path.join(real_extraction_path, zip_info.filename)
+                    )
+                    if not dest_path.startswith(real_extraction_path + os.sep):
+                        raise Exception(
+                            f"SECURITY: Zip Slip detectado en '{zip_info.filename}'. "
+                            "Extracción abortada."
+                        )
+                    zip_ref.extract(zip_info, real_extraction_path)
+
+        except BadZipfile:
+            if os.path.exists(extraction_path):
+                shutil.rmtree(extraction_path)
+            raise Exception("El archivo subido no es un ZIP válido o está corrupto.")
+
+        except Exception as e:
+            if os.path.exists(extraction_path):
+                shutil.rmtree(extraction_path)
+            raise e
+
+    return extraction_path
+
+    def calc_eta(num_projects: int) -> str:
+    """ Calcula el tiempo estimado basado en los últimos 10 lotes """
+    last_ten = BatchCSV.objects.all().order_by('-date')[:10]
+    if not last_ten: return "Calculating..."
+    
+    try:
+        # Evitamos división por cero si un batch antiguo falló y tiene 0 proyectos
+        anal_time = sum(batch.task_time / batch.num_projects for batch in last_ten if batch.num_projects > 0) / 10
+        mean_tm = anal_time * num_projects
+        
+        hours = int(mean_tm // 3600)
+        minutes = int((mean_tm % 3600) // 60)
+        seconds = round(mean_tm % 60, 2)
+        
+        return f'{hours}h: {minutes}min: {seconds}s'
+    except Exception:
+        return "Calculating..."
+
+
+        
 '''
 # ==============================================================================
 # 6. ESTADÍSTICAS Y DESCARGAS
@@ -1354,24 +1430,6 @@ def base32_to_str(base32_str: str) -> str:
     except (ValueError, TypeError):
         return ""
 
-def calc_eta(num_projects: int) -> str:
-    """ Calcula el tiempo estimado basado en los últimos 10 lotes """
-    last_ten = BatchCSV.objects.all().order_by('-date')[:10]
-    if not last_ten: return "Calculating..."
-    
-    try:
-        # Evitamos división por cero si un batch antiguo falló y tiene 0 proyectos
-        anal_time = sum(batch.task_time / batch.num_projects for batch in last_ten if batch.num_projects > 0) / 10
-        mean_tm = anal_time * num_projects
-        
-        hours = int(mean_tm // 3600)
-        minutes = int((mean_tm % 3600) // 60)
-        seconds = round(mean_tm % 60, 2)
-        
-        return f'{hours}h: {minutes}min: {seconds}s'
-    except Exception:
-        return "Calculating..."
-
 def generate_rubric(skill_points: str) -> dict:
     """ Genera la rúbrica de evaluación basada en la URL codificada """
     mastery = ['Abstraction', 'Parallelization', 'Logic', 'Synchronization', 
@@ -1391,85 +1449,6 @@ def generate_rubric(skill_points: str) -> dict:
         for skill_name in mastery:
             skill_rubric[skill_name] = 4      
     return skill_rubric
-
-def calc_num_projects(batch_path: str) -> int:
-    """ Calcula recursivamente cuántos archivos hay en el directorio temporal """
-    num_projects = 0
-    for root, dirs, files in os.walk(batch_path):
-        # Filtramos archivos ocultos o del sistema (__MACOSX, .DS_Store)
-        valid_files = [f for f in files if not f.startswith('.') and not f.startswith('__')]
-        num_projects += len(valid_files)
-    return num_projects
-    
-def extract_batch_projects(projects_file: object) -> str:
-    """
-    Extrae el ZIP subido a una carpeta temporal y devuelve la ruta.
-    Protección contra: Zip Bombs, Zip Slip, archivos corruptos y exceso de ficheros.
-    """
-    project_name = str(uuid.uuid4())
-    unique_id = '{}_{}'.format(
-        project_name,
-        datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")
-    )
-
-    extraction_path = os.path.join(settings.MEDIA_ROOT, 'uploads', 'batch_mode', unique_id)
-
-    MAX_EXTRACT_SIZE = 100 * 1024 * 1024  # 100 MB descomprimido
-    MAX_FILES_IN_ZIP = 500
-
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_file_path = os.path.join(temp_dir, projects_file.name)
-
-        with open(temp_file_path, 'wb+') as temp_file:
-            for chunk in projects_file.chunks():
-                temp_file.write(chunk)
-
-        try:
-            with ZipFile(temp_file_path, 'r') as zip_ref:
-
-                # Comprobación previa sin extraer
-                extracted_size = 0
-                file_count = 0
-                for zip_info in zip_ref.infolist():
-                    file_count += 1
-                    if file_count > MAX_FILES_IN_ZIP:
-                        raise Exception(
-                            f"SECURITY: ZIP rechazado — demasiados archivos "
-                            f"(más de {MAX_FILES_IN_ZIP})."
-                        )
-                    extracted_size += zip_info.file_size
-                    if extracted_size > MAX_EXTRACT_SIZE:
-                        raise Exception(
-                            "SECURITY: ZIP rechazado — supera el límite de "
-                            "tamaño al descomprimir (posible Zip Bomb)."
-                        )
-
-                # Extracción segura con protección Zip Slip
-                os.makedirs(extraction_path, exist_ok=True)
-                real_extraction_path = os.path.realpath(extraction_path)
-
-                for zip_info in zip_ref.infolist():
-                    dest_path = os.path.realpath(
-                        os.path.join(real_extraction_path, zip_info.filename)
-                    )
-                    if not dest_path.startswith(real_extraction_path + os.sep):
-                        raise Exception(
-                            f"SECURITY: Zip Slip detectado en '{zip_info.filename}'. "
-                            "Extracción abortada."
-                        )
-                    zip_ref.extract(zip_info, real_extraction_path)
-
-        except BadZipfile:
-            if os.path.exists(extraction_path):
-                shutil.rmtree(extraction_path)
-            raise Exception("El archivo subido no es un ZIP válido o está corrupto.")
-
-        except Exception as e:
-            if os.path.exists(extraction_path):
-                shutil.rmtree(extraction_path)
-            raise e
-
-    return extraction_path
 
 def identify_user_type(request) -> str:
     """ Determina el tipo de usuario (Organization, Coder, Admin, o Main) """

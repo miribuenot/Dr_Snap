@@ -1,44 +1,13 @@
-{% load i18n %}
-{% trans alert %}
+{% extends 'main/base.html' %}
+{% load i18n static %}
 
-<!DOCTYPE html>
-<html class="nivo-lightbox-notouch" lang="en">
+{% block title %}Dr. Snap - Home{% endblock %}
 
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Analyze your Snap projects to assess your Computational Thinking skills">
-    <meta name="keywords" content="Stamp, Startup, Multipurpose, Bootstrap, Landing page, Template, ration, Landing">
-    <meta name="author" content="Programamos URJC Libresoft FECyT">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+{% block alerts %}
+    {% trans alert %}
+{% endblock %}
 
-    <title>Dr. Snap</title>
-
-    <link rel="stylesheet" href="/static/app/content/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" href="/static/app/images/favicon.ico">
-    <link rel="stylesheet" href="/static/app/icons/icons.css">
-    <link type="text/css" rel="stylesheet" href="/static/app/content/css_002.css">
-    <link type="text/css" rel="stylesheet" href="/static/app/content/css.css">
-    <link rel="stylesheet" href="/static/app/content/bootstrap-main.css">
-    <link rel="stylesheet" href="/static/app/content/animate.css">
-
-    <link rel="stylesheet" href="/static/app/content/owl_002.css">
-    <link rel="stylesheet" href="/static/app/content/owl.css">
-    <link rel="stylesheet" href="/static/app/content/nivo-lightbox.css">
-    <link rel="stylesheet" href="/static/app/content/default.css">
-
-    <link rel="stylesheet" href="/static/app/content/styles.css">
-    <link rel="stylesheet" href="/static/app/content/responsive.css">
-    <link rel="stylesheet" href="/static/app/content/red.css">
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EF8MXDGMRC"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-EF8MXDGMRC');
-    </script>
-
+{% block extra_head %}
     <style>
         .carousel-inner > .item > img,
         .carousel-inner > .item > a > img {
@@ -49,84 +18,23 @@
         .carousel-control { width: 10%; }
         .language-content { cursor: pointer; }
     </style>
+{% endblock %}
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var personalizedOptions = document.getElementById("personalized-options");
-            if (personalizedOptions) {
-                document.querySelector("[name='dashboard_mode']").addEventListener("change", function () {
-                    var selectedOption = this.value;
-                    if (selectedOption === "Personalized") {
-                        personalizedOptions.style.display = "block";
-                    } else {
-                        personalizedOptions.style.display = "none";
-                    }
-                });
-            }
-        });
-    </script>
-</head>
+{% block preloader %}
+    <div style="display: none;" class="preloader">
+        <div style="display: none;" class="status">&nbsp;</div>
+    </div>
+{% endblock %}
 
-<body>
-    <div id="mywrapper">
-        <div style="display: none;" class="preloader">
-            <div style="display: none;" class="status">&nbsp;</div>
-        </div>
+{% block content %}
+    <header id="home" style="background-position: 50% 40.5px;" class="header" data-stellar-background-ratio="0.3">
+        <video autoplay muted loop id="video-background">
+            <source src="{% static 'app/videos/Snap!.mp4' %}" type="video/mp4">
+            {% trans 'Your browser does not support the video tag.' %}
+        </video>
         
-        <header id="home" style="background-position: 50% 40.5px;" class="header" data-stellar-background-ratio="0.3">
-            <video autoplay muted loop id="video-background">
-                <source src="/static/app/videos/Snap!.mp4" type="video/mp4">
-                {% trans 'Your browser does not support the video tag.' %}
-            </video>
-            
-            <div class="overlay-layer">
-                <div class="navbar navbar-inverse bs-docs-nav navbar-fixed-top sticky-navigation" role="navigation" style="min-height: 80px;">
-                    <div class="container-fluid" style="position: relative; padding-left: 30px; padding-right: 30px;">
-                        <div class="navbar-header">
-                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#stamp-navigation" style="margin-top: 25px;">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-                            </button>
-                            <a class="navbar-brand visible-xs" href="/">
-                                <img class="d-block img-fluid" style="height: 50px; margin-top: 5px;" src="/static/app/images/final.jpg" alt="Dr. Snap">
-                            </a>
-                        </div>
-
-                        <a class="navbar-brand hidden-xs" href="/" style="position: absolute; left: 50%; transform: translateX(-50%); padding: 0; top: 5px;">
-                            <img class="d-block img-fluid" style="height: 80px; width: auto;" src="/static/app/images/final.jpg" alt="Dr. Snap">
-                        </a>
-                       
-                        <div class="navbar-collapse collapse" id="stamp-navigation">
-                            <ul class="nav navbar-nav navbar-left main-navigation small-text" style="margin-top: 15px;">
-                                <li><a href="#section_personalized" style="font-weight: bold; text-transform: uppercase;"><em>{% trans "Personalized Mode" %}</em></a></li>
-                                <li><a href="#section_assistant" style="font-weight: bold; text-transform: uppercase;"><em>{% trans "Recommender Assistant" %}</em></a></li>
-                                <li><a href="#section_batch" style="font-weight: bold; text-transform: uppercase;"><em>{% trans "Batch Analysis Mode" %}</em></a></li>
-                            </ul>
-
-                            <ul class="nav navbar-nav navbar-right login-register small-text" style="margin-top: 15px;">
-                                <li style="display: block;" class="login dropdown">
-                                    <a aria-expanded="false" type="button" data-toggle="dropdown" class="dropdown-toggle language-content" data-hover="dropdown" style="padding-top: 15px; padding-bottom: 15px;">
-                                        <span class="icon-basic-world" style="font-size: 20px;"></span>
-                                    </a>
-                                    <ul role="menu" class="dropdown-menu" style="padding: 20px;">
-                                        <li style="padding-left: 20px;">
-                                            <form action="/i18n/setlang/" method="post">
-                                                {% csrf_token %}
-                                                <input name="next" type="hidden" value="{{ redirect_to }}" />
-                                                <select name="language" onchange="this.form.submit()" class='btn-group btn-group-justified colored-text language-content'>
-                                                    {% get_language_info_list for LANGUAGES as languages %}
-                                                    {% for language in languages %}
-                                                        <option value="{{ language.code }}" {% if language.code == request.LANGUAGE_CODE %}selected{% endif %}>{{ language.name }} ({{ language.code }})</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+        <div class="overlay-layer">
+            <div class="container" style="padding-top: 10vh;">
 
                 <div class="container" style="padding-top: 10vh;">
                     <div class="row">
@@ -185,90 +93,95 @@
                     </div>
                 </div>
             </div>
-        </header>
-
-        <section id="section_personalized" class="services" style="padding-left: 7%;">
-            <div class="container">            
-                <div class="row">
-                    <div class="col-md-4 align-self-center" style="margin-top: 80px;">
-                        <h3><strong>{% trans "Personalized Mode" %}</strong></h3>
-                        <p class="h4">{% trans "The personalized mode allows you to create a personalized rubric for evaluate projects by your own criteria, after this you can share a link associated to your rubric to evaluate your students." %}</p>
-                        <a href="{% url 'rubric_creator' %}"><button class="btn btn-primary standard-button">{% trans "Create rubric" %}</button></a>
-                    </div>
-                    <div class="col-md-8 text-center"><img src="/static/app/images/personalized_snap.png" class="img-fluid mx-auto d-block" style="max-width: 90%;"></div>
-                </div> 
-            </div>
-        </section>
-
-        <section id="section_assistant" class="services">
-            <div class="container">            
-                <div class="row">
-                    <div class="col-md-8 text-center"><img src="/static/app/images/Assistant_snap.png" class="img-fluid mx-auto d-block" style="max-width: 90%;"></div>
-                    <div class="col-md-4 align-self-center">
-                        <form id="recommender-form" method="post" action="/show_dashboard/" style="margin-top: 50px;">
-                            {% csrf_token %}
-                            <h3><strong>{% trans "Recommender Assistant" %}</strong></h3>
-                            <p class="h4"><span class='colored-text'>{% trans "NEW!!!" %}</span> {% trans "This mode gives you a feedback about the bad smells of your project and how to solve them with a assistant interface." %}</p>
-                            <input type="hidden" name="dashboard_mode" value="Recommender">
-                            <input id="input-recom" name="urlProject_recom" class="form-control" placeholder="URL..." type="text">
-                            <button id="url_recom" name="_url_recom" type="submit" class="btn btn-primary standard-button" style="margin-top: 15px;">{% trans "Analyze Bad Smells" %}</button>
-                        </form>
-                    </div>
-                </div> 
-            </div>
-        </section>
-
-        <section id="section_batch" class="services" style="padding-left: 7%;">
-            <div class="container">            
-                <div class="row">
-                    <div class="col-md-4 align-self-center" style="margin-top: 80px;">
-                        <h3><strong>{% trans "Batch Analysis Mode" %}</strong></h3>
-                        <p class="h4">{% trans "Analyze multiple projects at once! Upload a .txt file with URLs or a .zip file with project files, and get a CSV report." %}</p>
-                        <a href="/batch_mode/" class="btn btn-primary standard-button" style="margin-top: 20px;">{% trans "Go to Batch Analysis" %}</a>
-                    </div>
-                    <div class="col-md-8 text-center"><img src="/static/app/images/csv.png" class="img-fluid mx-auto d-block" style="max-width: 60%; margin-top: 20px;"></div>
-                </div> 
-            </div>
-        </section>
-
-    {% include 'main/footer.html' %}
-
-
-        <div id="modalUrl" class="modal fade" role="dialog">
-            <div class="modal-dialog"><div class="modal-content"><div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><strong>{% trans "How I can know my Snap! project's url?" %}</strong></h4>
-            </div><div class="modal-body">{% trans "<img class='framed' style='width: 100%;' src='static/app/images/url-en.png' />" %}</div></div></div>
         </div>
+    </header>
 
-        <div id="modalProject" class="modal fade" role="dialog">
-            <div class="modal-dialog"><div class="modal-content"><div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><strong>{% trans "How I can download my Snap! project?" %}</strong></h4>
-            </div><div class="modal-body">{% trans "<img class='framed' style='width: 100%;' src='static/app/images/project-en.png' />" %}</div></div></div>
+    <section id="section_personalized" class="services" style="padding-left: 7%;">
+        <div class="container">            
+            <div class="row">
+                <div class="col-md-4 align-self-center" style="margin-top: 80px;">
+                    <h3><strong>{% trans "Personalized Mode" %}</strong></h3>
+                    <p class="h4">{% trans "The personalized mode allows you to create a personalized rubric for evaluate projects by your own criteria, after this you can share a link associated to your rubric to evaluate your students." %}</p>
+                    <a href="{% url 'rubric_creator' %}"><button class="btn btn-primary standard-button">{% trans "Create rubric" %}</button></a>
+                </div>
+                <div class="col-md-8 text-center"><img src="/static/app/images/personalized_snap.png" class="img-fluid mx-auto d-block" style="max-width: 90%;"></div>
+            </div> 
         </div>
+    </section>
 
-        <div id="modalTxt" class="modal fade" role="dialog">
-            <div class="modal-dialog"><div class="modal-content"><div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><strong>{% trans "How is the correct format of the txt?" %}</strong></h4>
-            </div><div class="modal-body">{% trans "<img class='framed' style='width: 100%;' src='static/app/images/txt-es.png' />" %}</div></div></div>
+    <section id="section_assistant" class="services">
+        <div class="container">            
+            <div class="row">
+                <div class="col-md-8 text-center"><img src="/static/app/images/Assistant_snap.png" class="img-fluid mx-auto d-block" style="max-width: 90%;"></div>
+                <div class="col-md-4 align-self-center">
+                    <form id="recommender-form" method="post" action="/show_dashboard/" style="margin-top: 50px;">
+                        {% csrf_token %}
+                        <h3><strong>{% trans "Recommender Assistant" %}</strong></h3>
+                        <p class="h4"><span class='colored-text'>{% trans "NEW!!!" %}</span> {% trans "This mode gives you a feedback about the bad smells of your project and how to solve them with a assistant interface." %}</p>
+                        <input type="hidden" name="dashboard_mode" value="Recommender">
+                        <input id="input-recom" name="urlProject_recom" class="form-control" placeholder="URL..." type="text">
+                        <button id="url_recom" name="_url_recom" type="submit" class="btn btn-primary standard-button" style="margin-top: 15px;">{% trans "Analyze Bad Smells" %}</button>
+                    </form>
+                </div>
+            </div> 
         </div>
-    </div> <div id="pb" class="jumbotron">
-        <div class="container"><h2>{% trans "Wait a moment, please." %}</h2></div>
-        <div class="container"><img src="/static/app/images/final.jpg" style="mix-blend-mode: multiply;"/></div>
-        <div class="container">
-            <div class="progress progress-striped active">
-                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 99%"><span>{% trans "loading..." %}</span></div>
-            </div>
+    </section>
+
+    <section id="section_batch" class="services" style="padding-left: 7%;">
+        <div class="container">            
+            <div class="row">
+                <div class="col-md-4 align-self-center" style="margin-top: 80px;">
+                    <h3><strong>{% trans "Batch Analysis Mode" %}</strong></h3>
+                    <p class="h4">{% trans "Analyze multiple projects at once! Upload a .txt file with URLs or a .zip file with project files, and get a CSV report." %}</p>
+                    <a href="/batch_mode/" class="btn btn-primary standard-button" style="margin-top: 20px;">{% trans "Go to Batch Analysis" %}</a>
+                </div>
+                <div class="col-md-8 text-center"><img src="/static/app/images/csv.png" class="img-fluid mx-auto d-block" style="max-width: 60%; margin-top: 20px;"></div>
+            </div> 
         </div>
+    </section>
+
+
+
+    <div id="modalUrl" class="modal fade" role="dialog">
+        <div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><strong>{% trans "How I can know my Snap! project's url?" %}</strong></h4>
+        </div><div class="modal-body">{% trans "<img class='framed' style='width: 100%;' src='static/app/images/url-en.png' />" %}</div></div></div>
     </div>
 
-    <script src="/static/app/scripts/jquery.min.js"></script>
-    <script>jQuery(window).load(function(){ jQuery(".status").fadeOut(); jQuery(".preloader").delay(1000).fadeOut("slow"); })</script>
-    <script src="/static/app/scripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/static/app/scripts/bootstrap-filestyle.js"></script>
-    <script src="/static/app/scripts/progress-bar.js"></script>
-    <script src="/static/app/scripts/custom.js"></script>
-</body>
-</html>
+    <div id="modalProject" class="modal fade" role="dialog">
+        <div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><strong>{% trans "How I can download my Snap! project?" %}</strong></h4>
+        </div><div class="modal-body">{% trans "<img class='framed' style='width: 100%;' src='static/app/images/project-en.png' />" %}</div></div></div>
+    </div>
+
+    <div id="modalTxt" class="modal fade" role="dialog">
+        <div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><strong>{% trans "How is the correct format of the txt?" %}</strong></h4>
+        </div><div class="modal-body">{% trans "<img class='framed' style='width: 100%;' src='static/app/images/txt-es.png' />" %}</div></div></div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'app/scripts/custom.js' %}"></script>
+    <script type="text/javascript" src="{% static 'app/scripts/bootstrap-filestyle.js' %}"></script>
+    <script src="{% static 'app/scripts/progress-bar.js' %}"></script>
+    <script>
+        jQuery(window).on('load', function(){ 
+            jQuery(".status").fadeOut(); 
+            jQuery(".preloader").delay(1000).fadeOut("slow"); 
+        });
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            var personalizedOptions = document.getElementById("personalized-options");
+            if (personalizedOptions) {
+                document.querySelector("[name='dashboard_mode']").addEventListener("change", function () {
+                    var selectedOption = this.value;
+                    personalizedOptions.style.display = (selectedOption === "Personalized") ? "block" : "none";
+                });
+            }
+        });
+    </script>
+{% endblock %}

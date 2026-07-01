@@ -1,237 +1,68 @@
-{% load i18n %}
-<html>
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Analyze your Snap projects to assess your Computational Thinking skills">
-    <meta name="keywords" content="Stamp, Startup, Multipurpose, Bootstrap, Landing page, Template, Registration, Landing">
-    <meta name="author" content="Programamos URJC Libresoft FECyT">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="../../static/app/content/scratchblocks2.css">
-    <!-- <script src="../../static/app/scripts/bootstrap-modal.js"></script> -->
-    <script src="../../static/app/scripts/translations.js"></script>
-    <!-- <script src="../../static/app/scripts/bootstrap.js"></script> -->
-    <link rel="stylesheet" href="../../static/app/content/bootstrap-tour.css">
-    <script src="../../static/app/scripts/bootstrap.min.js"></script>
-    <script src="../../static/app/scripts/bootstrap-tour.js"></script>
-    <script src="../../static/app/scripts/googleAnalytics.js"></script>
-    <script src="../../static/app/scripts/scratchblocks-v3.4-min.js"></script>
+{% extends 'main/base.html' %}
+{% load i18n static %}
 
+{% block title %}Dr. Snap - Analyze Project{% endblock %}
 
-    <!-- SITE TITLE -->
-    <title>Dr. Snap</title>
-
-
-    <link rel="stylesheet" href="/static/app/content/style.css">
-    <!-- =========================
-     FAV AND TOUCH ICONS AND FONT
-    ============================== -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" href="/static/app/images/favicon.ico">
-    <link rel="stylesheet" href="static/app/icons/icons.css">
-    <link type="text/css" rel="stylesheet" href="/static/app/content/css_002.css">
-    <link type="text/css" rel="stylesheet" href="/static/app/content/css.css">
-    <!-- =========================
-     STYLESHEETS
-    ============================== -->
-    <!-- BOOTSTRAP AND ANIMATION -->
-    <link rel="stylesheet" href="/static/app/content/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/app/content/animate.css">
-
-    <!-- CAROUSEL AND LIGHTBOX -->
-    <link rel="stylesheet" href="../../static/app/content/owl_002.css">
-    <link rel="stylesheet" href="../../static/app/content/owl.css">
-    <link rel="stylesheet" href="../../static/app/content/nivo-lightbox.css">
-    <link rel="stylesheet" href="../../static/app/content/default.css">
-
-    <!-- CUSTOM STYLESHEETS -->
-    <link rel="stylesheet" href="../../static/app/content/styles.css">
-    <link rel="stylesheet" href="/static/app/content/master.css">
-    <!-- RESPONSIVE FIXES -->
-    <link rel="stylesheet" href="../../static/app/content/responsive.css">
-
-    <!-- DEFAULT COLOR/ CURRENTLY USING -->
-    <link rel="stylesheet" href="../../static/app/content/red.css">
-
-    
-
-    <script>
-        window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var form = document.forms["form"];
-
-            function updateUrl(number) {
-                form.action = "/show_dashboard/" + number;
-                console.log(form.action);
-            }
-
-            function obtainNumbersOfUrl(url) {
-                var urlObj = new URL(url);
-                var path = urlObj.pathname;
-                var parts = path.split('/');
-                var number = parts.pop();
-                updateUrl(number);
-            }
-
-            // Update of the URL for the Sliders
-            var url = window.location.href;
-            obtainNumbersOfUrl(url);
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('#form-personalized').addEventListener('submit', function(event) {
-                if (event.submitter.id !== 'urls') {
-                    return;
-                }
-        
-                var emailInput = document.querySelector('input[name="batch-email"]');
-                var fileInput = document.querySelector('input[name="urlsFile"]');
-                var emailWarning = document.getElementById('email-warning');
-                var txtWarning = document.getElementById('txt-warning');
-                var valid = true;
-        
-                if (!emailInput.value.trim()) {
-                    emailWarning.style.display = 'block'; 
-                    valid = false; 
-                } else {
-                    emailWarning.style.display = 'none'; 
-                }
-        
-                if (!fileInput.files.length) {
-                    txtWarning.style.display = 'block'; 
-                    valid = false; 
-                } else {
-                    txtWarning.style.display = 'none'; 
-                }
-        
-                if (!valid) {
-                    event.preventDefault();
-                }
-            });    
-        });
-    </script>
-
-
+{% block extra_css %}
+    {{ block.super }}
     <style>
-        .btn-primary {
-            background-color: #1792A4;
-        }
-        .btn-primary:hover {
-            background-color: #4CA8A1;
-        }
-        .btn-primary:focus {
-            background-color: #4CA8A1;
-        }
-        .language-content {
-            cursor: pointer;
-        }
-
+        .btn-primary { background-color: #1792A4; }
+        .btn-primary:hover, .btn-primary:focus { background-color: #4CA8A1; }
+        .language-content { cursor: pointer; }
     </style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 50px;">
     
-</head>
-<body>
-<div id="mywrapper">
-    <!-- TOP BAR -->
-    <div class="navbar navbar-inverse bs-docs-nav navbar-fixed-top  sticky-navigation" role="navigation">
-        <div class="container">
-            <!-- NAVIGATION LINK -->
-            <a href="/" style="padding-left: 4%;">
-                <img src="/static/app/images/final.jpg" alt="" width="220" height="70.1667">
-            </a>
-            <ul class="nav navbar-nav navbar-right login-register small-text">
-                <li style="display: block;" class="login dropdown">
-                    <a aria-expanded="false" type="button" data-toggle="dropdown" class="dropdown-toggle language-content" data-hover="dropdown" style="padding-top: 50%;">
-                        <span class="icon-basic-world"></span>
-                    </a>
-                    <ul role="menu" class="dropdown-menu" style="padding: 20px;">
-                        <li style="padding-left: 20px;">
-                            <div>
-                                <form action="/i18n/setlang/" method="post">
-                                    {% csrf_token %}
-                                    <input name="next" type="hidden" value="{{ redirect_to }}" />
-                                    <select name="language" onchange="this.form.submit()" class='btn-group btn-group-justified colored-text language-content'>
-                                        {% get_language_info_list for LANGUAGES as languages %}
-                                        {% for language in languages %}
-                                            {% if language.code == request.LANGUAGE_CODE %}
-                                                <option value="{{ language.code }}" selected>{{ language.name }} ({{ language.code }})</option>
-                                            {% else %}
-                                                <option value="{{ language.code }}">{{ language.name }} ({{ language.code }})</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
-                                </form>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-
-        </div>
-    </div>
-    <!-- /END TOP BAR -->
-
-<div class="container">
-    
-    <!-- BODY -->
-    
-    
-    <h4>  {% trans "Do you want to analyze one project?" %}</h4>
-
-    <!-- VERTICAL PROJECT FORM -->
-    <div class="col-md-7 col-md-offset-2">
-        <br></br>
-        <div class="vertical-project-form">
-            <h4>  {% trans "Do you want to analyze one project?" %}</h4>
-
-            <h5 class="dark-text form-heading"><strong>{% trans "There are three options to analyze your Snap project now!" %}</strong></h5>
-            <form name="form" id="form-personalized" class="project-form" enctype="multipart/form-data" method="post" action="/show_dashboard/">
-
-                <input type="hidden" name="dashboard_mode" value="Personalized">
-                {% trans "1. Introduce the <span class='colored-text'><a data-toggle='modal' href='#modalUrl'>url</a></span> of your Snap project, you don't have to download it:" %}
-                {% trans '<input name="urlProject" id="cf-name" class="form-control input-box placeholder" placeholder="https://snap.berkeley.edu/project?username=&projectname=" type="text">' %}
-                <button id="url" name='_url' type="submit" class="btn btn-primary standard-button">{% trans "Analyze by url" %}</button>
-                {% csrf_token %}
-                <br><br>
-                {% csrf_token %}
-                {% trans "2. If you have your <span class='colored-text'><a data-toggle='modal' href='#modalProject'>project</a></span> downloaded in the computer you can analyze it here:" %}
-                {% trans "<input  name='zipFile' type='file' class='filestyle' data-buttonText='Choose Project'>" %}
-                <button id="upload" name='_upload' type="submit" class="btn btn-primary standard-button">{% trans "Analyze my project" %}</button>
-                <br></br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="vertical-project-form">
                 
-            </form>
-                  
-
-            <!-- FORM SUBMIT SUCCESS / ERROR MESSAGES -->
-            <p class="file-error dark-text small-text">
-            {% trans "Error! Please choose a .sb or .sb3 file or input an url" %}</p>
-            {% if error %}
-            <br></br>
-            <p><span class="icon icon-close-alt2"></span> {% trans "Error! Please choose a .sb or .sb3 file or input an url" %}</p>
-            {% endif %}
-            {% if id_error %}
-            <br></br>
-            <p><span class="icon icon-close-alt2"></span> {% trans "Error! Your project id is wrong" %}</p>
-            {% endif %}
-            {% if no_exists %}
-            <br></br>
-            <p><span class="icon icon-close-alt2"></span> {% trans "Error! Your project doesn't exist in Snap's servers" %}</p>
-            {% endif %}
+                <h5 class="dark-text form-heading" style="font-size: 24px; margin-bottom: 25px;"><strong>{% trans "There are two options to analyze your Snap project now!" %}</strong></h5>
+                
+                <form name="form" id="form-personalized" class="project-form" enctype="multipart/form-data" method="post" action="/show_dashboard/">
+                    <input type="hidden" name="dashboard_mode" value="Personalized">
+                    
+                    <p style="font-size: 16px;">
+                        {% trans "1. Introduce the <span class='colored-text'><a data-toggle='modal' href='#modalUrl'>url</a></span> of your Snap project, you don't have to download it:" %}
+                    </p>
+                    
+                    {% trans '<input name="urlProject" id="cf-name" class="form-control input-box placeholder" placeholder="https://snap.berkeley.edu/project?username=&projectname=" type="text">' %}
+                    
+                    <button id="url" name='_url' type="submit" class="btn btn-primary standard-button" style="margin-top: 15px; margin-bottom: 40px;">{% trans "Analyze by url" %}</button>
+                    
+                    {% csrf_token %}
+                    
+                    <p style="font-size: 16px;">
+                        {% trans "2. If you have your <span class='colored-text'><a data-toggle='modal' href='#modalProject'>project</a></span> downloaded in the computer you can analyze it here:" %}
+                    </p>
+                    
+                    {% trans "<input  name='zipFile' type='file' class='filestyle' data-buttonText='Choose Project'>" %}
+                    
+                    <button id="upload" name='_upload' type="submit" class="btn btn-primary standard-button" style="margin-top: 15px;">{% trans "Analyze my project" %}</button>
+                    
+                </form>
+                
+                {% if error %}
+                    <br>
+                    <p class="text-danger" style="font-size: 16px; margin-top: 15px;"><span class="icon icon-close-alt2"></span> {% trans "Error! Please choose a .sb or .sb3 file or input an url" %}</p>
+                {% endif %}
+                {% if id_error %}
+                    <br>
+                    <p class="text-danger" style="font-size: 16px; margin-top: 15px;"><span class="icon icon-close-alt2"></span> {% trans "Error! Your project id is wrong" %}</p>
+                {% endif %}
+                {% if no_exists %}
+                    <br>
+                    <p class="text-danger" style="font-size: 16px; margin-top: 15px;"><span class="icon icon-close-alt2"></span> {% trans "Error! Your project doesn't exist in Snap's servers" %}</p>
+                {% endif %}
+            </div>
         </div>
     </div>
-    
-    
-  
 </div>
-<br></br>
 
 <div id="modalUrl" class="modal fade" role="dialog">
     <div class="modal-dialog">
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
@@ -241,88 +72,130 @@
                 <h4 class="modal-title"><strong>{% trans "How I can know my Snap project's url?" %}</strong></h4>
                 <div class="colored-line"></div>
             </div>
-            <div class="modal-body">
-                {% trans "<img class='framed' style='width: 500px;' src='static/app/images/url-en.png' />" %}
-            </div>
-            <div class="modal-footer">
+            <div class="modal-body text-center">
+                {% trans "<img class='framed' style='width: 100%; max-width: 500px;' src='static/app/images/url-en.png' />" %}
             </div>
         </div>
     </div>
 </div>
 
-
-<!-- Modal Project -->
 <div id="modalProject" class="modal fade" role="dialog">
     <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
-            <div class="small-text-medium uppercase colored-text">
-                {% trans "I want to download my project from Snap!" %}
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
+                <div class="small-text-medium uppercase colored-text">
+                    {% trans "I want to download my project from Snap!" %}
+                </div>
+                <h4 class="modal-title"><strong>{% trans "How I can download my Snap project to my computer?" %}</strong></h4>
+                <div class="colored-line"></div>
             </div>
-            <h4 class="modal-title"><strong>{% trans "How I can download my Snap project to my computer?" %}</strong></h4>
-            <div class="colored-line"></div>
-        </div>
-        <div class="modal-body">
-            {% trans "<img class='framed' style='width: 500px;' src='static/app/images/project-en.png' />" %}
-        </div>
-        <div class="modal-footer">
+            <div class="modal-body text-center">
+                {% trans "<img class='framed' style='width: 100%; max-width: 500px;' src='static/app/images/project-en.png' />" %}
+            </div>
         </div>
     </div>
+</div>
 
-    </div>
- </div>
-
- <!-- Modal Txt -->
 <div id="modalTxt" class="modal fade" role="dialog">
     <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
-            <div class="small-text-medium uppercase colored-text">
-                {% trans "What is an txt with Snap!'s urls?" %}
-            </div>
-            <h4 class="modal-title"><strong>{% trans "How is the correct format of the txt?" %}</strong></h4>
-            <div class="colored-line"></div>
-        </div>
-        <div class="modal-body">
-            {% trans "<img class='framed' style='width: 500px;' src='static/app/images/txt-es.png' />" %}
-        </div>
-        <div class="modal-footer">
-        </div>
-    </div>
-
-    </div>
- </div>
-
-    {% include 'main/footer.html' %}
-
-
-    <div id="pb" class="jumbotron">
-        <div class="container">
-                <p>
-                    <h2>
-                        {% trans "Wait a moment, please." %}
-                    </h2>
-                </p>
-        </div>
-        <div class="container">
-            <img src="/static/app/images/final.jpg"/>
-        </div>
-        <div class = "container">
-            <div class="progress progress-striped active">
-                <div class="progress-bar progress-bar-danger" role="progressbar"
-                    aria-valuenow="99" aria-valuemin="0" aria-valuemax="100"
-                    style="width: 99%">
-                    <span style="width: 99%">{% trans "loading..." %}</span>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close text-right" data-dismiss="modal">&times;</button>
+                <div class="small-text-medium uppercase colored-text">
+                    {% trans "What is an txt with Snap!'s urls?" %}
                 </div>
+                <h4 class="modal-title"><strong>{% trans "How is the correct format of the txt?" %}</strong></h4>
+                <div class="colored-line"></div>
+            </div>
+            <div class="modal-body text-center">
+                {% trans "<img class='framed' style='width: 100%; max-width: 500px;' src='static/app/images/txt-es.png' />" %}
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="static/app/scripts/bootstrap-filestyle.js"> </script>
-    <script src="/static/app/scripts/progress-bar.js"></script>
+</div>
 
-</body>
-</html>
+<div id="pb" class="jumbotron" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background-color: rgba(255,255,255,0.95); text-align: center; padding-top: 15%;">
+    <div class="container">
+        <h2>{% trans "Wait a moment, please." %}</h2>
+        <img src="{% static 'app/images/final.jpg' %}" style="margin: 20px 0; max-width: 250px;"/>
+        <div class="progress progress-striped active" style="width: 50%; margin: 0 auto;">
+            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                <span>{% trans "loading..." %}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ block.super }}
+    
+    <script src="{% static 'app/scripts/bootstrap-filestyle.js' %}"></script>
+    
+    <script src="{% static 'app/scripts/progress-bar.js' %}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var form = document.forms["form-personalized"];
+
+            function updateUrl(number) {
+                form.action = "/show_dashboard/" + number;
+            }
+
+            function obtainNumbersOfUrl(url) {
+                var urlObj = new URL(url);
+                var path = urlObj.pathname;
+                var parts = path.split('/');
+                var number = parts.pop();
+                
+                // Actualizamos la url destino si realmente es un número (evita fallos)
+                if (number && !isNaN(number)) {
+                    updateUrl(number);
+                }
+            }
+
+            var url = window.location.href;
+            obtainNumbersOfUrl(url);
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('#form-personalized').addEventListener('submit', function(event) {
+                // Prevenimos envío si hay campos vacíos obligatorios
+                if (event.submitter && event.submitter.id !== 'urls') {
+                    return;
+                }
+        
+                var emailInput = document.querySelector('input[name="batch-email"]');
+                var fileInput = document.querySelector('input[name="urlsFile"]');
+                var emailWarning = document.getElementById('email-warning');
+                var txtWarning = document.getElementById('txt-warning');
+                var valid = true;
+        
+                if (emailInput) {
+                    if (!emailInput.value.trim()) {
+                        if (emailWarning) emailWarning.style.display = 'block'; 
+                        valid = false; 
+                    } else {
+                        if (emailWarning) emailWarning.style.display = 'none'; 
+                    }
+                }
+        
+                if (fileInput) {
+                    if (!fileInput.files.length) {
+                        if (txtWarning) txtWarning.style.display = 'block'; 
+                        valid = false; 
+                    } else {
+                        if (txtWarning) txtWarning.style.display = 'none'; 
+                    }
+                }
+        
+                if (!valid) {
+                    event.preventDefault();
+                }
+            });    
+        });
+    </script>
+{% endblock %}
