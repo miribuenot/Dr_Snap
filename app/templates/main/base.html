@@ -61,7 +61,6 @@
     {% block extra_head %}{% endblock %}
 
     <style>
-        /* BLINDAJE DE LA BARRA DE NAVEGACIÓN */
         #stamp-navigation .main-navigation > li > a {
             font-weight: normal !important; /* Quita la negrita agresiva */
             font-style: normal !important;  /* Quita la cursiva si no la quieres */
@@ -70,10 +69,27 @@
             letter-spacing: 0.5px; /* Le da un toque más elegante */
         }
         
-        /* Estilo específico para el botón Learn */
         #stamp-navigation .main-navigation > li > a.learn-link {
             color: #f0cd08 !important;
             font-weight: 600 !important; /* Un poco más de peso solo para este enlace */
+        }
+
+        @media (min-width: 768px) and (max-width: 1200px) {
+            #stamp-navigation .main-navigation > li > a {
+                font-size: 11px !important;
+                padding-left: 8px !important;
+                padding-right: 8px !important;
+            }
+            
+            .navbar-left.main-navigation {
+                max-width: 40%; 
+                display: flex;
+                flex-wrap: wrap; 
+            }
+            
+            .navbar-brand.hidden-xs img {
+                height: 60px !important;
+            }
         }
     </style>
 </head>
