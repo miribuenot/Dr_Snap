@@ -1,208 +1,1272 @@
 {% load i18n static %}
 <!DOCTYPE html>
 <html class="nivo-lightbox-notouch" lang="{{ request.LANGUAGE_CODE|default:'en' }}">
+
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Analyze your Snap projects to assess your Computational Thinking skills">
-    <meta name="keywords" content="Stamp, Startup, Multipurpose, Bootstrap, Landing page, Template, Registration, Landing">
-    <meta name="author" content="Programamos URJC Libresoft FECyT">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description"
+          content="Analyze your Snap projects to assess your Computational Thinking skills">
+
+    <meta name="keywords"
+          content="Stamp, Startup, Multipurpose, Bootstrap, Landing page, Template, Registration, Landing">
+
+    <meta name="author"
+          content="Programamos URJC Libresoft FECyT">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <title>{% block title %}Dr. Snap{% endblock %}</title>
-    <link rel="icon" href="{% static 'app/images/favicon.ico' %}">
 
-    <!-- 1. ESTILO BASE (Debe ir estrictamente antes de los CDNs y Bootstrap) -->
-    <link rel="stylesheet" href="{% static 'app/content/style.css' %}">
+    <link rel="icon"
+          href="{% static 'app/images/favicon.ico' %}">
 
-    <!-- 2. CDNs OPCIONALES (El Dashboard inyecta aquí Bootstrap 5 si es Recommender) -->
+
+    <!-- =========================================================
+         1. ESTILO BASE
+         ========================================================= -->
+
+    <link rel="stylesheet"
+          href="{% static 'app/content/style.css' %}">
+
+
+    <!-- =========================================================
+         2. CDNs OPCIONALES
+         ========================================================= -->
+
     {% block cdn_links %}
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     {% endblock %}
 
-    <link rel="stylesheet" href="{% static 'app/icons/icons.css' %}">
-    <link type="text/css" rel="stylesheet" href="{% static 'app/content/css_002.css' %}">
-    <link type="text/css" rel="stylesheet" href="{% static 'app/content/css.css' %}">
 
-    <!-- 3. BOOTSTRAP PRINCIPAL LOCAL -->
+    <link rel="stylesheet"
+          href="{% static 'app/icons/icons.css' %}">
+
+    <link type="text/css"
+          rel="stylesheet"
+          href="{% static 'app/content/css_002.css' %}">
+
+    <link type="text/css"
+          rel="stylesheet"
+          href="{% static 'app/content/css.css' %}">
+
+
+    <!-- =========================================================
+         3. BOOTSTRAP PRINCIPAL LOCAL
+         ========================================================= -->
+
     {% block bootstrap_css %}
-        <link rel="stylesheet" href="{% static 'app/content/bootstrap-main.css' %}">
+        <link rel="stylesheet"
+              href="{% static 'app/content/bootstrap-main.css' %}">
     {% endblock %}
 
-    <!-- 4. ANIMACIONES Y PLUGINS GLOBALES -->
-    <link rel="stylesheet" href="{% static 'app/content/animate.css' %}">
-    <link rel="stylesheet" href="{% static 'app/content/owl_002.css' %}">
-    <link rel="stylesheet" href="{% static 'app/content/owl.css' %}">
-    <link rel="stylesheet" href="{% static 'app/content/nivo-lightbox.css' %}">
-    <link rel="stylesheet" href="{% static 'app/content/default.css' %}">
 
-    <!-- 5. ESTILOS CUSTOM (Sobrescriben colores de Bootstrap) -->
-    <link rel="stylesheet" href="{% static 'app/content/styles.css' %}">
+    <!-- =========================================================
+         4. ANIMACIONES Y PLUGINS GLOBALES
+         ========================================================= -->
 
-    <!-- 6. BLOQUE PARA CSS ESPECÍFICO (ej. niveles de competencia) -->
+    <link rel="stylesheet"
+          href="{% static 'app/content/animate.css' %}">
+
+    <link rel="stylesheet"
+          href="{% static 'app/content/owl_002.css' %}">
+
+    <link rel="stylesheet"
+          href="{% static 'app/content/owl.css' %}">
+
+    <link rel="stylesheet"
+          href="{% static 'app/content/nivo-lightbox.css' %}">
+
+    <link rel="stylesheet"
+          href="{% static 'app/content/default.css' %}">
+
+
+    <!-- =========================================================
+         5. ESTILOS CUSTOM
+         ========================================================= -->
+
+    <link rel="stylesheet"
+          href="{% static 'app/content/styles.css' %}">
+
+
+    <!-- =========================================================
+         6. CSS ESPECÍFICO DE LAS PLANTILLAS HIJAS
+         ========================================================= -->
+
     {% block extra_css %}{% endblock %}
 
-    <!-- 7. RESPONSIVE Y TEMA ROJO (Siempre al final) -->
-    <link rel="stylesheet" href="{% static 'app/content/responsive.css' %}">
-    <link rel="stylesheet" href="{% static 'app/content/red.css' %}">
 
-    <!-- GOOGLE ANALYTICS -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EF8MXDGMRC"></script>
+    <!-- =========================================================
+         7. RESPONSIVE Y TEMA ROJO
+         ========================================================= -->
+
+    <link rel="stylesheet"
+          href="{% static 'app/content/responsive.css' %}">
+
+    <link rel="stylesheet"
+          href="{% static 'app/content/red.css' %}">
+
+
+    <!-- =========================================================
+         GOOGLE ANALYTICS
+         ========================================================= -->
+
+    <script async
+            src="https://www.googletagmanager.com/gtag/js?id=G-EF8MXDGMRC"></script>
+
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag(){
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
+
         gtag('config', 'G-EF8MXDGMRC');
     </script>
 
-    <!-- JQUERY -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-    <!-- SCRIPTS EXTRAS DEL HEAD -->
+    <!-- =========================================================
+         JQUERY
+         ========================================================= -->
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+    </script>
+
+
+    <!-- =========================================================
+         SCRIPTS EXTRAS DEL HEAD
+         ========================================================= -->
+
     {% block extra_head %}{% endblock %}
 
+
     <style>
-        #stamp-navigation .main-navigation > li > a {
-            font-weight: normal !important; /* Quita la negrita agresiva */
-            font-style: normal !important;  /* Quita la cursiva si no la quieres */
+
+        /*
+         * =========================================================
+         * BOTÓN SECTIONS
+         * =========================================================
+         */
+
+        #sidebar-toggle {
+            position: absolute !important;
+
+            left: 25px !important;
+            top: 18px !important;
+
+            height: 44px !important;
+            min-height: 44px !important;
+            width: auto !important;
+
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+
+            gap: 10px !important;
+
+            padding: 0 14px !important;
+            margin: 0 !important;
+
+            border: 2px solid #555555 !important;
+            border-radius: 6px !important;
+
+            background: #ffffff !important;
+
+            color: #333333 !important;
+
+            cursor: pointer !important;
+
+            font-family: 'Open Sans', sans-serif !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+
             text-transform: uppercase !important;
-            font-family: 'Open Sans', sans-serif !important; /* Fuerza una fuente suave */
-            letter-spacing: 0.5px; /* Le da un toque más elegante */
-        }
-        
-        #stamp-navigation .main-navigation > li > a.learn-link {
-            color: #f0cd08 !important;
-            font-weight: 600 !important; /* Un poco más de peso solo para este enlace */
+            letter-spacing: 0.5px !important;
+
+            z-index: 5000 !important;
+
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
+
+        #sidebar-toggle:hover {
+            background-color: #f2f2f2 !important;
+            border-color: #333333 !important;
+        }
+
+
+        #sidebar-toggle:focus {
+            outline: none !important;
+        }
+
+
+        /*
+         * =========================================================
+         * ICONO DE TRES RAYAS
+         * =========================================================
+         */
+
+        #sidebar-toggle .sections-icon {
+            display: flex !important;
+
+            flex-direction: column !important;
+
+            justify-content: center !important;
+            align-items: center !important;
+
+            width: 25px !important;
+            height: 25px !important;
+
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+
+        #sidebar-toggle .sections-icon .icon-bar {
+            display: block !important;
+
+            width: 25px !important;
+            height: 3px !important;
+
+            margin: 3px 0 !important;
+            padding: 0 !important;
+
+            background-color: #333333 !important;
+
+            border-radius: 2px !important;
+        }
+
+
+        /*
+         * =========================================================
+         * TEXTO SECTIONS
+         * =========================================================
+         */
+
+        #sidebar-toggle .sections-text {
+            display: inline-block !important;
+
+            color: #333333 !important;
+
+            line-height: 1 !important;
+
+            white-space: nowrap !important;
+        }
+
+
+        /*
+         * =========================================================
+         * NAVBAR
+         * =========================================================
+         */
+
+        #main-navbar {
+            min-height: 80px !important;
+
+            height: 80px !important;
+
+            position: fixed !important;
+
+            top: 0 !important;
+            left: 0 !important;
+
+            width: 100% !important;
+
+            z-index: 1000 !important;
+        }
+
+
+        #main-navbar .navbar-inner {
+            min-height: 80px !important;
+
+            height: 80px !important;
+
+            position: relative !important;
+
+            padding-left: 30px !important;
+            padding-right: 30px !important;
+        }
+
+
+        /*
+         * =========================================================
+         * LOGO CENTRADO
+         * =========================================================
+         */
+
+        #main-navbar .navbar-logo {
+            position: absolute !important;
+
+            left: 50% !important;
+            top: 0 !important;
+
+            transform: translateX(-50%) !important;
+
+            padding: 0 !important;
+            margin: 0 !important;
+
+            z-index: 3000 !important;
+        }
+
+
+        #main-navbar .navbar-logo img {
+            display: block !important;
+
+            height: 80px !important;
+
+            width: auto !important;
+
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+
+        /*
+         * =========================================================
+         * SELECTOR DE IDIOMA
+         * =========================================================
+         */
+
+        #main-navbar .navbar-language {
+            position: absolute !important;
+
+            right: 20px !important;
+            top: 0 !important;
+
+            margin: 0 !important;
+
+            z-index: 5000 !important;
+        }
+
+
+        #main-navbar .navbar-language > li > a {
+            padding-top: 25px !important;
+            padding-bottom: 25px !important;
+        }
+
+
+        /*
+         * =========================================================
+         * OCULTAR LA ANTIGUA NAVEGACIÓN HORIZONTAL
+         * =========================================================
+         */
+
+        #stamp-navigation {
+            display: none !important;
+        }
+
+
+        /*
+         * =========================================================
+         * SIDEBAR
+         * =========================================================
+         */
+
+        #navigation-sidebar {
+            position: fixed !important;
+
+            top: 0 !important;
+            left: 0 !important;
+
+            width: 320px !important;
+            max-width: 85vw !important;
+
+            height: 100vh !important;
+
+            background-color: #ffffff !important;
+
+            z-index: 10000 !important;
+
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.25) !important;
+
+            transform: translateX(-100%) !important;
+
+            transition: transform 0.3s ease !important;
+
+            overflow-y: auto !important;
+
+            visibility: visible !important;
+        }
+
+
+        #navigation-sidebar.open {
+            transform: translateX(0) !important;
+        }
+
+
+        /*
+         * =========================================================
+         * CABECERA SIDEBAR
+         * =========================================================
+         */
+
+        #navigation-sidebar .sidebar-header {
+            position: relative !important;
+
+            height: 80px !important;
+
+            border-bottom: 1px solid #eeeeee !important;
+        }
+
+
+        /*
+         * =========================================================
+         * BOTÓN CERRAR
+         * =========================================================
+         */
+
+        #sidebar-close {
+            position: absolute !important;
+
+            top: 20px !important;
+            right: 20px !important;
+
+            width: 40px !important;
+            height: 40px !important;
+
+            padding: 0 !important;
+            margin: 0 !important;
+
+            border: none !important;
+
+            background-color: transparent !important;
+
+            color: #333333 !important;
+
+            cursor: pointer !important;
+
+            font-size: 24px !important;
+
+            z-index: 10001 !important;
+        }
+
+
+        #sidebar-close:hover {
+            opacity: 0.6;
+        }
+
+
+        #sidebar-close:focus {
+            outline: none !important;
+        }
+
+
+        /*
+         * =========================================================
+         * MENÚ DEL SIDEBAR
+         * =========================================================
+         */
+
+        #navigation-sidebar .sidebar-menu {
+            list-style: none !important;
+
+            margin: 0 !important;
+
+            padding: 25px 20px !important;
+        }
+
+
+        #navigation-sidebar .sidebar-menu li {
+            list-style: none !important;
+
+            margin: 0 0 8px 0 !important;
+            padding: 0 !important;
+        }
+
+
+        #navigation-sidebar .sidebar-menu li a {
+            display: block !important;
+
+            padding: 15px 18px !important;
+
+            color: #333333 !important;
+
+            text-decoration: none !important;
+
+            font-family: 'Open Sans', sans-serif !important;
+
+            font-size: 16px !important;
+
+            font-weight: normal !important;
+
+            text-transform: uppercase !important;
+
+            letter-spacing: 0.5px !important;
+
+            border-radius: 5px !important;
+
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease !important;
+        }
+
+
+        #navigation-sidebar .sidebar-menu li a:hover {
+            background-color: #f0f0f0 !important;
+
+            color: #333333 !important;
+        }
+
+
+        /*
+         * Learn destacado
+         */
+
+        #navigation-sidebar .sidebar-menu li a.learn-link {
+            color: #f0cd08 !important;
+
+            font-weight: 600 !important;
+        }
+
+
+        /*
+         * =========================================================
+         * OVERLAY
+         * =========================================================
+         */
+
+        #navigation-sidebar-overlay {
+            position: fixed !important;
+
+            top: 0 !important;
+            left: 0 !important;
+
+            width: 100% !important;
+            height: 100% !important;
+
+            background: rgba(0, 0, 0, 0.35) !important;
+
+            z-index: 9000 !important;
+
+            opacity: 0 !important;
+
+            visibility: hidden !important;
+
+            transition:
+                opacity 0.3s ease,
+                visibility 0.3s ease !important;
+        }
+
+
+        #navigation-sidebar-overlay.active {
+            opacity: 1 !important;
+
+            visibility: visible !important;
+        }
+
+
+        /*
+         * =========================================================
+         * ESPACIO PARA NAVBAR FIJA
+         * =========================================================
+         */
+
+        #mywrapper {
+            padding-top: 80px;
+        }
+
+
+        /*
+         * =========================================================
+         * RESPONSIVE
+         * =========================================================
+         */
+
+        @media (max-width: 767px) {
+
+            #main-navbar .navbar-inner {
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+            }
+
+
+            #sidebar-toggle {
+                left: 15px !important;
+            }
+
+
+            #main-navbar .navbar-logo img {
+                height: 65px !important;
+
+                margin-top: 7px !important;
+            }
+
+
+            #main-navbar .navbar-language {
+                right: 10px !important;
+            }
+
+
+            #navigation-sidebar {
+                width: 300px !important;
+            }
+
+        }
+
+
+        /*
+         * =========================================================
+         * PANTALLAS MUY PEQUEÑAS
+         * =========================================================
+         */
+
+        @media (max-width: 500px) {
+
+            #sidebar-toggle {
+                width: 45px !important;
+
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+
+                gap: 0 !important;
+            }
+
+
+            #sidebar-toggle .sections-text {
+                display: none !important;
+            }
+
+
+            #main-navbar .navbar-logo img {
+                height: 60px !important;
+
+                margin-top: 10px !important;
+            }
+
+        }
+
+
+        /*
+         * =========================================================
+         * ESTILOS DEL ANTIGUO MENÚ
+         * =========================================================
+         */
+
+        #stamp-navigation .main-navigation > li > a {
+            font-weight: normal !important;
+
+            font-style: normal !important;
+
+            text-transform: uppercase !important;
+
+            font-family: 'Open Sans', sans-serif !important;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        #stamp-navigation .main-navigation > li > a.learn-link {
+            color: #f0cd08 !important;
+
+            font-weight: 600 !important;
+        }
+
+
         @media (min-width: 768px) and (max-width: 1200px) {
+
             #stamp-navigation .main-navigation > li > a {
                 font-size: 11px !important;
+
                 padding-left: 8px !important;
+
                 padding-right: 8px !important;
             }
-            
+
+
             .navbar-left.main-navigation {
-                max-width: 40%; 
+                max-width: 40%;
+
                 display: flex;
-                flex-wrap: wrap; 
+
+                flex-wrap: wrap;
             }
-            
+
+
             .navbar-brand.hidden-xs img {
                 height: 60px !important;
             }
+
         }
+
     </style>
+
 </head>
 
+
 <body>
+
     {% block alerts %}{% endblock %}
 
-    <div id="{% block wrapper_id %}mywrapper{% endblock %}" {% block wrapper_style %}{% endblock %}>
-        
-        <div class="navbar navbar-inverse bs-docs-nav navbar-fixed-top sticky-navigation" role="navigation" style="min-height: 80px;">
-            <div class="container-fluid" style="position: relative; padding-left: 30px; padding-right: 30px;">
-                
-                <div class="navbar-header">
-                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#stamp-navigation" style="margin-top: 25px;">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand visible-xs" href="/">
-                        <img class="d-block img-fluid" style="height: 50px; margin-top: 5px;" src="{% static 'app/images/final.jpg' %}" alt="Dr. Snap">
-                    </a>
-                </div>
 
-                <a class="navbar-brand hidden-xs" href="/" style="position: absolute; left: 50%; transform: translateX(-50%); padding: 0; top: 5px;">
-                    <img class="d-block img-fluid" style="height: 80px; width: auto;" src="{% static 'app/images/final.jpg' %}" alt="Dr. Snap">
+    <div id="{% block wrapper_id %}mywrapper{% endblock %}"
+         {% block wrapper_style %}{% endblock %}>
+
+
+        <!-- =====================================================
+             NAVBAR
+             ===================================================== -->
+
+        <div id="main-navbar"
+             class="navbar navbar-inverse bs-docs-nav navbar-fixed-top sticky-navigation"
+             role="navigation">
+
+
+            <div class="navbar-inner container-fluid">
+
+
+                <!-- =================================================
+                     BOTÓN SECTIONS
+                     ================================================= -->
+
+                <button type="button"
+                        id="sidebar-toggle"
+                        aria-label="Open sections menu"
+                        aria-expanded="false">
+
+
+                    <span class="sections-icon">
+
+                        <span class="icon-bar"></span>
+
+                        <span class="icon-bar"></span>
+
+                        <span class="icon-bar"></span>
+
+                    </span>
+
+
+                    <span class="sections-text">
+
+                        {% trans "Sections" %}
+
+                    </span>
+
+
+                </button>
+
+
+                <!-- =================================================
+                     LOGO CENTRADO
+                     ================================================= -->
+
+                <a class="navbar-brand navbar-logo"
+                   href="/">
+
+
+                    <img class="d-block img-fluid"
+                         src="{% static 'app/images/final.jpg' %}"
+                         alt="Dr. Snap">
+
+
                 </a>
-               
-                <div class="navbar-collapse collapse" id="stamp-navigation">
-                    <ul class="nav navbar-nav navbar-left main-navigation small-text" style="margin-top: 15px;">
-                        <li><a href="/#section_personalized">{% trans "Personalized Mode" %}</a></li>
-                        <li><a href="/#section_assistant">{% trans "Recommender Assistant" %}</a></li>
-                        <li><a href="/#section_batch">{% blocktrans %}Batch Analysis Mode{% endblocktrans %}</a></li>
-                        <li><a href="/learn/duplicatedScripts/" class="learn-link">{% trans "Learn" %}</a></li>
-                    </ul>
 
-                    <ul class="nav navbar-nav navbar-right login-register small-text" style="margin-top: 15px;">
-                        <li style="display: block;" class="login dropdown">
-                            <a aria-expanded="false" type="button" data-toggle="dropdown" class="dropdown-toggle language-content" data-hover="dropdown" style="padding-top: 15px; padding-bottom: 15px; cursor: pointer;">
-                                <span class="icon-basic-world" style="font-size: 20px;"></span>
-                            </a>
-                            <ul role="menu" class="dropdown-menu" style="padding: 20px;">
-                                <li style="padding-left: 20px;">
-                                    <form id="language-form" action="/i18n/setlang/" method="post">
-                                        {% csrf_token %}
-                                        <input name="next" type="hidden" value="{{ redirect_to }}" />
-                                        <select name="language" id="language-selector" onchange="submitGlobalLanguageForm()" class='btn-group btn-group-justified colored-text language-content'>
-                                            {% get_language_info_list for LANGUAGES as languages %}
-                                            {% for language in languages %}
-                                                <option value="{{ language.code }}" {% if language.code == request.LANGUAGE_CODE %}selected{% endif %}>{{ language.name }} ({{ language.code }})</option>
-                                            {% endfor %}
-                                        </select>
-                                    </form>
-                                    {% block language_extra_forms %}{% endblock %}
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
+
+                <!-- =================================================
+                     SELECTOR DE IDIOMA
+                     ================================================= -->
+
+                <ul class="nav navbar-nav navbar-right login-register small-text navbar-language">
+
+
+                    <li style="display: block;"
+                        class="login dropdown">
+
+
+                        <a aria-expanded="false"
+                           type="button"
+                           data-toggle="dropdown"
+                           class="dropdown-toggle language-content"
+                           data-hover="dropdown"
+                           style="padding-top: 25px; padding-bottom: 25px; cursor: pointer;">
+
+
+                            <span class="icon-basic-world"
+                                  style="font-size: 20px;">
+                            </span>
+
+
+                        </a>
+
+
+                        <ul role="menu"
+                            class="dropdown-menu"
+                            style="padding: 20px;">
+
+
+                            <li style="padding-left: 20px;">
+
+
+                                <form id="language-form"
+                                      action="/i18n/setlang/"
+                                      method="post">
+
+
+                                    {% csrf_token %}
+
+
+                                    <input name="next"
+                                           type="hidden"
+                                           value="{{ redirect_to }}" />
+
+
+                                    <select name="language"
+                                            id="language-selector"
+                                            onchange="submitGlobalLanguageForm()"
+                                            class="btn-group btn-group-justified colored-text language-content">
+
+
+                                        {% get_language_info_list for LANGUAGES as languages %}
+
+
+                                        {% for language in languages %}
+
+
+                                            <option value="{{ language.code }}"
+                                                {% if language.code == request.LANGUAGE_CODE %}selected{% endif %}>
+
+                                                {{ language.name }} ({{ language.code }})
+
+                                            </option>
+
+
+                                        {% endfor %}
+
+
+                                    </select>
+
+
+                                </form>
+
+
+                                {% block language_extra_forms %}{% endblock %}
+
+
+                            </li>
+
+
+                        </ul>
+
+
+                    </li>
+
+
+                </ul>
+
 
             </div>
+
         </div>
+
+
+        <!-- =====================================================
+             OVERLAY
+             ===================================================== -->
+
+        <div id="navigation-sidebar-overlay"></div>
+
+
+        <!-- =====================================================
+             SIDEBAR LATERAL
+             ===================================================== -->
+
+        <aside id="navigation-sidebar">
+
+
+            <div class="sidebar-header">
+
+
+                <button type="button"
+                        id="sidebar-close"
+                        aria-label="Close sections menu">
+
+
+                    <i class="bi bi-x-lg"></i>
+
+
+                </button>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 ENLACES
+                 ================================================= -->
+
+            <ul class="sidebar-menu">
+
+
+                <li>
+
+                    <a href="/#section_personalized">
+
+                        {% trans "Personalized Mode" %}
+
+                    </a>
+
+                </li>
+
+
+                <li>
+
+                    <a href="/#section_assistant">
+
+                        {% trans "Recommender Assistant" %}
+
+                    </a>
+
+                </li>
+
+
+                <li>
+
+                    <a href="/#section_batch">
+
+                        {% blocktrans %}
+                            Batch Analysis Mode
+                        {% endblocktrans %}
+
+                    </a>
+
+                </li>
+
+
+                <li>
+
+                    <a href="/learn/duplicatedScripts/"
+                       class="learn-link">
+
+                        {% trans "Learn" %}
+
+                    </a>
+
+                </li>
+
+
+            </ul>
+
+
+        </aside>
+
 
         {% block preloader %}{% endblock %}
 
+
         {% block content %}{% endblock %}
 
+
         {% block footer %}
+
             {% include 'main/footer.html' %}
+
         {% endblock %}
+
 
     </div>
 
+
+    <!-- =========================================================
+         BOOTSTRAP
+         ========================================================= -->
+
     <script src="{% static 'app/scripts/bootstrap.min.js' %}"></script>
 
-    <script>
-        $(window).on('load', function() {
-            $('.status').fadeOut();
-            $('.preloader').delay(1000).fadeOut('slow');
-        });
-    </script>
+
+    <!-- =========================================================
+         SIDEBAR JAVASCRIPT
+         ========================================================= -->
 
     <script>
-        function submitGlobalLanguageForm() {
-            var langForm = document.getElementById('language-form');
-            var dashForm = document.getElementById('dashboard-form'); // Busca si la plantilla hija renderizó el formulario oculto del dashboard
-            
-            if (dashForm) {
-                var formData = new FormData(langForm);
-                fetch("/i18n/setlang/", {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'same-origin',
-                    headers: { 'X-CSRFToken': '{{ csrf_token }}' }
-                }).then(response => {
-                    if (response.ok) {
-                        dashForm.submit();
-                    }
-                }).catch(error => console.error('Error:', error));
-            } else {
-                langForm.submit();
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+
+            var sidebar =
+                document.getElementById('navigation-sidebar');
+
+
+            var toggleButton =
+                document.getElementById('sidebar-toggle');
+
+
+            var closeButton =
+                document.getElementById('sidebar-close');
+
+
+            var overlay =
+                document.getElementById('navigation-sidebar-overlay');
+
+
+            /*
+             * =====================================================
+             * ABRIR SIDEBAR
+             * =====================================================
+             */
+
+            function openSidebar() {
+
+                sidebar.classList.add('open');
+
+                overlay.classList.add('active');
+
+                toggleButton.setAttribute(
+                    'aria-expanded',
+                    'true'
+                );
+
+                document.body.style.overflow = 'hidden';
+
             }
-        }
+
+
+            /*
+             * =====================================================
+             * CERRAR SIDEBAR
+             * =====================================================
+             */
+
+            function closeSidebar() {
+
+                sidebar.classList.remove('open');
+
+                overlay.classList.remove('active');
+
+                toggleButton.setAttribute(
+                    'aria-expanded',
+                    'false'
+                );
+
+                document.body.style.overflow = '';
+
+            }
+
+
+            /*
+             * =====================================================
+             * BOTÓN SECTIONS
+             * =====================================================
+             */
+
+            toggleButton.addEventListener(
+                'click',
+                function () {
+
+                    if (sidebar.classList.contains('open')) {
+
+                        closeSidebar();
+
+                    } else {
+
+                        openSidebar();
+
+                    }
+
+                }
+            );
+
+
+            /*
+             * =====================================================
+             * BOTÓN CERRAR
+             * =====================================================
+             */
+
+            closeButton.addEventListener(
+                'click',
+                function () {
+
+                    closeSidebar();
+
+                }
+            );
+
+
+            /*
+             * =====================================================
+             * CLIC FUERA DEL SIDEBAR
+             * =====================================================
+             */
+
+            overlay.addEventListener(
+                'click',
+                function () {
+
+                    closeSidebar();
+
+                }
+            );
+
+
+            /*
+             * =====================================================
+             * CERRAR AL PINCHAR UN ENLACE
+             * =====================================================
+             */
+
+            var sidebarLinks =
+                sidebar.querySelectorAll(
+                    '.sidebar-menu a'
+                );
+
+
+            sidebarLinks.forEach(
+                function (link) {
+
+                    link.addEventListener(
+                        'click',
+                        function () {
+
+                            closeSidebar();
+
+                        }
+                    );
+
+                }
+            );
+
+
+            /*
+             * =====================================================
+             * CERRAR CON ESC
+             * =====================================================
+             */
+
+            document.addEventListener(
+                'keydown',
+                function (event) {
+
+                    if (event.key === 'Escape') {
+
+                        closeSidebar();
+
+                    }
+
+                }
+            );
+
+
+        });
+
     </script>
+
+
+    <!-- =========================================================
+         PRELOADER
+         ========================================================= -->
+
+    <script>
+
+        $(window).on('load', function() {
+
+            $('.status').fadeOut();
+
+            $('.preloader').delay(1000).fadeOut('slow');
+
+        });
+
+    </script>
+
+
+    <!-- =========================================================
+         CAMBIO DE IDIOMA
+         ========================================================= -->
+
+    <script>
+
+        function submitGlobalLanguageForm() {
+
+
+            var langForm =
+                document.getElementById('language-form');
+
+
+            var dashForm =
+                document.getElementById('dashboard-form');
+
+
+            if (dashForm) {
+
+
+                var formData =
+                    new FormData(langForm);
+
+
+                fetch("/i18n/setlang/", {
+
+                    method: 'POST',
+
+                    body: formData,
+
+                    credentials: 'same-origin',
+
+                    headers: {
+
+                        'X-CSRFToken': '{{ csrf_token }}'
+
+                    }
+
+                }).then(response => {
+
+
+                    if (response.ok) {
+
+                        dashForm.submit();
+
+                    }
+
+
+                }).catch(error => {
+
+                    console.error(
+                        'Error:',
+                        error
+                    );
+
+                });
+
+
+            } else {
+
+
+                langForm.submit();
+
+
+            }
+
+        }
+
+    </script>
+
 
     {% block extra_scripts %}{% endblock %}
-    
-    <!-- Animación de la Progress Bar (Preloader) -->
+
+
+    <!-- =========================================================
+         ANIMACIÓN DE LA PROGRESS BAR
+         ========================================================= -->
+
     <script>
+
         $(window).on('load', function() {
+
             $('.status').fadeOut();
+
             $('.preloader').delay(500).fadeOut('slow');
+
         });
+
     </script>
+
+
     <script src="{% static 'app/scripts/custom.js' %}"></script>
 
+
 </body>
+
 </html>
